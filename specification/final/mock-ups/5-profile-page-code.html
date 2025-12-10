@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13ecec",
+            "background-light": "#f6f8f8",
+            "background-dark": "#102222",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "Noto Sans", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col font-display group/design-root overflow-x-hidden">
+<!-- Top App Bar -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
+<div class="text-white flex size-12 shrink-0 items-center justify-start">
+</div>
+<h1 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Profile</h1>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-transparent text-slate-900 dark:text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<span class="material-symbols-outlined text-2xl">settings</span>
+</button>
+</div>
+</div>
+<!-- Profile Header -->
+<div class="flex p-4 @container">
+<div class="flex w-full flex-col gap-4 items-center">
+<div class="flex gap-4 flex-col items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32" data-alt="A portrait of a smiling woman with blonde hair." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAbQlcnDy9WJ9Kb5OvXhHDmxjxb1enbdvKb4kXXwFDeLhq3eX9XwQhpsF-k8kTJiG9M1FaC6DXAuujx1LijyTQNLUzxnN-mcmxRP2t2fNalhyOvtOe7ETQqSqB8OyJncVam1woTB6Gtt8LTtRae9wjrCnQetgKfdc7Nk_F5p6xiNa4YYNVHJxxFk8QfG8JrsNPr3kOlx4NeuvNKm_Mn61MIJAXswdx8PVu-n9NwQgf1m3RdPCKltLuL72eHNqRQqWOf6ciQtbuCLmYV");'></div>
+<div class="flex flex-col items-center justify-center">
+<p class="text-slate-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] text-center">Jane Doe</p>
+<p class="text-slate-500 dark:text-[#92c9c9] text-base font-normal leading-normal text-center">@janedoe</p>
+<p class="text-slate-500 dark:text-[#92c9c9] text-base font-normal leading-normal text-center mt-1">Lover of mid-century modern furniture.</p>
+</div>
+</div>
+<div class="flex w-full max-w-[480px] gap-3 @[480px]:w-auto pt-2">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-slate-200 dark:bg-[#234848] text-slate-900 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] flex-1 @[480px]:flex-auto">
+<span class="truncate">Edit Profile</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-[#112222] text-sm font-bold leading-normal tracking-[0.015em] flex-1 @[480px]:flex-auto">
+<span class="truncate">Share Profile</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Profile Stats -->
+<div class="flex flex-wrap gap-3 px-4 py-3">
+<div class="flex min-w-[111px] flex-1 basis-[fit-content] flex-col gap-2 rounded-xl border border-slate-200 dark:border-[#326767] bg-slate-100 dark:bg-transparent p-3 items-center text-center">
+<p class="text-slate-900 dark:text-white tracking-light text-2xl font-bold leading-tight">24</p>
+<div class="flex items-center gap-2">
+<p class="text-slate-500 dark:text-[#92c9c9] text-sm font-normal leading-normal">Listings</p>
+</div>
+</div>
+<div class="flex min-w-[111px] flex-1 basis-[fit-content] flex-col gap-2 rounded-xl border border-slate-200 dark:border-[#326767] bg-slate-100 dark:bg-transparent p-3 items-center text-center">
+<p class="text-slate-900 dark:text-white tracking-light text-2xl font-bold leading-tight">15</p>
+<div class="flex items-center gap-2">
+<p class="text-slate-500 dark:text-[#92c9c9] text-sm font-normal leading-normal">Sold</p>
+</div>
+</div>
+<div class="flex min-w-[111px] flex-1 basis-[fit-content] flex-col gap-2 rounded-xl border border-slate-200 dark:border-[#326767] bg-slate-100 dark:bg-transparent p-3 items-center text-center">
+<p class="text-slate-900 dark:text-white tracking-light text-2xl font-bold leading-tight">4.8 ★</p>
+<div class="flex items-center gap-2">
+<p class="text-slate-500 dark:text-[#92c9c9] text-sm font-normal leading-normal">Rating</p>
+</div>
+</div>
+</div>
+<div class="px-4 py-3">
+<div class="w-full border-t border-slate-200 dark:border-[#326767]"></div>
+</div>
+<!-- Navigation List -->
+<div class="flex flex-col w-full pb-4">
+<div class="flex items-center gap-4 bg-transparent px-4 min-h-14 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-slate-900 dark:text-white flex items-center justify-center rounded-lg bg-primary/20 shrink-0 size-10">
+<span class="material-symbols-outlined">list_alt</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-normal leading-normal flex-1 truncate">My Listings</p>
+</div>
+<div class="shrink-0">
+<div class="text-slate-400 dark:text-white flex size-7 items-center justify-center">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-transparent px-4 min-h-14 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-slate-900 dark:text-white flex items-center justify-center rounded-lg bg-primary/20 shrink-0 size-10">
+<span class="material-symbols-outlined">bookmark</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-normal leading-normal flex-1 truncate">Saved Items</p>
+</div>
+<div class="shrink-0">
+<div class="text-slate-400 dark:text-white flex size-7 items-center justify-center">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-transparent px-4 min-h-14 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-slate-900 dark:text-white flex items-center justify-center rounded-lg bg-primary/20 shrink-0 size-10">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-normal leading-normal flex-1 truncate">My Purchases</p>
+</div>
+<div class="shrink-0">
+<div class="text-slate-400 dark:text-white flex size-7 items-center justify-center">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-transparent px-4 min-h-14 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-slate-900 dark:text-white flex items-center justify-center rounded-lg bg-primary/20 shrink-0 size-10">
+<span class="material-symbols-outlined">help</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-normal leading-normal flex-1 truncate">Help &amp; Support</p>
+</div>
+<div class="shrink-0">
+<div class="text-slate-400 dark:text-white flex size-7 items-center justify-center">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-transparent px-4 min-h-14 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-slate-900 dark:text-white flex items-center justify-center rounded-lg bg-primary/20 shrink-0 size-10">
+<span class="material-symbols-outlined text-red-500">logout</span>
+</div>
+<p class="text-red-500 text-base font-normal leading-normal flex-1 truncate">Log Out</p>
+</div>
+</div>
+</div>
+</div>
+</body></html>

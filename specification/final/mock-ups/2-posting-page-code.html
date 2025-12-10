@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create New Listing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13ecec",
+            "background-light": "#f6f8f8",
+            "background-dark": "#102222",
+            "surface-light": "#ffffff",
+            "surface-dark": "#192d2d",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+    .form-input {
+      background-color: transparent;
+      border: none;
+      color: inherit;
+      padding: 0;
+      width: 100%;
+    }
+    .form-input:focus {
+        outline: none;
+        box-shadow: none;
+        border-color: transparent;
+        ring: 0;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<header class="fixed top-0 z-10 w-full bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+<div class="flex h-16 items-center justify-between p-4">
+<button class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-slate-700 dark:text-white">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+<h1 class="flex-1 text-center text-lg font-bold text-slate-900 dark:text-white">Create New Listing</h1>
+<div class="w-12"></div>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto px-4 pb-24 pt-20">
+<div class="flex flex-col gap-6">
+<div>
+<h2 class="mb-3 text-base font-bold text-slate-900 dark:text-white">Add Photos</h2>
+<div class="grid grid-cols-3 gap-3">
+<button class="flex aspect-square flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-100 dark:border-slate-700 dark:bg-slate-800/50">
+<span class="material-symbols-outlined text-3xl text-slate-500 dark:text-slate-400">add_photo_alternate</span>
+<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Add Photo</p>
+</button>
+<div class="aspect-square rounded-lg bg-slate-200 dark:bg-slate-800"></div>
+<div class="aspect-square rounded-lg bg-slate-200 dark:bg-slate-800"></div>
+</div>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-surface-light p-4 dark:bg-surface-dark">
+<div class="border-b border-slate-200 py-3 dark:border-slate-700">
+<label class="text-sm font-medium text-slate-500 dark:text-slate-400" for="item-title">Title</label>
+<input class="form-input mt-1 w-full text-base text-slate-900 placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500" id="item-title" placeholder="e.g. Vintage Armchair" type="text"/>
+</div>
+<div class="border-b border-slate-200 py-3 dark:border-slate-700">
+<label class="text-sm font-medium text-slate-500 dark:text-slate-400" for="item-description">Description</label>
+<textarea class="form-input mt-1 w-full text-base text-slate-900 placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500" id="item-description" placeholder="Add more details about your item" rows="3"></textarea>
+</div>
+<div class="border-b border-slate-200 py-3 dark:border-slate-700">
+<label class="text-sm font-medium text-slate-500 dark:text-slate-400" for="item-price">Price</label>
+<div class="mt-1 flex items-center text-base text-slate-900 dark:text-white">
+<span class="text-slate-400 dark:text-slate-500">$</span>
+<input class="form-input ml-1 w-full placeholder:text-slate-400 dark:placeholder:text-slate-500" id="item-price" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div class="py-3">
+<div class="flex items-center justify-between">
+<div>
+<label class="text-sm font-medium text-slate-500 dark:text-slate-400" for="item-category">Category</label>
+<p class="mt-1 text-base text-slate-900 dark:text-white">Furniture</p>
+</div>
+<button class="text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full rounded-full bg-primary py-4 text-center font-bold text-background-dark">Publish Listing</button>
+</div>
+</div>
+</main>
+<nav class="fixed bottom-0 z-10 w-full border-t border-slate-200/50 bg-background-light/80 dark:border-slate-800/50 dark:bg-background-dark/80 backdrop-blur-sm">
+<div class="flex h-16 items-center justify-around px-2">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">home</span>
+<p class="text-xs font-medium">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<p class="text-xs font-medium">Sell</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">chat_bubble</span>
+<p class="text-xs font-medium">Messages</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">person</span>
+<p class="text-xs font-medium">Profile</p>
+</a>
+</div>
+<div class="h-safe-area-inset-bottom bg-transparent"></div>
+</nav>
+</div>
+
+</body></html>

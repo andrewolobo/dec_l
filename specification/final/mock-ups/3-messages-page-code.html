@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Messages Page</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13ecec",
+            "background-light": "#f6f8f8",
+            "background-dark": "#102222",
+            "surface-light": "#ffffff",
+            "surface-dark": "#192d2d",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<header class="fixed top-0 z-10 w-full bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+<div class="flex h-16 items-center justify-between p-4">
+<div class="w-12"></div>
+<h1 class="flex-1 text-center text-lg font-bold text-slate-900 dark:text-white">Messages</h1>
+<button class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-slate-700 dark:text-white">
+<span class="material-symbols-outlined text-2xl">search</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto pt-16">
+<div class="flex flex-col">
+<a class="flex items-center gap-4 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800/50" href="#">
+<div class="relative h-14 w-14 flex-shrink-0">
+<img alt="Profile picture of Sarah L." class="h-full w-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPl4zdqlgeMAVYWvjNc3msEFB_Htgp_rQJF7vmpA0WZwA6pXJ4A9SzymNhyOIA8KDz0L0GYL-LWYTOGRtKu3DyYVxGUjtxKckCgR8OnFJCU2jdCWW-vErfbwpZB0JaUc_YBsOJSud3CAm_CsUH4um1JazEPfL5R8PbOwafAeCg9eJbJGdVjNimHN5yG2Wej-x_CNaMcNyZGDjtCMmR3cFzrkOIf47q2uzKxjyomSDtM9DGHi2vj7ICQq_ujdN6BAsqdbBrD_wfyDKJ"/>
+<span class="absolute bottom-0 right-0 block h-3.5 w-3.5 rounded-full border-2 border-background-light bg-green-500 dark:border-background-dark"></span>
+</div>
+<div class="flex-1 overflow-hidden">
+<div class="flex items-center justify-between">
+<p class="font-bold text-slate-900 dark:text-white">Sarah L.</p>
+<p class="text-xs text-slate-400 dark:text-slate-500">10m ago</p>
+</div>
+<div class="flex items-center justify-between gap-2">
+<p class="truncate text-sm text-slate-500 dark:text-slate-400">Great, I can meet you tomorrow.</p>
+<span class="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-background-dark">1</span>
+</div>
+</div>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800/50" href="#">
+<div class="relative h-14 w-14 flex-shrink-0">
+<img alt="Profile picture of Mark J." class="h-full w-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZqQQiMYSk2ySAkTiLAh77FNBnQqBsNsAsQU87PqURocMT5nOBc8WHq7eWRHyaWZI0_1X1_miV27VzcUJrddslBg9hGcnOeihAYsNsypaDHnprmzmUTwCjPenlI3lueWJzeaKxi07Tg7tkuZgPdJBQtReM69V-ZKgasAUyookdBQImVwenoav6pj2NXD2hHRnm2qiFxd87koRrSOiCveur2uDuNlwS2P4bgAgphfBsWsJ2Uvv97xBwc8UqZ0UJ9-PGjtvImmTAl7xZ"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<div class="flex items-center justify-between">
+<p class="font-bold text-slate-900 dark:text-white">Mark J.</p>
+<p class="text-xs text-slate-400 dark:text-slate-500">1h ago</p>
+</div>
+<div class="flex items-center justify-between gap-2">
+<p class="truncate text-sm text-slate-500 dark:text-slate-400">Is the vintage armchair still available?</p>
+</div>
+</div>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800/50" href="#">
+<div class="relative h-14 w-14 flex-shrink-0">
+<img alt="Profile picture of Emily R." class="h-full w-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3tN9AUER5NKuiNywBJqcbwJK9N90DxdO5FwWrxgWc74T66bSfvYnQewmBDGfO_mhqzN37JQ9exONxOqCSO9VHH6P9q5NFZrhfhW0thb55jFQdEIZfluBCg0FMQScGv5QRo1QCWFF9giNTgnQObjvQZ4BiwKKdzM5NjXp8A9wxObRzZ1UW0d9PeTt-TsIDQoR762kLUSHYM1RDKyXDc78USCwkmgE5eU0qxWYBBAm0vRZjW2UWA1Ct5AuxbEuOv8PYjkbBy2P2ODe6"/>
+<span class="absolute bottom-0 right-0 block h-3.5 w-3.5 rounded-full border-2 border-background-light bg-green-500 dark:border-background-dark"></span>
+</div>
+<div class="flex-1 overflow-hidden">
+<div class="flex items-center justify-between">
+<p class="font-bold text-slate-900 dark:text-white">Emily R.</p>
+<p class="text-xs text-slate-400 dark:text-slate-500">Yesterday</p>
+</div>
+<div class="flex items-center justify-between gap-2">
+<p class="truncate text-sm font-medium text-slate-900 dark:text-white">Perfect! See you then.</p>
+</div>
+</div>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800/50" href="#">
+<div class="relative h-14 w-14 flex-shrink-0">
+<img alt="Profile picture of David P." class="h-full w-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB35bToPfZyOkBRZnJi59N8zzy1PJYMZyFPwBwxlVNjQqMxYMvgFAPwqNe5z0gHc9FyeWwmCO9d1gc3v3esJILQ4mofiJb25-etCqP8MVbMmqIyFivRXXF0gHwIglCqXibToDedzWDrPgS4i-scBqDFdYYSuw9O5FWhXjh5cJc2eyRTrBypeCSqJRPq6BX6AN6XuDsGdvG1YTk1c4BaFhd6zT9d9AS8myXeX8wd6_2007BLgbsSblQ4uF8RkLM8bbsETXy3a6bnAanE"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<div class="flex items-center justify-between">
+<p class="font-bold text-slate-900 dark:text-white">David P.</p>
+<p class="text-xs text-slate-400 dark:text-slate-500">2d ago</p>
+</div>
+<div class="flex items-center justify-between gap-2">
+<p class="truncate text-sm text-slate-500 dark:text-slate-400">You're welcome!</p>
+</div>
+</div>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800/50" href="#">
+<div class="relative h-14 w-14 flex-shrink-0">
+<img alt="Profile picture of Chloe B." class="h-full w-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmKScMQ1tvDsT1vv9GvZnc3k9Dujup74s-4RdaylDCau-QejeRKmVa512TY_o_LsH68amqqtZWe0kZOlr5sa4lQbuYEOw-tnsjBjX86bgqQLWjJKFhK2rRhQSZHy3VIC5qIueO-pGPPan3GbkNlw8FyW15tZITLmrcncwsWoEkgTNObBIuATumxdoEEp61PIZt539dgSmayFsVyHEENYzR8P1kuaUe_HWrLDcbc-mo2U_INNBaA4JHO7Ikka_EF5wtxHqInMbEnYZO"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<div class="flex items-center justify-between">
+<p class="font-bold text-slate-900 dark:text-white">Chloe B.</p>
+<p class="text-xs text-slate-400 dark:text-slate-500">Mar 15</p>
+</div>
+<div class="flex items-center justify-between gap-2">
+<p class="truncate text-sm text-slate-500 dark:text-slate-400">Can you do $50 for the mirror?</p>
+</div>
+</div>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800/50" href="#">
+<div class="relative h-14 w-14 flex-shrink-0">
+<img alt="Profile picture of James K." class="h-full w-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFpu5K6WZNxD3d6UhVM0OjWE-cXxpjcHpCCUaU-Dclp3DneL2CWR0mwTq8Jgezcaj_zLHjcup2vKCZyNquSaa2xa9sFgb86xUoarmpWYIKaBzpEbm_Gd7A61W-PE30uCfJykDDHqkKUop0_lHHlKCo9vpOhVLI-clpdPQqhEI_2SCuP6MJU74d0EjMS5wkvhfMqpP0uFoJCGOzWtd5tLl4mYq-36_Oe6bCWGloJVTqT4Sarm_6qZ9EZPFACfGom0kEi6h6AlwYhq8V"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<div class="flex items-center justify-between">
+<p class="font-bold text-slate-900 dark:text-white">James K.</p>
+<p class="text-xs text-slate-400 dark:text-slate-500">Mar 12</p>
+</div>
+<div class="flex items-center justify-between gap-2">
+<p class="truncate text-sm font-medium text-slate-900 dark:text-white">Item received, thank you!</p>
+</div>
+</div>
+</a>
+</div>
+</main>
+<nav class="fixed bottom-0 z-10 w-full border-t border-slate-200/50 bg-background-light/80 dark:border-slate-800/50 dark:bg-background-dark/80 backdrop-blur-sm">
+<div class="flex h-16 items-center justify-around px-2">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">home</span>
+<p class="text-xs font-medium">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">add_circle</span>
+<p class="text-xs font-medium">Sell</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<p class="text-xs font-medium">Messages</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">person</span>
+<p class="text-xs font-medium">Profile</p>
+</a>
+</div>
+<div class="h-safe-area-inset-bottom bg-transparent"></div>
+</nav>
+</div>
+</body></html>

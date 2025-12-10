@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chat Interface</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13ecec",
+            "background-light": "#f6f8f8",
+            "background-dark": "#102222",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "Noto Sans", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark">
+<div class="relative mx-auto flex h-screen w-full max-w-[480px] flex-col font-display group/design-root overflow-hidden">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-white/10 bg-background-light/80 p-4 pb-3 backdrop-blur-sm dark:bg-background-dark/80">
+<button class="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full text-white">
+<span class="material-symbols-outlined text-2xl text-slate-800 dark:text-white">arrow_back</span>
+</button>
+<div class="flex flex-1 items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0" data-alt="Profile picture of Jane Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAAd5xK5_3M6E7HABWizF7QovTIE0FkD1FO7KC_p2Ffp9tcUZeMAueOuQb3ipL8e-pBfZeWOscfOnQXooPuEwBzszgdmik0JV86D8ps88Gz-G7ghxqGkpYheJNltn4Vl8s0IsKHocDCbyq02IYI3HFDog00_QgkegrPpQNX-ndJgi1UgtJd6JbAt4yLR5-_TzMv-kXVfANhdqJ5R63aqIbh7XIeuhOwK5YhWFhQmICe1nmVEw4JfJsc-339YSW7tL7kUADcOu408SUk");'></div>
+<div class="flex flex-col">
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] text-slate-800 dark:text-white">Jane Doe</h2>
+<p class="text-sm font-normal text-slate-500 dark:text-[#92c9c9]">Online</p>
+</div>
+</div>
+<button class="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full text-white">
+<span class="material-symbols-outlined text-2xl text-slate-800 dark:text-white">more_vert</span>
+</button>
+</div>
+<!-- Chat Messages -->
+<div class="flex flex-1 flex-col overflow-y-auto p-4">
+<div class="flex flex-col gap-2">
+<div class="self-center text-xs text-slate-500 dark:text-[#92c9c9] my-4 px-3 py-1 bg-slate-200/50 dark:bg-white/10 rounded-full">Today</div>
+<!-- Received Message -->
+<div class="flex items-end gap-3 self-start max-w-[85%]">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8 shrink-0" data-alt="Profile picture of Jane Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDx30fOymNVXiQ7_1TJrds26oZlefMLzwVKPED8eRU_8TEPsEZ1kO7qMGmp_F-b9vIso4bGQcVtwIduWelzY1OcTjFNxqdWWmXEq5YE2KrfPPg-0K5l-PoRNUoNmO9udU2NEnZXslY2u85uqQ5sBDSa38ZrpIVnqVjH6XDxU0nN5xZJ0QIAelqM1usPDxoMIvOdR5cc4EkERBqNTbRTFrT-5t5tfYl9MgOlFIVASulyncpy9AtQhOyRoNGU9vkDzlfrVhDkPLaRAKO-");'></div>
+<div class="flex flex-col gap-1 items-start">
+<p class="text-base font-normal leading-normal flex rounded-lg rounded-bl-none px-4 py-3 bg-slate-200 text-slate-800 dark:bg-[#234848] dark:text-white">Hi! Is the 'Vintage Armchair' still available?</p>
+<p class="text-xs text-slate-500 dark:text-[#92c9c9] pl-1">10:30 AM</p>
+</div>
+</div>
+<!-- Sent Message -->
+<div class="flex items-end gap-3 self-end max-w-[85%]">
+<div class="flex flex-col gap-1 items-end">
+<p class="text-base font-normal leading-normal flex rounded-lg rounded-br-none px-4 py-3 bg-primary text-background-dark">Yes, it is!</p>
+<div class="flex items-center gap-1.5 pr-1">
+<p class="text-xs text-slate-500 dark:text-[#92c9c9]">10:31 AM</p>
+<span class="material-symbols-outlined !text-base text-primary">done_all</span>
+</div>
+</div>
+</div>
+<!-- Received Message -->
+<div class="flex items-end gap-3 self-start max-w-[85%]">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8 shrink-0" data-alt="Profile picture of Jane Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAHofkr6XcF27lm2gQU2jpVTwNAq7DPQkH-PPHEdPb5MWecrnqV28YkNZ6VBKyPi-QVNUvHeRiLPLvIFjpViguJZXzzuBz6ndryJ6_tqmHA4lrn5EPYV6DN1ee1Z84NkrgvqClyrqWvC1sslm_k8IKs1KI251dyqP9-7nkx_ndvg5fgLj3g1WUcfOPPNGRi_Wbe5rPPfaUwND92IZ3BjZMsi341oiQWmqFHvFuwnU81k_hV6uUn4fe6sqxadmaSZ1NFM3L2iofub0jf");'></div>
+<div class="flex flex-col gap-1 items-start">
+<p class="text-base font-normal leading-normal flex rounded-lg rounded-bl-none px-4 py-3 bg-slate-200 text-slate-800 dark:bg-[#234848] dark:text-white">Great! Could I come see it this weekend?</p>
+<p class="text-xs text-slate-500 dark:text-[#92c9c9] pl-1">10:32 AM</p>
+</div>
+</div>
+<!-- Sent Message -->
+<div class="flex items-end gap-3 self-end max-w-[85%]">
+<div class="flex flex-col gap-1 items-end">
+<p class="text-base font-normal leading-normal flex rounded-lg rounded-br-none px-4 py-3 bg-primary text-background-dark">Sure, Saturday afternoon works for me. Does 2 PM sound good?</p>
+<div class="flex items-center gap-1.5 pr-1">
+<p class="text-xs text-slate-500 dark:text-[#92c9c9]">10:33 AM</p>
+<span class="material-symbols-outlined !text-base text-slate-500 dark:text-[#92c9c9]">done</span>
+</div>
+</div>
+</div>
+<!-- Typing Indicator -->
+<div class="flex items-end gap-3 self-start max-w-[85%]">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8 shrink-0" data-alt="Profile picture of Jane Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDzir0-wbigq9JqKl3WWvjx6wkiqHfIq2Sy7u_glXhqKRZvtEkmyvI5hyP9uhksu3blTqMiW3PI8U5en1sEEo7qxAcbg_aYBvLIawr9rhYsAYDMPNLpBEJkaqTwm2K_dxUtsJk-6kceoV5MmQ8RPvZ17e-xZPBJF3WF1vJu_20irpvGA5Uo5qhesAyly5Nfb1ZfJxzvVpFSb88rKTxl8_XJVTpNpJpbL9ZrUKJcfFe_sflJz8VFSXQj0Yw_P1l4gCWLFwbnF4-KolWV");'></div>
+<div class="flex flex-col gap-1 items-start">
+<div class="flex items-center gap-1.5 rounded-lg rounded-bl-none px-4 py-3 bg-slate-200 text-slate-800 dark:bg-[#234848] dark:text-white">
+<div class="size-2 animate-[pulse_1.5s_cubic-bezier(0.4,0,0.6,1)_infinite] rounded-full bg-slate-400 dark:bg-slate-500"></div>
+<div class="size-2 animate-[pulse_1.5s_cubic-bezier(0.4,0,0.6,1)_infinite_0.2s] rounded-full bg-slate-400 dark:bg-slate-500"></div>
+<div class="size-2 animate-[pulse_1.5s_cubic-bezier(0.4,0,0.6,1)_infinite_0.4s] rounded-full bg-slate-400 dark:bg-slate-500"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Composer -->
+<div class="sticky bottom-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm pt-2">
+<div class="flex items-center gap-3 p-4">
+<label class="flex h-12 flex-1 items-stretch">
+<div class="flex w-full flex-1 items-stretch rounded-lg">
+<input class="form-input h-full w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg border-none bg-slate-200 text-base font-normal leading-normal text-slate-800 placeholder:text-slate-500 focus:outline-0 focus:ring-0 dark:bg-[#234848] dark:text-white dark:placeholder:text-[#92c9c9] px-4" placeholder="Type a message..." value="Perfect, see you then!"/>
+</div>
+</label>
+<button class="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary text-background-dark">
+<span class="material-symbols-outlined text-2xl">send</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

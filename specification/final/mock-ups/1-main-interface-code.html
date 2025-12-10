@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Feed Interface</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ecec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#102222",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Top App Bar -->
+<header class="fixed top-0 z-10 w-full bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+<div class="flex items-center p-4">
+<div class="flex size-12 shrink-0 items-center">
+<!-- Placeholder for logo if needed -->
+</div>
+<h1 class="flex-1 text-center text-lg font-bold text-slate-900 dark:text-white">Marketplace</h1>
+<div class="flex w-12 items-center justify-end gap-2">
+<button class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-slate-700 dark:text-white">
+<span class="material-symbols-outlined text-2xl">search</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Feed -->
+<main class="flex-1 overflow-y-auto pb-24 pt-20">
+<div class="flex flex-col gap-6">
+<!-- Item Card 1 -->
+<div class="flex flex-col bg-background-light dark:bg-background-dark">
+<div class="flex items-center gap-3 px-4 pb-3">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Portrait of Jane Doe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOdNJFMksjBlEU0GV8PjthkW-aPV_nqBfwue_6r7GjTPRbtItP6iymwGXHcakn15IO1bOQO2DacVDE3h3Ccisj6lu6dT_eaVJAuPj3JN9o_3im-5EM88_YcTybFaI26rWjlvvC-6QNrntiJJHqdcI8ncHgZR10DLDjKKxRPAd69sUzFgAsn-95pMVyIVeBVDHgKGsLpw-pJbYqpuxiz9oYIsm1U2FPqsDVjomB5-9GGg4OG-j1vb_arPXPayW2_iwUYttgvZnCCqd_"/>
+<div class="flex flex-col">
+<p class="text-sm font-bold leading-tight text-slate-800 dark:text-white">jane.doe</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">San Francisco, CA</p>
+</div>
+</div>
+<div class="relative w-full">
+<div class="aspect-square w-full bg-cover bg-center" data-alt="Mid-century modern armchair in a well-lit room." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCZrZCGx9h7JINyV7Yjk5sacCNPnA0e5-P8yepNKBD5Td0OPwHI55g3VvKXx3r39zw2Z0jIpZxyXySh88I2ijrtMt9jqphFDSx-A2c3Etg7R6eQs71qrY9z3nBxbkwlYq837Q6r1ecMg3Mr0sRZGFWgjBA6wo4qgICI2doJ26TMGqIWbfqlg0HPyXm3XpRBVjei7XCYpz6ktHrQyizcgezQl9Em_8clEbk3MCEsYYqpp2YEoZEb8oU3GFFZCnKzP5OKymM79KoJEPhH');"></div>
+<div class="absolute bottom-4 right-4 flex gap-1.5">
+<div class="h-1.5 w-1.5 rounded-full bg-white"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/50"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/50"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2 px-4 pt-4">
+<div class="flex items-start justify-between gap-4">
+<h2 class="text-lg font-bold leading-tight text-slate-900 dark:text-white">Mid-Century Modern Armchair</h2>
+<button class="mt-1 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-2xl">bookmark</span>
+</button>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Vintage armchair in great condition. Minor scuffs on the left leg. Perfect for a reading nook...</p>
+<p class="text-xl font-extrabold text-primary">$250</p>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="flex flex-col bg-background-light dark:bg-background-dark">
+<div class="flex items-center gap-3 px-4 pb-3">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Portrait of John Smith" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0WSYvn9xX4yb0FXrePzesum9ncIy1hNqw3HkBaJm1sr8kcH770ufBMsL0vbUJ_S6v6jElWlCg39Tsq45CtFzCDdhEJ76t6yvb8J1Ro-IdVtJ97c3aImUDY5EEqVnijcxCs7OVyiOROBSgG8aBiJBPZdWQK1MCoyZaflySe5dmEJxI6DBZ6oNRauVsdwr0LdPUu-8PlmhA2z91hfj4NaIpo0EEQGE5PAuWIjTp5MJ-KjUW-srJy0mAM7ON4hgkIbMaSPb5PqMi-K_L"/>
+<div class="flex flex-col">
+<p class="text-sm font-bold leading-tight text-slate-800 dark:text-white">john.smith</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">New York, NY</p>
+</div>
+</div>
+<div class="relative w-full">
+<div class="aspect-square w-full bg-cover bg-center" data-alt="A tall vintage wooden bookshelf filled with old books." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAVJPsxr9fudl28-EcEuobfRgWP1n5o2Yb536twwf-XoyvLjGHh3wxrTJvce45jru8QfKMQe0qF42nzJDnwxzpcWjiuphsDrDn6CoVWb0SpDa--2UpZ401Inr34gLly5FdZwbgJN1LwE9TX0G-pKfyLGyizUUGWXS-sTfn54oubRbm3cn2-KkDkan9zKfdx48pte8dpVUmeK5mvp7CB-TDQYFSeYwKOGI9indgF0FkhkSd0Gea4lHwQFdn-QEdQt21BRr4BlC60K0oN');"></div>
+<div class="absolute bottom-4 right-4 flex gap-1.5">
+<div class="h-1.5 w-1.5 rounded-full bg-white"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/50"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2 px-4 pt-4">
+<div class="flex items-start justify-between gap-4">
+<h2 class="text-lg font-bold leading-tight text-slate-900 dark:text-white">Vintage Wooden Bookshelf</h2>
+<button class="mt-1 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Solid oak bookshelf, 5 shelves. Perfect for any living space or office.</p>
+<p class="text-xl font-extrabold text-primary">$150</p>
+</div>
+</div>
+<!-- Item Card 3 -->
+<div class="flex flex-col bg-background-light dark:bg-background-dark">
+<div class="flex items-center gap-3 px-4 pb-3">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Portrait of Sarah P" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmt2hwBNb2FcnViNB4T1xhr-5MyHrcZ6AbNSsvTMwFzof2s4-WT6QxUplzGUiRvLn3YzYZav_bHWWeoRmKsbryGxG0dZ9eYs65fPoF6Ru7MvEJrwGVdMvWQUulpDCvt_2z4rdE-ZVOAMO5VqN3dE7ipQM8Vx46kJ_Fbnmy8-G5SsKL-buF8ZzgesUobqupyaV_Qs-f8llO4gLZKKicLGlB0RTnHYItghwJnguK2ypPWqglegQw1RRf2otN2nc4f2MsZgOk5Z_V9v_V"/>
+<div class="flex flex-col">
+<p class="text-sm font-bold leading-tight text-slate-800 dark:text-white">sarah_p</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Chicago, IL</p>
+</div>
+</div>
+<div class="relative w-full">
+<div class="aspect-square w-full bg-cover bg-center" data-alt="A sleek, black designer floor lamp against a plain wall." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBvGcpWM84-5-EAelguJHWYUEo5IPY3qajCDkYXRSr9TJs0UGajV2i_bKiHYnhL1bVerORZSRn2UstJiSSjppcAWKQmbXkL-ylFNmUNPi0N2XIjJuleLe6PJNn-OOnZyU40BZl9hPap13D9NsYxQHgn3A9Ah9gpi4nCJ7KCLLk4T5eZDzUqRoCbBeD9-bajIAA8GcIw23gw-z7Xf4ySxOq1_vMWeABlgTBkHewGPjKFt0nZXgLEZ7ewko3fJg5pDCg72lg-tqojNL8h');"></div>
+<div class="absolute bottom-4 right-4 flex gap-1.5">
+<div class="h-1.5 w-1.5 rounded-full bg-white"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/50"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/50"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/50"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2 px-4 pt-4">
+<div class="flex items-start justify-between gap-4">
+<h2 class="text-lg font-bold leading-tight text-slate-900 dark:text-white">Designer Floor Lamp</h2>
+<button class="mt-1 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-2xl">bookmark</span>
+</button>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Sleek, minimalist floor lamp with a warm LED bulb. Adds a modern touch.</p>
+<p class="text-xl font-extrabold text-primary">$85</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 z-10 w-full border-t border-slate-200/50 bg-background-light/80 dark:border-slate-800/50 dark:bg-background-dark/80 backdrop-blur-sm">
+<div class="flex h-16 items-center justify-around px-2">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">home</span>
+<p class="text-xs font-medium">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">add_circle</span>
+<p class="text-xs font-medium">Sell</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">chat_bubble</span>
+<p class="text-xs font-medium">Messages</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400" href="#">
+<span class="material-symbols-outlined text-2xl">person</span>
+<p class="text-xs font-medium">Profile</p>
+</a>
+</div>
+<!-- Safe area padding for iOS -->
+<div class="h-safe-area-inset-bottom bg-transparent"></div>
+</nav>
+</div>
+</body></html>

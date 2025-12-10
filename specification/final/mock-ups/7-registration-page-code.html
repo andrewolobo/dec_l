@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registration Page</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ecec",
+              "background-light": "#f6f8f8",
+              "background-dark": "#121212",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex-grow flex flex-col justify-center">
+<!-- Logo Placeholder -->
+<div class="flex justify-center pt-8 pb-6">
+<span class="material-symbols-outlined text-white text-5xl">
+                sell
+            </span>
+</div>
+<!-- TopAppBar -->
+<h2 class="text-white text-2xl font-bold leading-tight tracking-[-0.015em] text-center px-4">Create your account</h2>
+<!-- ButtonGroup for OAuth -->
+<div class="flex justify-center w-full">
+<div class="flex w-full flex-1 gap-3 max-w-md flex-col items-stretch px-4 py-8">
+<button class="flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-5 bg-[#2D2D2D] text-white text-base font-bold leading-normal tracking-[0.015em] w-full gap-3">
+<img alt="Google logo" class="w-6 h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUY-I7GiccGGN63r2PGH2fxocC8u-x56hiS05iI0UxkWm0JUecLQI77PypW8Pp6Gl75J-mbdYM3Kk-LfQ4vFfM1H75txh0eunqEYrX35E4GuoZZjyIvigjgOLnnYkppWruh05mNSPmd9h0Ly_5wz4d2vkpbX9f_bKW5QGRkTHzw28LUtGcqPK8zMQUp5-3FdS-7wBKd-4K5CmYWGfNNAldfCkJihaQIHHhQSUkBbNLplcl2LxUGVOjojR8ep-V0gfM7MEIPL-GRVt8"/>
+<span class="truncate">Sign up with Google</span>
+</button>
+<button class="flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-5 bg-[#2D2D2D] text-white text-base font-bold leading-normal tracking-[0.015em] w-full gap-3">
+<img alt="Microsoft logo" class="w-6 h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXG9AKzw5s_T7CXKmyTExyqOURQE0-vRfWmZarHTcPK_4Pl3aqw4xZnTybibKW3TIbX7P0LDxPdg31EC-U6vDNzMW3ThMbgISpn_KPzCUt2GwNWj1MJGRPOyq9OflCRoGcUDNAeddVnpV9J0tcHrJhCGmqohF4bEe75J4oKILxLJUk57_GtObl-WvjQPnNH-IeDmTOEHny80EMrHyXtGwcYH4K_dhM6I6HiijRVXCnh9ERl-a_TExfavmo6M7meC8kYiBOJvWTiNNe"/>
+<span class="truncate">Sign up with Microsoft</span>
+</button>
+</div>
+</div>
+<!-- MetaText (Divider) -->
+<p class="text-gray-400 text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center">or</p>
+<!-- Email TextField -->
+<div class="flex justify-center w-full">
+<div class="flex max-w-md w-full flex-wrap items-end gap-4 px-4 py-3">
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-white text-base font-medium leading-normal pb-2">Email Address</p>
+<div class="flex w-full flex-1 items-stretch rounded-lg">
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-2 focus:ring-primary border-none bg-[#2D2D2D] focus:border-none h-14 placeholder:text-gray-500 p-4 text-base font-normal leading-normal" placeholder="Email Address" type="email" value=""/>
+</div>
+</label>
+</div>
+</div>
+<!-- Password TextField -->
+<div class="flex justify-center w-full">
+<div class="flex max-w-md w-full flex-wrap items-end gap-4 px-4 py-3">
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-white text-base font-medium leading-normal pb-2">Password</p>
+<div class="flex w-full flex-1 items-stretch rounded-lg">
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-2 focus:ring-primary border-none bg-[#2D2D2D] focus:border-none h-14 placeholder:text-gray-500 p-4 text-base font-normal leading-normal" placeholder="Password" type="password" value=""/>
+</div>
+</label>
+</div>
+</div>
+<!-- Spacer -->
+<div class="h-5"></div>
+<!-- Sign Up Button -->
+<div class="flex justify-center w-full">
+<div class="flex flex-1 gap-3 max-w-md flex-col items-stretch px-4 py-3">
+<button class="flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em] w-full">
+<span class="truncate">Sign Up</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="flex flex-col items-center justify-center gap-4 px-4 pb-12 pt-6 text-center">
+<p class="text-gray-400 text-sm">Already have an account? <a class="font-bold text-primary" href="#">Log In</a></p>
+<p class="text-gray-500 text-xs max-w-xs">By signing up, you agree to our <a class="font-bold text-primary" href="#">Terms of Service</a> and <a class="font-bold text-primary" href="#">Privacy Policy</a>.</p>
+</div>
+</div>
+</body></html>

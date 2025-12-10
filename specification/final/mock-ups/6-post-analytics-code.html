@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13ecec",
+            "background-light": "#f6f8f8",
+            "background-dark": "#102222",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "Noto Sans", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style type="text/tailwindcss">
+    body {
+      min-height: max(884px, 100dvh);
+    }
+    .chart-bar {
+      --bar-height: 0%;
+      height: var(--bar-height);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col font-display group/design-root overflow-x-hidden">
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
+<div class="flex w-12 items-center justify-start">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-transparent text-slate-900 dark:text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<span class="material-symbols-outlined text-2xl">arrow_back_ios_new</span>
+</button>
+</div>
+<h1 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Post Analytics</h1>
+<div class="flex w-12 items-center justify-end">
+</div>
+</div>
+<div class="flex flex-col gap-4 p-4">
+<label class="text-slate-900 dark:text-white text-base font-semibold leading-normal">Select a listing</label>
+<div class="relative w-full">
+<button class="flex w-full items-center justify-between rounded-xl border border-slate-200 dark:border-[#326767] bg-slate-100 dark:bg-[#234848] p-3">
+<div class="flex items-center gap-3">
+<div class="h-14 w-14 shrink-0 rounded-lg bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDYB6nn5GjTGY_i7V2NGGBzkntLQB8RgchNAxEjziAHD6KOFJF-TKgV4YBXnWVa4kTH7utflVizlWGkPM78rxDytwuZdJkaUUF9d1ofRkukhg-zVCU2cEWotg7XM4XHKAouq8SitQOEJTc5LExK5DTrIYg5Pe74ZpeoP3OOxoUvBSAzVdsyB2l_dDVt3GGRlMesQ7R4Jo6jD0qCRG-3hDaOLfVY9J08U_0lIDyegCfuuJFzQLZNLDNnDva3qx-Xy6ZDL_zyaauP40Ro");'></div>
+<div class="flex flex-col items-start text-left">
+<p class="text-slate-900 dark:text-white font-semibold text-base">Vintage Leather Sofa</p>
+<p class="text-slate-500 dark:text-[#92c9c9] text-sm">Active</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-500 dark:text-[#92c9c9]">unfold_more</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-4 px-4 py-3">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Key Metrics</h2>
+<div class="grid grid-cols-2 gap-3">
+<div class="flex flex-col gap-2 rounded-xl border border-slate-200 dark:border-[#326767] bg-slate-100 dark:bg-transparent p-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">visibility</span>
+<p class="text-slate-500 dark:text-[#92c9c9] text-sm font-normal leading-normal">Views</p>
+</div>
+<p class="text-slate-900 dark:text-white tracking-light text-3xl font-bold leading-tight">1,284</p>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-green-500">arrow_upward</span>
+<p class="text-sm font-medium text-green-500">12%</p>
+<p class="text-slate-400 dark:text-slate-500 text-sm">vs last week</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl border border-slate-200 dark:border-[#326767] bg-slate-100 dark:bg-transparent p-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">favorite</span>
+<p class="text-slate-500 dark:text-[#92c9c9] text-sm font-normal leading-normal">Saves</p>
+</div>
+<p class="text-slate-900 dark:text-white tracking-light text-3xl font-bold leading-tight">72</p>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-green-500">arrow_upward</span>
+<p class="text-sm font-medium text-green-500">8%</p>
+<p class="text-slate-400 dark:text-slate-500 text-sm">vs last week</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl border border-slate-200 dark:border-[#326767] bg-slate-100 dark:bg-transparent p-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">chat_bubble</span>
+<p class="text-slate-500 dark:text-[#92c9c9] text-sm font-normal leading-normal">Messages</p>
+</div>
+<p class="text-slate-900 dark:text-white tracking-light text-3xl font-bold leading-tight">15</p>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-red-500">arrow_downward</span>
+<p class="text-sm font-medium text-red-500">3%</p>
+<p class="text-slate-400 dark:text-slate-500 text-sm">vs last week</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl border border-slate-200 dark:border-[#326767] bg-slate-100 dark:bg-transparent p-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">ads_click</span>
+<p class="text-slate-500 dark:text-[#92c9c9] text-sm font-normal leading-normal">Clicks</p>
+</div>
+<p class="text-slate-900 dark:text-white tracking-light text-3xl font-bold leading-tight">256</p>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-green-500">arrow_upward</span>
+<p class="text-sm font-medium text-green-500">15%</p>
+<p class="text-slate-400 dark:text-slate-500 text-sm">vs last week</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 px-4 py-3">
+<div class="flex items-center justify-between">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Performance</h2>
+<div class="flex items-center gap-2 rounded-lg bg-slate-200 dark:bg-[#234848] p-1">
+<button class="rounded-md px-3 py-1 text-xs font-bold bg-white dark:bg-[#326767] text-slate-900 dark:text-white">Week</button>
+<button class="rounded-md px-3 py-1 text-xs font-bold text-slate-500 dark:text-[#92c9c9]">Month</button>
+</div>
+</div>
+<div class="flex h-48 w-full flex-col justify-end gap-2 rounded-xl border border-slate-200 dark:border-[#326767] bg-slate-100 dark:bg-transparent p-4">
+<div class="flex h-full w-full items-end justify-between px-2">
+<div class="chart-bar w-4 rounded-full bg-primary" style="--bar-height: 40%;"></div>
+<div class="chart-bar w-4 rounded-full bg-primary" style="--bar-height: 60%;"></div>
+<div class="chart-bar w-4 rounded-full bg-primary" style="--bar-height: 50%;"></div>
+<div class="chart-bar w-4 rounded-full bg-primary" style="--bar-height: 75%;"></div>
+<div class="chart-bar w-4 rounded-full bg-primary" style="--bar-height: 65%;"></div>
+<div class="chart-bar w-4 rounded-full bg-primary" style="--bar-height: 85%;"></div>
+<div class="chart-bar w-4 rounded-full bg-primary" style="--bar-height: 95%;"></div>
+</div>
+<div class="flex w-full justify-between border-t border-slate-200 dark:border-[#326767] pt-2 text-center text-xs text-slate-500 dark:text-[#92c9c9]">
+<span>Mon</span>
+<span>Tue</span>
+<span>Wed</span>
+<span>Thu</span>
+<span>Fri</span>
+<span>Sat</span>
+<span>Sun</span>
+</div>
+</div>
+</div>
+<div class="p-4 mt-auto sticky bottom-0 bg-background-light dark:bg-background-dark">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-primary text-[#112222] text-base font-bold leading-normal tracking-[0.015em] w-full">
+<span class="material-symbols-outlined mr-2">rocket_launch</span>
+<span class="truncate">Promote Listing</span>
+</button>
+</div>
+</div>
+
+</body></html>
