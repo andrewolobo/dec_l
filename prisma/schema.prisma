@@ -25,6 +25,9 @@ model User {
   oauthProviderId   String?   @db.NVarChar(255) @map("OAuthProviderId")
   profilePictureUrl String?   @db.NVarChar(500) @map("ProfilePictureURL")
   location          String?   @db.NVarChar(255) @map("Location")
+  bio               String?   @db.NVarChar(500) @map("Bio")
+  isEmailVerified   Boolean   @default(false) @map("IsEmailVerified")
+  isPhoneVerified   Boolean   @default(false) @map("IsPhoneVerified")
   isActive          Boolean   @default(true) @map("IsActive")
   isAdmin           Boolean   @default(false) @map("IsAdmin")
   createdAt         DateTime  @default(now()) @map("CreatedAt") @db.DateTime2

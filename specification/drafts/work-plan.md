@@ -24,3 +24,7 @@ API endpoints,
 - feed page
 - create post page
 - profile page
+
+# Step 3 - Develop Authentication
+
+Use passportJS for user Oauth authentication
