@@ -85,6 +85,3 @@ export class PostImageRepository extends BaseRepository<PostImage> {
     return prisma.$transaction(updates);
   }
 }
-
-// Export singleton instance
-export const postImageRepository = new PostImageRepository();

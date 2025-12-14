@@ -75,7 +75,7 @@ export class AuthService {
             fullName: user.fullName,
             emailAddress: user.email,
             profilePictureUrl: user.profilePictureUrl || undefined,
-            isEmailVerified: false, // Not in schema yet
+            isEmailVerified: user.isEmailVerified,
           },
           tokens,
         },
@@ -142,7 +142,7 @@ export class AuthService {
             fullName: user.fullName,
             emailAddress: user.email,
             profilePictureUrl: user.profilePictureUrl || undefined,
-            isEmailVerified: false, // Not in schema yet
+            isEmailVerified: user.isEmailVerified,
           },
           tokens,
         },
@@ -186,7 +186,7 @@ export class AuthService {
       let user = await userRepository.findByOAuth(data.provider, userInfo.id);
 
       if (!user) {
-        // Create new user
+        // Create new user with email pre-verified for OAuth
         user = await userRepository.create({
           email: userInfo.email,
           phoneNumber: "", // OAuth users may not have phone
@@ -194,6 +194,7 @@ export class AuthService {
           profilePictureUrl: userInfo.picture,
           oauthProvider: data.provider,
           oauthProviderId: userInfo.id,
+          isEmailVerified: true, // OAuth emails are pre-verified
         });
       }
 
@@ -212,7 +213,7 @@ export class AuthService {
             fullName: user.fullName,
             emailAddress: user.email,
             profilePictureUrl: user.profilePictureUrl || undefined,
-            isEmailVerified: true, // OAuth emails are pre-verified
+            isEmailVerified: user.isEmailVerified,
           },
           tokens,
         },

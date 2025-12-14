@@ -300,6 +300,7 @@ describe("AuthService", () => {
       const oauthUser = createMockUser({
         oauthProvider: "Google",
         oauthProviderId: "google-123",
+        isEmailVerified: true, // OAuth users have verified emails
       });
       const oauthData = {
         provider: "Google" as const,
