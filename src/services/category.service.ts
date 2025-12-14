@@ -25,7 +25,6 @@ export class CategoryService {
           iconUrl: undefined, // Not in schema yet
           postCount: cat._count.posts,
           createdAt: cat.createdAt,
-          updatedAt: cat.createdAt,
         })
       );
 
@@ -82,7 +81,6 @@ export class CategoryService {
           iconUrl: undefined, // Not in schema yet
           postCount: categoryWithCount?._count?.posts || 0,
           createdAt: category.createdAt,
-          updatedAt: category.createdAt,
         },
       };
     } catch (error) {
@@ -134,7 +132,6 @@ export class CategoryService {
           iconUrl: data.iconUrl,
           postCount: 0,
           createdAt: category.createdAt,
-          updatedAt: category.createdAt,
         },
       };
     } catch (error) {
@@ -206,7 +203,6 @@ export class CategoryService {
           iconUrl: data.iconUrl,
           postCount: categoryWithCount?._count?.posts || 0,
           createdAt: updatedCategory.createdAt,
-          updatedAt: updatedCategory.createdAt,
         },
       };
     } catch (error) {

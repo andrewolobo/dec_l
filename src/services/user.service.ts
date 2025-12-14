@@ -41,9 +41,9 @@ export class UserService {
           phoneNumber: user.phoneNumber || undefined,
           profilePictureUrl: user.profilePictureUrl || undefined,
           location: user.location || undefined,
-          bio: undefined, // Not in schema yet
-          isEmailVerified: false, // Not in schema yet
-          isPhoneVerified: false, // Not in schema yet
+          bio: user.bio || undefined,
+          isEmailVerified: user.isEmailVerified,
+          isPhoneVerified: user.isPhoneVerified,
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,
         },
@@ -93,9 +93,9 @@ export class UserService {
           phoneNumber: updatedUser.phoneNumber || undefined,
           profilePictureUrl: updatedUser.profilePictureUrl || undefined,
           location: updatedUser.location || undefined,
-          bio: undefined, // Not in schema yet
-          isEmailVerified: false, // Not in schema yet
-          isPhoneVerified: false, // Not in schema yet
+          bio: updatedUser.bio || undefined,
+          isEmailVerified: updatedUser.isEmailVerified,
+          isPhoneVerified: updatedUser.isPhoneVerified,
           createdAt: updatedUser.createdAt,
           updatedAt: updatedUser.updatedAt,
         },
@@ -419,20 +419,18 @@ export class UserService {
         };
       }
 
-      // TODO: Add isEmailVerified field to User model
-      // For now, just return success
-      // if (user.isEmailVerified) {
-      //   return {
-      //     success: true,
-      //     data: {
-      //       message: 'Email already verified',
-      //     },
-      //   };
-      // }
+      if (user.isEmailVerified) {
+        return {
+          success: true,
+          data: {
+            message: "Email already verified",
+          },
+        };
+      }
 
-      // await userRepository.update(userId, {
-      //   isEmailVerified: true,
-      // });
+      await userRepository.update(userId, {
+        isEmailVerified: true,
+      });
 
       return {
         success: true,
@@ -471,20 +469,18 @@ export class UserService {
         };
       }
 
-      // TODO: Add isPhoneVerified field to User model
-      // For now, just return success
-      // if (user.isPhoneVerified) {
-      //   return {
-      //     success: true,
-      //     data: {
-      //       message: 'Phone already verified',
-      //     },
-      //   };
-      // }
+      if (user.isPhoneVerified) {
+        return {
+          success: true,
+          data: {
+            message: "Phone already verified",
+          },
+        };
+      }
 
-      // await userRepository.update(userId, {
-      //   isPhoneVerified: true,
-      // });
+      await userRepository.update(userId, {
+        isPhoneVerified: true,
+      });
 
       return {
         success: true,

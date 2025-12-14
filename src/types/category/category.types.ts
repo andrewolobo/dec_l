@@ -26,5 +26,4 @@ export interface CategoryResponseDTO {
   iconUrl?: string;
   postCount: number;
   createdAt: Date;
-  updatedAt: Date;
 }

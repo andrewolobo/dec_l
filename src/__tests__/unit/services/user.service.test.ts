@@ -524,7 +524,9 @@ describe("UserService", () => {
   describe("verifyEmail", () => {
     it("should verify email successfully", async () => {
       // Arrange
-      (userRepository.findById as MockedFunction).mockResolvedValue(mockUser);
+      const unverifiedUser = { ...mockUser, isEmailVerified: false };
+      (userRepository.findById as MockedFunction).mockResolvedValue(unverifiedUser);
+      (userRepository.update as MockedFunction).mockResolvedValue({ ...unverifiedUser, isEmailVerified: true });
 
       // Act
       const result = await userService.verifyEmail(mockUser.id);
@@ -532,6 +534,21 @@ describe("UserService", () => {
       // Assert
       expect(result.success).toBe(true);
       expect(result.data?.message).toBe("Email verified successfully");
+      expect(userRepository.update).toHaveBeenCalledWith(mockUser.id, { isEmailVerified: true });
+    });
+
+    it("should return already verified message when email already verified", async () => {
+      // Arrange
+      const verifiedUser = { ...mockUser, isEmailVerified: true };
+      (userRepository.findById as MockedFunction).mockResolvedValue(verifiedUser);
+
+      // Act
+      const result = await userService.verifyEmail(mockUser.id);
+
+      // Assert
+      expect(result.success).toBe(true);
+      expect(result.data?.message).toBe("Email already verified");
+      expect(userRepository.update).not.toHaveBeenCalled();
     });
 
     it("should return error when user not found", async () => {
@@ -566,7 +583,9 @@ describe("UserService", () => {
   describe("verifyPhone", () => {
     it("should verify phone successfully", async () => {
       // Arrange
-      (userRepository.findById as MockedFunction).mockResolvedValue(mockUser);
+      const unverifiedUser = { ...mockUser, isPhoneVerified: false };
+      (userRepository.findById as MockedFunction).mockResolvedValue(unverifiedUser);
+      (userRepository.update as MockedFunction).mockResolvedValue({ ...unverifiedUser, isPhoneVerified: true });
 
       // Act
       const result = await userService.verifyPhone(mockUser.id);
@@ -574,6 +593,21 @@ describe("UserService", () => {
       // Assert
       expect(result.success).toBe(true);
       expect(result.data?.message).toBe("Phone verified successfully");
+      expect(userRepository.update).toHaveBeenCalledWith(mockUser.id, { isPhoneVerified: true });
+    });
+
+    it("should return already verified message when phone already verified", async () => {
+      // Arrange
+      const verifiedUser = { ...mockUser, isPhoneVerified: true };
+      (userRepository.findById as MockedFunction).mockResolvedValue(verifiedUser);
+
+      // Act
+      const result = await userService.verifyPhone(mockUser.id);
+
+      // Assert
+      expect(result.success).toBe(true);
+      expect(result.data?.message).toBe("Phone already verified");
+      expect(userRepository.update).not.toHaveBeenCalled();
     });
 
     it("should return error when user not found", async () => {
