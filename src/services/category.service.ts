@@ -22,7 +22,7 @@ export class CategoryService {
           id: cat.id,
           name: cat.name,
           description: cat.description || undefined,
-          iconUrl: undefined, // Not in schema yet
+          iconUrl: cat.iconUrl || undefined,
           postCount: cat._count.posts,
           createdAt: cat.createdAt,
         })
@@ -121,6 +121,7 @@ export class CategoryService {
       const category = await categoryRepository.createCategory({
         name: data.name,
         description: data.description,
+        iconUrl: data.iconUrl,
       });
 
       return {
@@ -129,7 +130,7 @@ export class CategoryService {
           id: category.id,
           name: category.name,
           description: category.description || undefined,
-          iconUrl: data.iconUrl,
+          iconUrl: category.iconUrl || undefined,
           postCount: 0,
           createdAt: category.createdAt,
         },

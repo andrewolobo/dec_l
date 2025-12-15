@@ -214,6 +214,7 @@ describe("CategoryService", () => {
       expect(categoryRepository.createCategory).toHaveBeenCalledWith({
         name: createData.name,
         description: createData.description,
+        iconUrl: createData.iconUrl,
       });
     });
 

@@ -15,9 +15,9 @@ POST {{baseUrl}}{{apiPrefix}}/auth/register
 Content-Type: application/json
 
 {
-  "emailAddress": "test-{{$timestamp}}@example.com",
+  "emailAddress": "andrewolobo10@gmail.com",
   "password": "TestPassword123!",
-  "fullName": "Test User",
+  "fullName": "Andrew Olobo",
   "phoneNumber": "+256700123456"
 }
 
@@ -25,6 +25,31 @@ Content-Type: application/json
 @accessToken = {{register.response.body.data.tokens.accessToken}}
 @refreshToken = {{register.response.body.data.tokens.refreshToken}}
 @userId = {{register.response.body.data.user.id}}
+
+###
+
+### ============================================
+### 1b. Register Admin User (for testing category/admin features)
+### ============================================
+
+# @name registerAdmin
+POST {{baseUrl}}{{apiPrefix}}/auth/register
+Content-Type: application/json
+
+{
+  "emailAddress": "admin@dec_l.com",
+  "password": "AdminPassword123!",
+  "fullName": "Admin User",
+  "phoneNumber": "+256700999999"
+}
+
+### Capture admin tokens
+@adminAccessToken = {{registerAdmin.response.body.data.tokens.accessToken}}
+@adminRefreshToken = {{registerAdmin.response.body.data.tokens.refreshToken}}
+@adminUserId = {{registerAdmin.response.body.data.user.id}}
+
+### Note: After registration, manually update database to set isAdmin=true for this user
+### SQL: UPDATE Users SET IsAdmin = 1 WHERE Email = 'admin@dec_l.com'
 
 ###
 
@@ -37,7 +62,7 @@ POST {{baseUrl}}{{apiPrefix}}/auth/login
 Content-Type: application/json
 
 {
-  "emailAddress": "test@example.com",
+  "emailAddress": "andrewolobo10@gmail.com",
   "password": "TestPassword123!"
 }
 

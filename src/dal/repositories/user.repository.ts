@@ -1,6 +1,6 @@
-import { BaseRepository } from './base.repository';
-import { User, Prisma } from '@prisma/client';
-import prisma from '../prisma.client';
+import { BaseRepository } from "./base.repository";
+import { User, Prisma } from "@prisma/client";
+import prisma from "../prisma.client";
 
 export class UserRepository extends BaseRepository<User> {
   protected modelName = Prisma.ModelName.User;
@@ -79,6 +79,7 @@ export class UserRepository extends BaseRepository<User> {
       phoneNumber?: string;
       profilePictureUrl?: string;
       location?: string;
+      bio?: string;
     }
   ): Promise<User> {
     return prisma.user.update({
@@ -102,7 +103,7 @@ export class UserRepository extends BaseRepository<User> {
               select: { likes: true },
             },
           },
-          orderBy: { createdAt: 'desc' },
+          orderBy: { createdAt: "desc" },
         },
       },
     });

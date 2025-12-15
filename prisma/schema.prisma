@@ -54,6 +54,7 @@ model Category {
   id          Int      @id @default(autoincrement()) @map("CategoryID")
   name        String   @db.NVarChar(100) @map("CategoryName")
   description String?  @db.NVarChar(500) @map("Description")
+  iconUrl     String?  @db.NVarChar(500) @map("IconURL")
   createdAt   DateTime @default(now()) @map("CreatedAt") @db.DateTime2
 
   // Relations (implicit - no FK constraints in DB)
@@ -81,15 +82,16 @@ model Post {
   expiresAt            DateTime? @map("ExpiresAt") @db.DateTime2
   viewCount            Int       @default(0) @map("ViewCount")
   likeCount            Int       @default(0) @map("LikeCount")
-  tier                 Int?      @map("Tier")
+  pricingTierId        Int?      @map("Tier")
   instagramPostId      String?   @db.NVarChar(255) @map("InstagramPostID")
   instagramPostedAt    DateTime? @map("InstagramPostedAt") @db.DateTime2
   createdAt            DateTime  @default(now()) @map("CreatedAt") @db.DateTime2
   updatedAt            DateTime  @updatedAt @map("UpdatedAt") @db.DateTime2
 
   // Relations (implicit - no FK constraints in DB)
-  user                 User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  category             Category  @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user                 User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  category             Category     @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pricingTier          PricingTier? @relation(fields: [pricingTierId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   images               PostImage[]
   likes                Like[]
   payments             Payment[]
@@ -195,6 +197,9 @@ model PricingTier {
   description    String?  @db.NVarChar(500) @map("Description")
   isActive       Boolean  @default(true) @map("IsActive")
   createdAt      DateTime @default(now()) @map("CreatedAt") @db.DateTime2
+
+  // Relations (implicit - no FK constraints in DB)
+  posts          Post[]
 
   @@map("PricingTiers")
 }
