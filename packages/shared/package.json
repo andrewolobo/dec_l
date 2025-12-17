@@ -1,19 +1,19 @@
 {
-  "name": "@dec_l/shared",
-  "version": "1.0.0",
-  "description": "Shared types and utilities for DEC_L",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
-  "exports": {
-    ".": "./src/index.ts",
-    "./types": "./src/types/index.ts",
-    "./constants": "./src/constants/index.ts"
-  },
-  "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf dist"
-  },
-  "devDependencies": {
-    "typescript": "^5.9.3"
-  }
+    "name": "@dec_l/shared",
+    "version": "1.0.0",
+    "description": "Shared types and utilities for DEC_L",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": "./src/index.ts",
+        "./types": "./src/types/index.ts",
+        "./constants": "./src/constants/index.ts"
+    },
+    "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf dist"
+    },
+    "devDependencies": {
+        "typescript": "^5.9.3"
+    }
 }

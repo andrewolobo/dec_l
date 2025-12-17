@@ -3,6 +3,7 @@
 Backend REST API for the DEC_L classifieds platform.
 
 ## Tech Stack
+
 - Node.js + Express 5.2.1
 - TypeScript
 - Prisma ORM + SQL Server
@@ -32,10 +33,13 @@ npm run build
 ```
 
 ## API Documentation
+
 See `/api-tests` folder for HTTP request examples.
 
 ## Environment Variables
+
 Copy `.env.example` to `.env` and configure:
+
 - DATABASE_URL
 - JWT_SECRET
 - JWT_REFRESH_SECRET
