@@ -18,11 +18,13 @@ DEC_L/
 ## Quick Start
 
 ### Install Dependencies
+
 ```bash
 npm install
 ```
 
 ### Development
+
 ```bash
 # Run API only
 npm run dev:api
@@ -35,6 +37,7 @@ npm run dev
 ```
 
 ### Testing
+
 ```bash
 # Test API
 npm run test:api
@@ -44,6 +47,7 @@ npm test
 ```
 
 ### Building
+
 ```bash
 # Build API
 npm run build:api
@@ -53,6 +57,7 @@ npm run build
 ```
 
 ### Docker
+
 ```bash
 # Development
 npm run docker:dev
@@ -73,6 +78,7 @@ npm run docker:down
 ## Tech Stack
 
 ### Backend (API)
+
 - Node.js + Express 5.2.1
 - TypeScript
 - Prisma ORM + SQL Server
@@ -80,6 +86,7 @@ npm run docker:down
 - Jest + SuperTest
 
 ### Frontend (Web)
+
 - SvelteKit (To be initialized)
 - TypeScript
 - TailwindCSS
