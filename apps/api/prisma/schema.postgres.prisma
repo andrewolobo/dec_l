@@ -1,0 +1,255 @@
+// PostgreSQL Prisma Schema for DEC_L
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// User Management
+// ============================================
+
+model User {
+  id                Int       @id @default(autoincrement()) @map("user_id")
+  email             String    @unique @db.VarChar(255) @map("email")
+  phoneNumber       String    @db.VarChar(20) @map("phone_number")
+  paymentsNumber    String?   @db.VarChar(20) @map("payments_number")
+  fullName          String    @db.VarChar(255) @map("full_name")
+  passwordHash      String?   @db.VarChar(255) @map("password_hash")
+  oauthProvider     String?   @db.VarChar(50) @map("oauth_provider")
+  oauthProviderId   String?   @db.VarChar(255) @map("oauth_provider_id")
+  profilePictureUrl String?   @db.VarChar(500) @map("profile_picture_url")
+  location          String?   @db.VarChar(255) @map("location")
+  bio               String?   @db.VarChar(500) @map("bio")
+  isEmailVerified   Boolean   @default(false) @map("is_email_verified")
+  isPhoneVerified   Boolean   @default(false) @map("is_phone_verified")
+  isActive          Boolean   @default(true) @map("is_active")
+  isAdmin           Boolean   @default(false) @map("is_admin")
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  // Relations
+  posts             Post[]
+  likes             Like[]
+  payments          Payment[]
+  sentMessages      Message[] @relation("SentMessages")
+  receivedMessages  Message[] @relation("ReceivedMessages")
+  views             View[]
+
+  @@index([email], map: "ix_users_email")
+  @@index([phoneNumber], map: "ix_users_phone_number")
+  @@map("users")
+}
+
+// ============================================
+// Content Management
+// ============================================
+
+model Category {
+  id          Int      @id @default(autoincrement()) @map("category_id")
+  name        String   @db.VarChar(100) @map("category_name")
+  description String?  @db.VarChar(500) @map("description")
+  iconUrl     String?  @db.VarChar(500) @map("icon_url")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  posts       Post[]
+
+  @@map("categories")
+}
+
+model Post {
+  id                   Int       @id @default(autoincrement()) @map("post_id")
+  userId               Int       @map("user_id")
+  title                String    @db.VarChar(255) @map("title")
+  categoryId           Int       @map("category_id")
+  brand                String?   @db.VarChar(100) @map("brand")
+  description          String    @db.Text @map("description")
+  price                Decimal   @db.Decimal(18, 2) @map("price")
+  location             String    @db.VarChar(255) @map("location")
+  gpsLocation          String?   @map("gps_location")
+  deliveryMethod       String?   @db.VarChar(100) @map("delivery_method")
+  contactNumber        String    @db.VarChar(20) @map("contact_number")
+  emailAddress         String?   @db.VarChar(255) @map("email_address")
+  status               String    @db.VarChar(50) @map("status")
+  scheduledPublishTime DateTime? @map("scheduled_publish_time") @db.Timestamptz
+  publishedAt          DateTime? @map("published_at") @db.Timestamptz
+  expiresAt            DateTime? @map("expires_at") @db.Timestamptz
+  viewCount            Int       @default(0) @map("view_count")
+  likeCount            Int       @default(0) @map("like_count")
+  pricingTierId        Int?      @map("pricing_tier_id")
+  instagramPostId      String?   @db.VarChar(255) @map("instagram_post_id")
+  instagramPostedAt    DateTime? @map("instagram_posted_at") @db.Timestamptz
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  // Relations
+  user                 User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  category             Category     @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pricingTier          PricingTier? @relation(fields: [pricingTierId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  images               PostImage[]
+  likes                Like[]
+  payments             Payment[]
+  messages             Message[]
+  views                View[]
+  analytics            ViewAnalytics[]
+
+  @@index([status, publishedAt(sort: Desc)], map: "ix_posts_status_published_at")
+  @@index([categoryId], map: "ix_posts_category_id")
+  @@index([userId], map: "ix_posts_user_id")
+  @@map("posts")
+}
+
+model PostImage {
+  id           Int      @id @default(autoincrement()) @map("image_id")
+  postId       Int      @map("post_id")
+  imageUrl     String   @db.VarChar(500) @map("image_url")
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("post_images")
+}
+
+model Like {
+  id        Int      @id @default(autoincrement()) @map("like_id")
+  postId    Int      @map("post_id")
+  userId    Int      @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([postId, userId], map: "uq_likes_post_id_user_id")
+  @@index([postId], map: "ix_likes_post_id")
+  @@index([userId], map: "ix_likes_user_id")
+  @@map("likes")
+}
+
+// ============================================
+// Messaging
+// ============================================
+
+model Message {
+  id              Int       @id @default(autoincrement()) @map("message_id")
+  senderId        Int       @map("sender_id")
+  recipientId     Int       @map("recipient_id")
+  postId          Int?      @map("post_id")
+  content         String    @db.Text @map("message_content")
+  messageType     String    @default("text") @db.VarChar(20) @map("message_type")
+  attachmentUrl   String?   @db.VarChar(500) @map("attachment_url")
+  isRead          Boolean   @default(false) @map("is_read")
+  readAt          DateTime? @map("read_at") @db.Timestamptz
+  isDeleted       Boolean   @default(false) @map("is_deleted")
+  deletedBy       Int?      @map("deleted_by")
+  isEdited        Boolean   @default(false) @map("is_edited")
+  editedAt        DateTime? @map("edited_at") @db.Timestamptz
+  parentMessageId Int?      @map("parent_message_id")
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  // Relations
+  sender         User      @relation("SentMessages", fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  recipient      User      @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  post           Post?     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentMessage  Message?  @relation("MessageReplies", fields: [parentMessageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies        Message[] @relation("MessageReplies")
+
+  @@map("messages")
+}
+
+// ============================================
+// Payments & Pricing
+// ============================================
+
+model Payment {
+  id                   Int       @id @default(autoincrement()) @map("payment_id")
+  postId               Int       @map("post_id")
+  userId               Int       @map("user_id")
+  amount               Decimal   @db.Decimal(18, 2) @map("amount")
+  currency             String    @default("UGX") @db.VarChar(3) @map("currency")
+  paymentMethod        String    @db.VarChar(50) @map("payment_method")
+  transactionReference String?   @db.VarChar(255) @map("transaction_reference")
+  status               String    @db.VarChar(50) @map("status")
+  confirmedAt          DateTime? @map("confirmed_at") @db.Timestamptz
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  post                 Post      @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user                 User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("payments")
+}
+
+model PricingTier {
+  id             Int      @id @default(autoincrement()) @map("tier_id")
+  name           String   @db.VarChar(100) @map("tier_name")
+  visibilityDays Int      @map("visibility_days")
+  price          Decimal  @db.Decimal(18, 2) @map("price")
+  description    String?  @db.VarChar(500) @map("description")
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  posts          Post[]
+
+  @@map("pricing_tiers")
+}
+
+// ============================================
+// Analytics & Views
+// ============================================
+
+model View {
+  id           Int      @id @default(autoincrement()) @map("view_id")
+  postId       Int      @map("post_id")
+  userId       Int?     @map("user_id")
+  ipAddress    String?  @db.VarChar(45) @map("ip_address")
+  userAgent    String?  @db.VarChar(500) @map("user_agent")
+  referrerUrl  String?  @db.VarChar(500) @map("referrer_url")
+  sessionId    String?  @db.VarChar(100) @map("session_id")
+  viewDuration Int?     @map("view_duration")
+  isUnique     Boolean  @default(true) @map("is_unique")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  // Relations
+  post         Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user         User?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([postId], map: "ix_views_post_id")
+  @@index([userId], map: "ix_views_user_id")
+  @@index([createdAt], map: "ix_views_created_at")
+  @@index([sessionId], map: "ix_views_session_id")
+  @@index([postId, userId], map: "ix_views_post_id_user_id")
+  @@index([postId, ipAddress], map: "ix_views_post_id_ip_address")
+  @@map("views")
+}
+
+model ViewAnalytics {
+  id                   Int      @id @default(autoincrement()) @map("analytics_id")
+  postId               Int      @map("post_id")
+  date                 DateTime @db.Date @map("date")
+  totalViews           Int      @default(0) @map("total_views")
+  uniqueViews          Int      @default(0) @map("unique_views")
+  authenticatedViews   Int      @default(0) @map("authenticated_views")
+  anonymousViews       Int      @default(0) @map("anonymous_views")
+  averageViewDuration  Int?     @map("average_view_duration")
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  // Relations
+  post                 Post     @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([postId, date], map: "uq_view_analytics_post_id_date")
+  @@index([postId], map: "ix_view_analytics_post_id")
+  @@index([date(sort: Desc)], map: "ix_view_analytics_date")
+  @@map("view_analytics")
+}
