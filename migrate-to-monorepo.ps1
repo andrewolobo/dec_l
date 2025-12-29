@@ -83,26 +83,26 @@ Write-Host "Step 5: Creating configuration files..." -ForegroundColor Green
 
 # Create root package.json using native PowerShell
 $rootPackage = @{
-    name = "dec_l"
-    version = "1.0.0"
-    private = $true
-    description = "Digital Exchange Classifieds for Lira - Monorepo"
-    workspaces = @("apps/*", "packages/*")
-    scripts = @{
-        "dev:api" = "npm run dev --workspace=apps/api"
-        "dev:web" = "npm run dev --workspace=apps/web"
-        "dev" = "concurrently `"npm run dev:api`" `"npm run dev:web`""
-        "build:api" = "npm run build --workspace=apps/api"
-        "build:web" = "npm run build --workspace=apps/web"
-        "build" = "npm run build:api; npm run build:web"
-        "test:api" = "npm run test --workspace=apps/api"
-        "test:web" = "npm run test --workspace=apps/web"
-        "test" = "npm run test:api; npm run test:web"
-        "docker:dev" = "docker-compose -f docker/docker-compose.yml up"
+    name            = "dec_l"
+    version         = "1.0.0"
+    private         = $true
+    description     = "Digital Exchange Classifieds - Monorepo"
+    workspaces      = @("apps/*", "packages/*")
+    scripts         = @{
+        "dev:api"          = "npm run dev --workspace=apps/api"
+        "dev:web"          = "npm run dev --workspace=apps/web"
+        "dev"              = "concurrently `"npm run dev:api`" `"npm run dev:web`""
+        "build:api"        = "npm run build --workspace=apps/api"
+        "build:web"        = "npm run build --workspace=apps/web"
+        "build"            = "npm run build:api; npm run build:web"
+        "test:api"         = "npm run test --workspace=apps/api"
+        "test:web"         = "npm run test --workspace=apps/web"
+        "test"             = "npm run test:api; npm run test:web"
+        "docker:dev"       = "docker-compose -f docker/docker-compose.yml up"
         "docker:dev:build" = "docker-compose -f docker/docker-compose.yml up --build"
-        "docker:prod" = "docker-compose -f docker/docker-compose.prod.yml up -d"
-        "docker:down" = "docker-compose -f docker/docker-compose.yml down"
-        "clean" = "npm run clean --workspaces --if-present"
+        "docker:prod"      = "docker-compose -f docker/docker-compose.prod.yml up -d"
+        "docker:down"      = "docker-compose -f docker/docker-compose.yml down"
+        "clean"            = "npm run clean --workspaces --if-present"
     }
     devDependencies = @{
         concurrently = "^8.2.2"
@@ -185,17 +185,17 @@ Write-Host "Step 6: Creating shared package..." -ForegroundColor Green
 
 # Create shared package.json
 $sharedPackage = @{
-    name = "@dec_l/shared"
-    version = "1.0.0"
-    description = "Shared types and utilities for DEC_L"
-    main = "./src/index.ts"
-    types = "./src/index.ts"
-    exports = @{
-        "." = "./src/index.ts"
-        "./types" = "./src/types/index.ts"
+    name            = "@dec_l/shared"
+    version         = "1.0.0"
+    description     = "Shared types and utilities for DEC_L"
+    main            = "./src/index.ts"
+    types           = "./src/index.ts"
+    exports         = @{
+        "."           = "./src/index.ts"
+        "./types"     = "./src/types/index.ts"
         "./constants" = "./src/constants/index.ts"
     }
-    scripts = @{
+    scripts         = @{
         build = "tsc"
         clean = "rm -rf dist"
     }
@@ -209,22 +209,22 @@ Write-Host "  ✓ Created packages/shared/package.json" -ForegroundColor Gray
 # Create shared tsconfig
 $sharedTsConfig = @{
     compilerOptions = @{
-        target = "ES2020"
-        module = "commonjs"
-        lib = @("ES2020")
-        declaration = $true
-        declarationMap = $true
-        outDir = "./dist"
-        rootDir = "./src"
-        strict = $true
-        esModuleInterop = $true
-        skipLibCheck = $true
+        target                           = "ES2020"
+        module                           = "commonjs"
+        lib                              = @("ES2020")
+        declaration                      = $true
+        declarationMap                   = $true
+        outDir                           = "./dist"
+        rootDir                          = "./src"
+        strict                           = $true
+        esModuleInterop                  = $true
+        skipLibCheck                     = $true
         forceConsistentCasingInFileNames = $true
-        resolveJsonModule = $true
-        moduleResolution = "node"
+        resolveJsonModule                = $true
+        moduleResolution                 = "node"
     }
-    include = @("src/**/*")
-    exclude = @("node_modules", "dist")
+    include         = @("src/**/*")
+    exclude         = @("node_modules", "dist")
 }
 $sharedTsConfig | ConvertTo-Json -Depth 10 | Set-Content "packages/shared/tsconfig.json"
 Write-Host "  ✓ Created packages/shared/tsconfig.json" -ForegroundColor Gray
@@ -276,7 +276,7 @@ Write-Host "  ✓ Updated .gitignore" -ForegroundColor Gray
 
 # Update root README
 @"
-# DEC_L - Digital Exchange Classifieds for Lira
+# DEC_L - Digital Exchange Classifieds
 
 A modern classifieds platform with separate API and web applications.
 

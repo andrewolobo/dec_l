@@ -8,8 +8,8 @@ Write-Host ""
 
 # Check if we're in the right directory
 if (-not (Test-Path "package.json")) {
-    Write-Host "ERROR: Run this script from the DEC_L project root!" -ForegroundColor Red
-    exit 1
+  Write-Host "ERROR: Run this script from the DEC_L project root!" -ForegroundColor Red
+  exit 1
 }
 
 # Confirm before proceeding
@@ -18,8 +18,8 @@ Write-Host "Current directory: $PWD" -ForegroundColor Yellow
 Write-Host ""
 $confirm = Read-Host "Create backup and proceed? (yes/no)"
 if ($confirm -ne "yes") {
-    Write-Host "Aborted." -ForegroundColor Red
-    exit 0
+  Write-Host "Aborted." -ForegroundColor Red
+  exit 0
 }
 
 Write-Host ""
@@ -42,51 +42,51 @@ Write-Host "Step 4: Moving API files..." -ForegroundColor Green
 
 # Move source code
 if (Test-Path "src") {
-    Move-Item -Path "src" -Destination "apps/api/src" -Force
-    Write-Host "  ✓ Moved src/" -ForegroundColor Gray
+  Move-Item -Path "src" -Destination "apps/api/src" -Force
+  Write-Host "  ✓ Moved src/" -ForegroundColor Gray
 }
 
 # Move configuration files
 $configFiles = @(
-    "package.json",
-    "package-lock.json",
-    "tsconfig.json",
-    "jest.config.js",
-    "prisma.config.ts"
+  "package.json",
+  "package-lock.json",
+  "tsconfig.json",
+  "jest.config.js",
+  "prisma.config.ts"
 )
 
 foreach ($file in $configFiles) {
-    if (Test-Path $file) {
-        Move-Item -Path $file -Destination "apps/api/$file" -Force
-        Write-Host "  ✓ Moved $file" -ForegroundColor Gray
-    }
+  if (Test-Path $file) {
+    Move-Item -Path $file -Destination "apps/api/$file" -Force
+    Write-Host "  ✓ Moved $file" -ForegroundColor Gray
+  }
 }
 
 # Move database files
 if (Test-Path "prisma") {
-    Move-Item -Path "prisma" -Destination "apps/api/prisma" -Force
-    Write-Host "  ✓ Moved prisma/" -ForegroundColor Gray
+  Move-Item -Path "prisma" -Destination "apps/api/prisma" -Force
+  Write-Host "  ✓ Moved prisma/" -ForegroundColor Gray
 }
 
 # Move test and build files
 $buildFiles = @(
-    @{src = "api-tests"; dest = "apps/api/api-tests" },
-    @{src = "coverage"; dest = "apps/api/coverage" },
-    @{src = "dist"; dest = "apps/api/dist" },
-    @{src = "node_modules"; dest = "apps/api/node_modules" }
+  @{src = "api-tests"; dest = "apps/api/api-tests" },
+  @{src = "coverage"; dest = "apps/api/coverage" },
+  @{src = "dist"; dest = "apps/api/dist" },
+  @{src = "node_modules"; dest = "apps/api/node_modules" }
 )
 
 foreach ($item in $buildFiles) {
-    if (Test-Path $item.src) {
-        Move-Item -Path $item.src -Destination $item.dest -Force
-        Write-Host "  ✓ Moved $($item.src)" -ForegroundColor Gray
-    }
+  if (Test-Path $item.src) {
+    Move-Item -Path $item.src -Destination $item.dest -Force
+    Write-Host "  ✓ Moved $($item.src)" -ForegroundColor Gray
+  }
 }
 
 # Move environment file
 if (Test-Path ".env") {
-    Copy-Item -Path ".env" -Destination "apps/api/.env" -Force
-    Write-Host "  ✓ Copied .env to apps/api/" -ForegroundColor Gray
+  Copy-Item -Path ".env" -Destination "apps/api/.env" -Force
+  Write-Host "  ✓ Copied .env to apps/api/" -ForegroundColor Gray
 }
 
 Write-Host "Step 5: Creating root configuration files..." -ForegroundColor Green
@@ -97,7 +97,7 @@ $rootPackageJson = @'
   "name": "dec_l",
   "version": "1.0.0",
   "private": true,
-  "description": "Digital Exchange Classifieds for Lira - Monorepo",
+  "description": "Digital Exchange Classifieds - Monorepo",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -313,7 +313,7 @@ Write-Host "  ✓ Updated .gitignore" -ForegroundColor Gray
 # Update root README
 Write-Host "Step 8: Updating root README..." -ForegroundColor Green
 $rootReadme = @'
-# DEC_L - Digital Exchange Classifieds for Lira
+# DEC_L - Digital Exchange Classifieds
 
 A modern classifieds platform with separate API and web applications.
 

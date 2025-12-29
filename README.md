@@ -1,4 +1,4 @@
-# DEC_L - Digital Exchange Classifieds for Lira
+# DEC_L - Digital Exchange Classifieds
 
 A modern classifieds platform with separate API and web applications.
 

@@ -198,7 +198,7 @@ Move-Item -Path "node_modules" -Destination "apps/api/node_modules"
   "name": "dec_l",
   "version": "1.0.0",
   "private": true,
-  "description": "Digital Exchange Classifieds for Lira - Monorepo",
+  "description": "Digital Exchange Classifieds - Monorepo",
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dev:api": "npm run dev --workspace=apps/api",
@@ -364,7 +364,7 @@ Thumbs.db
 **Root README.md** (Update)
 
 ```markdown
-# DEC_L - Digital Exchange Classifieds for Lira
+# DEC_L - Digital Exchange Classifieds
 
 A modern classifieds platform with separate API and web applications.
 
@@ -465,19 +465,15 @@ All imports in the API use **relative paths** (`../`, `../../`, `./`), which wil
 These files have absolute or root-relative paths that need updating:
 
 1. **apps/api/tsconfig.json**
-
    - ✅ NO CHANGES - Uses relative paths (`./src`, `./dist`)
 
 2. **apps/api/jest.config.js**
-
    - ✅ NO CHANGES - Uses relative paths
 
 3. **apps/api/prisma.config.ts**
-
    - ✅ NO CHANGES - Uses relative paths
 
 4. **GitHub Actions** (if exists)
-
    - Update working directories to `apps/api`
    - Update artifact paths
 
