@@ -34,8 +34,13 @@
 	<!-- Hero Section -->
 	<div class="p-4">
 		<div class="relative w-full h-[500px] rounded-xl overflow-hidden shadow-lg group">
-			<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-				style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA4FHxxZHI17PtBT9nRiGUja5Rh24YImveHYCkztPOLCx3VqPW_RH2pH6i88iJTTy3yF470k5h21DtQPfzXpBfGwgZFuJhhFgFyeNBi4mw7ptO5qNWdYwOLcTH-zqsf-q1Bz4ZaRjjFoR85mqSc8AL2U0SLgj161UYW280EiCv4fGlG5fdyPMU_PyGwI8wPyk3OCNLs7jsVNH4sgnGFUbHPDxY8Q9eOVfVkbzKUjAbbWCh4oJmNXarAiT1YJmT6E-afnS7ljVoj6cSU')">
+			<div class="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
+				<img 
+					src="/images/hero-banner.png" 
+					alt="Hero banner" 
+					class="w-full h-full object-cover"
+					style="image-rendering: -webkit-optimize-contrast;"
+				/>
 			</div>
 			<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
 			<div class="absolute bottom-0 left-0 w-full p-6 flex flex-col gap-4">
@@ -99,6 +104,36 @@
 		</div>
 
 		<!-- Feature 3 -->
+		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
+			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
+				style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBW4cJu_UimkXkzFVLr7IrdVUkHMbMkbRucrRqiKAEeABEe-lhdHO07vqFVtStgsp8zNEVwtaTQcRiZEjoNUjA4gEOWFDRfCDJKjknlO1jSPaUneQVAL8u4uXHDVLN8hMssraeIs9gEwlEpVZW8wd0ErmiZYltRIADPMcBkBuYfIZemHWDZ3SFPYYbbZscl4GoVowlBn6HlU6jvwvySowmKJq47snQAcHArOugiIcr8pjrE1dOtB405ZowrCaN2-0_Y3xdGDPexh9-P')">
+				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
+				<div class="absolute bottom-4 left-4 right-4">
+					<div class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary">
+						<Icon name="chat_bubble" />
+					</div>
+					<p class="text-white text-xl font-bold leading-tight">Safe & Simple Chat</p>
+					<p class="text-primary text-sm font-medium mt-1">No spam, just sales locally.</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Feature 4 -->
+		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
+			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
+				style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBW4cJu_UimkXkzFVLr7IrdVUkHMbMkbRucrRqiKAEeABEe-lhdHO07vqFVtStgsp8zNEVwtaTQcRiZEjoNUjA4gEOWFDRfCDJKjknlO1jSPaUneQVAL8u4uXHDVLN8hMssraeIs9gEwlEpVZW8wd0ErmiZYltRIADPMcBkBuYfIZemHWDZ3SFPYYbbZscl4GoVowlBn6HlU6jvwvySowmKJq47snQAcHArOugiIcr8pjrE1dOtB405ZowrCaN2-0_Y3xdGDPexh9-P')">
+				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
+				<div class="absolute bottom-4 left-4 right-4">
+					<div class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary">
+						<Icon name="chat_bubble" />
+					</div>
+					<p class="text-white text-xl font-bold leading-tight">Safe & Simple Chat</p>
+					<p class="text-primary text-sm font-medium mt-1">No spam, just sales locally.</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Feature 5 -->
 		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
 			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
 				style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBW4cJu_UimkXkzFVLr7IrdVUkHMbMkbRucrRqiKAEeABEe-lhdHO07vqFVtStgsp8zNEVwtaTQcRiZEjoNUjA4gEOWFDRfCDJKjknlO1jSPaUneQVAL8u4uXHDVLN8hMssraeIs9gEwlEpVZW8wd0ErmiZYltRIADPMcBkBuYfIZemHWDZ3SFPYYbbZscl4GoVowlBn6HlU6jvwvySowmKJq47snQAcHArOugiIcr8pjrE1dOtB405ZowrCaN2-0_Y3xdGDPexh9-P')">
