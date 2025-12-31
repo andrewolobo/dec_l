@@ -251,8 +251,7 @@ npm install --save-dev @types/multer@^1.4.11
 
 **Verify in .env:**
 ```dotenv
-SAS_TOKEN=sp=racwdli&st=2025-12-30T10:11:40Z&se=2025-12-30T18:26:40Z&spr=https&sv=2024-11-04&sr=c&sig=RiVRnzFWx5pNyxI9j56637MIe3vd7Snko5D%2F4%2FSURdw%3D
-BLOB_URL=https://declutterimg.blob.core.windows.net/images?sp=racwdli&st=2025-12-30T10:11:40Z&se=2025-12-30T18:26:40Z&spr=https&sv=2024-11-04&sr=c&sig=RiVRnzFWx5pNyxI9j56637MIe3vd7Snko5D%2F4%2FSURdw%3D
+[REMOVED TOKEN AND URL]
 ```
 
 **Note on SAS Token Expiry:** Current token expires on December 30, 2025 (today). Before going to production:
