@@ -25,9 +25,9 @@
 		</button>
 		<h2 class="text-slate-900 dark:text-white text-xl font-extrabold leading-tight tracking-[-0.015em] flex-1 text-center">Bamboo Tree</h2>
 		<div class="flex w-12 items-center justify-end">
-			<button class="text-primary hover:text-primary/80 text-base font-bold leading-normal tracking-[0.015em] shrink-0 transition-colors">
+			<a href="/login" class="text-primary hover:text-primary/80 text-base font-bold leading-normal tracking-[0.015em] shrink-0 transition-colors">
 				Log In
-			</button>
+			</a>
 		</div>
 	</div>
 
@@ -48,9 +48,9 @@
 					</p>
 				</div>
 				<div class="pt-2">
-					<button class="flex w-full sm:w-auto min-w-[140px] cursor-pointer items-center justify-center rounded-xl h-12 px-6 bg-primary text-background-dark text-base font-bold transition-transform active:scale-95 hover:bg-primary/90 shadow-[0_0_15px_rgba(19,236,236,0.3)]">
+					<a href="/register" class="flex w-full sm:w-auto min-w-[140px] cursor-pointer items-center justify-center rounded-xl h-12 px-6 bg-primary text-background-dark text-base font-bold transition-transform active:scale-95 hover:bg-primary/90 shadow-[0_0_15px_rgba(19,236,236,0.3)]">
 						Get Started
-					</button>
+					</a>
 				</div>
 			</div>
 		</div>
