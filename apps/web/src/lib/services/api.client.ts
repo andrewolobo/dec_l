@@ -149,14 +149,36 @@ async function refreshAccessToken(): Promise<string> {
 	}
 
 	try {
-		const response = await axios.post<ApiResponse<AuthTokens>>(
+		const response = await axios.post<ApiResponse<{ accessToken: string }>>(
 			`${appConfig.api.baseUrl}/auth/refresh`,
 			{ refreshToken: tokens.refreshToken }
 		);
 
 		if (response.data.success && response.data.data) {
-			const newTokens = response.data.data;
-			saEnhanced logging in development
+			const newAccessToken = response.data.data.accessToken;
+			saveTokens({ accessToken: newAccessToken, refreshToken: tokens.refreshToken });
+
+			if (isDevelopment && appConfig.dev.debugMode) {
+				console.log('[API] Access token refreshed successfully');
+			}
+
+			return newAccessToken;
+		} else {
+			throw new Error('Token refresh failed');
+		}
+	} catch (error) {
+		if (isDevelopment) {
+			console.error('[API] Token refresh failed:', error);
+		}
+		throw error;
+	}
+}
+/**
+ * Response interceptor - Handle successful responses and errors
+ */
+apiClient.interceptors.response.use(
+	// Success handler
+	(response) => {
 		if (isDevelopment && appConfig.dev.debugMode) {
 			const requestStart = response.config.headers?.['X-Request-Start'];
 			const duration = requestStart ? Date.now() - parseInt(requestStart as string) : 0;
@@ -173,8 +195,18 @@ async function refreshAccessToken(): Promise<string> {
 
 		return response;
 	},
+	// Error handler
 	async (error: AxiosError<ApiError>) => {
-		const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+		const originalRequest = error.config as AxiosRequestConfig & {
+			_retry?: boolean;
+			_retryCount?: number;
+			_retryReason?: string;
+		};
+
+		// Don't process if no config
+		if (!originalRequest) {
+			return Promise.reject(error);
+		}
 
 		// Enhanced error logging
 		const errorInfo: ClientError = {
@@ -250,7 +282,7 @@ async function refreshAccessToken(): Promise<string> {
 				// Redirect to login (skip in test environment)
 				if (typeof window !== 'undefined' && import.meta.env.MODE !== 'test') {
 					window.location.href =
-						'/auth/login?redirect=' + encodeURIComponent(window.location.pathname);
+						'/login?redirectTo=' + encodeURIComponent(window.location.pathname);
 				}
 
 				return Promise.reject(refreshError);
@@ -262,146 +294,84 @@ async function refreshAccessToken(): Promise<string> {
 		// Handle 403 Forbidden
 		if (error.response?.status === 403) {
 			if (isDevelopment) {
-			Enhanced retry interceptor for failed requests
- * Uses error handler utilities to determine retryability
- */
-apiClient.interceptors.response.use(undefined, async (error: AxiosError) => {
-	const originalRequest = error.config as AxiosRequestConfig & {
-		_retryCount?: number;
-		_retryReason?: string;
-	};
-
-	// Don't retry if no config (shouldn't happen, but be safe)
-	if (!originalRequest) {
-		return Promise.reject(error);
-	}
-
-	// Don't retry if it's a client error (4xx) unless it's 429 (rate limit) or 408 (timeout)
-	const status = error.response?.status;
-	if (status && status >= 400 && status < 500 && status !== 408 && status !== 429) {
-		return Promise.reject(error);
-	}
-
-	// Use enhanced error handler to check if error is retryable
-	if (!isRetryable(error)) {
-		return Promise.reject(error);
-	}
-
-	// Initialize retry count
-	if (!originalRequest._retryCount) {
-		originalRequest._retryCount = 0;
-	}
-
-	// Determine retry reason for logging
-	if (!originalRequest._retryReason) {
-		if (isNetworkError(error)) {
-			originalRequest._retryReason = 'Network Error';
-		} else if (isTimeoutError(error)) {
-			originalRequest._retryReason = 'Timeout';
-		} else if (isRateLimitError(error)) {
-			originalRequest._retryReason = 'Rate Limit';
-		} else if (isServerError(error)) {
-			originalRequest._retryReason = 'Server Error';
-		} else {
-			originalRequest._retryReason = 'Unknown';
+				console.error('[API] Forbidden - insufficient permissions');
+			}
+			return Promise.reject(error);
 		}
-	}
 
-	// Check if we should retry
-	const maxRetries = isRateLimitError(error) ? 5 : appConfig.api.retryAttempts;
+		// Handle retryable errors (network, timeout, rate limit, server errors)
+		const status = error.response?.status;
+		const shouldRetry = isRetryable(error) && status !== 401 && status !== 403;
 
-	if (originalRequest._retryCount < maxRetries) {
-		originalRequest._retryCount++;
+		if (!shouldRetry) {
+			return Promise.reject(error);
+		}
 
-		// Calculate delay with exponential backoff
-		let delay = appConfig.api.retryDelay * Math.pow(2, originalRequest._retryCount - 1);
+		// Initialize retry count
+		if (!originalRequest._retryCount) {
+			originalRequest._retryCount = 0;
+		}
 
-		// For rate limit errors, respect Retry-After header if present
-		if (isRateLimitError(error) && error.response?.headers['retry-after']) {
-			const retryAfter = parseInt(error.response.headers['retry-after']);
-			if (!isNaN(retryAfter)) {
-				delay = retryAfter * 1000; // Convert to milliseconds
+		// Determine retry reason for logging
+		if (!originalRequest._retryReason) {
+			if (isNetworkError(error)) {
+				originalRequest._retryReason = 'Network Error';
+			} else if (isTimeoutError(error)) {
+				originalRequest._retryReason = 'Timeout';
+			} else if (isRateLimitError(error)) {
+				originalRequest._retryReason = 'Rate Limit';
+			} else if (isServerError(error)) {
+				originalRequest._retryReason = 'Server Error';
+			} else {
+				originalRequest._retryReason = 'Unknown';
 			}
 		}
 
-		// Cap maximum delay at 30 seconds
-		delay = Math.min(delay, 30000);
+		// Check if we should retry
+		const maxRetries = isRateLimitError(error) ? 5 : appConfig.api.retryAttempts;
 
-		if (isDevelopment) {
-			console.log(
-				`[API Retry] ${originalRequest._retryReason} - Attempt ${originalRequest._retryCount}/${maxRetries} after ${delay}ms`,
-				{
-					url: originalRequest.url,
-					method: originalRequest.method
+		if (originalRequest._retryCount < maxRetries) {
+			originalRequest._retryCount++;
+
+			// Calculate delay with exponential backoff
+			let delay = appConfig.api.retryDelay * Math.pow(2, originalRequest._retryCount - 1);
+
+			// For rate limit errors, respect Retry-After header if present
+			if (isRateLimitError(error) && error.response?.headers['retry-after']) {
+				const retryAfter = parseInt(error.response.headers['retry-after']);
+				if (!isNaN(retryAfter)) {
+					delay = retryAfter * 1000; // Convert to milliseconds
 				}
+			}
+
+			// Cap maximum delay at 30 seconds
+			delay = Math.min(delay, 30000);
+
+			if (isDevelopment) {
+				console.log(
+					`[API Retry] ${originalRequest._retryReason} - Attempt ${originalRequest._retryCount}/${maxRetries} after ${delay}ms`,
+					{
+						url: originalRequest.url,
+						method: originalRequest.method
+					}
+				);
+			}
+
+			await new Promise((resolve) => setTimeout(resolve, delay));
+
+			return apiClient(originalRequest);
+		}
+
+		// Max retries exceeded
+		if (isDevelopment) {
+			console.error(
+				`[API Retry] ${originalRequest._retryReason} - Max retries (${maxRetries}) exceeded for ${originalRequest.url}`
 			);
-		}
-
-		await new Promise((resolve) => setTimeout(resolve, delay));
-
-		return apiClient(originalRequest);
-	}
-
-	// Max retries exceeded
-	if (isDevelopment) {
-		console.error(
-			`[API Retry] ${originalRequest._retryReason} - Max retries (${maxRetries}) exceeded for ${originalRequest.url}`
-		nd');
-		}
-
-		// Handle 429 Rate Limit
-		if (error.response?.status === 429) {
-			console.error('Rate limit exceeded');
-		}
-
-		// Handle 500+ Server Errors
-		if (error.response?.status && error.response.status >= 500) {
-			console.error('Server error occurred');
 		}
 
 		return Promise.reject(error);
 	}
 );
-
-/**
- * Retry interceptor for failed requests (network errors, etc.)
- */
-apiClient.interceptors.response.use(undefined, async (error: AxiosError) => {
-	const originalRequest = error.config as AxiosRequestConfig & { _retryCount?: number };
-
-	// Don't retry if it's a client error (4xx)
-	if (error.response && error.response.status >= 400 && error.response.status < 500) {
-		return Promise.reject(error);
-	}
-
-	// Initialize retry count (handle case where originalRequest might be undefined in tests)
-	if (!originalRequest) {
-		return Promise.reject(error);
-	}
-	if (!originalRequest._retryCount) {
-		originalRequest._retryCount = 0;
-	}
-
-	// Check if we should retry
-	if (originalRequest._retryCount < appConfig.api.retryAttempts) {
-		originalRequest._retryCount++;
-
-		// Exponential backoff
-		const delay = appConfig.api.retryDelay * Math.pow(2, originalRequest._retryCount - 1);
-
-		if (isDevelopment) {
-			console.log(
-				`[API Retry] Attempt ${originalRequest._retryCount}/${appConfig.api.retryAttempts} after ${delay}ms`
-			);
-		}
-
-		await new Promise((resolve) => setTimeout(resolve, delay));
-
-		return apiClient(originalRequest);
-	}
-
-	return Promise.reject(error);
-});
 
 /**
  * Helper function to make type-safe API calls

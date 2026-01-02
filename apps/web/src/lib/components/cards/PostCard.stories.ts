@@ -102,7 +102,7 @@ export const LongContent: Story = {
 			...samplePost,
 			content: `This is a much longer post with multiple paragraphs and lots of content to demonstrate how the card handles longer text. 
 
-The ReGoods marketplace has been transforming how we think about sustainable fashion. By connecting buyers and sellers of second-hand clothing, we're not only reducing waste but also making quality fashion more accessible to everyone.
+The Tunda Plug marketplace has been transforming how we think about sustainable fashion. By connecting buyers and sellers of second-hand clothing, we're not only reducing waste but also making quality fashion more accessible to everyone.
 
 Here are some key features we've implemented:
 • Advanced search and filtering

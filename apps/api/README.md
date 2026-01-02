@@ -1,6 +1,6 @@
-# DEC_L API
+# Tunda Plug API
 
-Backend REST API for the DEC_L classifieds platform.
+Backend REST API for the Tunda Plug classifieds platform.
 
 ## Tech Stack
 

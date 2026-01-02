@@ -1,6 +1,6 @@
 # Media & Display Components
 
-A collection of reusable media and display components for the ReGoods application.
+A collection of reusable media and display components for the Tunda Plug application.
 
 ## Components
 

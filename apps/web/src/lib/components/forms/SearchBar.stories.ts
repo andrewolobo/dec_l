@@ -86,7 +86,7 @@ export const HeaderSearch: Story = {
 		Component: SearchBar,
 		slot: `
 			<div style="max-width: 600px; padding: 1rem; background: #1a1a1a; border-radius: 0.5rem;">
-				<SearchBar placeholder="Search ReGoods..." />
+				<SearchBar placeholder="Search Tunda Plug..." />
 			</div>
 		`
 	})

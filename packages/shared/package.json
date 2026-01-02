@@ -1,7 +1,7 @@
 {
-    "name": "@dec_l/shared",
+    "name": "@tunda-plug/shared",
     "version": "1.0.0",
-    "description": "Shared types and utilities for DEC_L",
+    "description": "Shared types and utilities for Tunda Plug",
     "main": "./src/index.ts",
     "types": "./src/index.ts",
     "exports": {

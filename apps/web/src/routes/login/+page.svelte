@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import * as authService from '$lib/services/auth.service';
 
 	let email = '';
 	let password = '';
@@ -16,17 +18,22 @@
 		error = '';
 
 		try {
-			// TODO: Integrate with authService when OAuth is implemented
-			// For now, just validate and show placeholder
-			console.log('Sign in with:', { email, password });
+			const response = await authService.login({
+				emailAddress: email,
+				password: password
+			});
 
-			// Placeholder - redirect to home after successful login
-			// await authService.login(email, password);
-			// goto('/');
-
-			error = 'Login API not yet implemented. Coming soon!';
+			if (response.success && response.data) {
+				// Auth service automatically stores tokens and user data
+				// Redirect to intended destination or default to browse
+				const redirectTo = $page.url.searchParams.get('redirectTo') || '/browse';
+				await goto(redirectTo);
+			} else {
+				error = response.error?.message || 'Login failed. Please try again.';
+			}
 		} catch (err: any) {
-			error = err.message || 'Login failed';
+			console.error('Login error:', err);
+			error = err.message || 'An unexpected error occurred. Please try again.';
 		} finally {
 			loading = false;
 		}
@@ -70,7 +77,7 @@
 </script>
 
 <svelte:head>
-	<title>Sign In - DEC_L</title>
+	<title>Sign In - Tunda Plug</title>
 </svelte:head>
 
 <div class="min-h-screen bg-background-light dark:bg-background-dark flex flex-col">

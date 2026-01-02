@@ -1,15 +1,174 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import * as authService from '$lib/services/auth.service';
 
+	// Step management
+	let currentStep = 1;
+	const totalSteps = 3;
+
+	// Form fields
 	let email = '';
 	let password = '';
+	let confirmPassword = '';
+	let fullName = '';
+	let phoneNumber = '';
+	let profilePicture = '';
+	let location = '';
+	let bio = '';
+	let agreedToTerms = false;
+
+	// UI state
 	let loading = false;
 	let error = '';
+	
+	// Touched state for validation
+	let emailTouched = false;
+	let passwordTouched = false;
+	let confirmPasswordTouched = false;
+	let fullNameTouched = false;
+	let phoneNumberTouched = false;
+	
+	// Validation errors
+	let emailError = '';
+	let passwordError = '';
+	let confirmPasswordError = '';
+	let fullNameError = '';
+	let phoneNumberError = '';
 
-	async function handleEmailSignUp() {
-		if (!email || !password) {
-			error = 'Please fill in all fields';
+	// Password strength
+	let passwordStrength = { score: 0, message: '', color: '' };
+
+	// Validation functions
+	function validateEmail(value: string): string {
+		if (!value) return 'Email is required';
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(value)) return 'Please enter a valid email address';
+		return '';
+	}
+
+	function validatePassword(value: string): string {
+		if (!value) return 'Password is required';
+		if (value.length < 8) return 'Password must be at least 8 characters';
+		if (!/[A-Z]/.test(value)) return 'Password must contain an uppercase letter';
+		if (!/[a-z]/.test(value)) return 'Password must contain a lowercase letter';
+		if (!/[0-9]/.test(value)) return 'Password must contain a number';
+		if (!/[^A-Za-z0-9]/.test(value)) return 'Password must contain a special character';
+		return '';
+	}
+
+	function validateConfirmPassword(value: string, passwordValue: string): string {
+		if (!value) return 'Please confirm your password';
+		if (value !== passwordValue) return 'Passwords do not match';
+		return '';
+	}
+
+	function validateFullName(value: string): string {
+		if (!value) return 'Full name is required';
+		if (value.length < 2) return 'Full name must be at least 2 characters';
+		if (value.length > 100) return 'Full name must not exceed 100 characters';
+		return '';
+	}
+
+	function validatePhoneNumber(value: string): string {
+		if (!value) return 'Phone number is required';
+		const phoneRegex = /^[0-9]{10,15}$/;
+		const cleanedPhone = value.replace(/\D/g, '');
+		if (!phoneRegex.test(cleanedPhone)) return 'Phone number must be 10-15 digits';
+		return '';
+	}
+
+	function calculatePasswordStrength(value: string) {
+		let score = 0;
+		if (value.length >= 8) score++;
+		if (value.length >= 12) score++;
+		if (/[A-Z]/.test(value)) score++;
+		if (/[a-z]/.test(value)) score++;
+		if (/[0-9]/.test(value)) score++;
+		if (/[^A-Za-z0-9]/.test(value)) score++;
+
+		if (score <= 2) {
+			passwordStrength = { score, message: 'Weak', color: 'bg-danger-500' };
+		} else if (score <= 4) {
+			passwordStrength = { score, message: 'Fair', color: 'bg-warning-500' };
+		} else if (score <= 5) {
+			passwordStrength = { score, message: 'Good', color: 'bg-primary' };
+		} else {
+			passwordStrength = { score, message: 'Strong', color: 'bg-success-500' };
+		}
+	}
+
+	// Reactive validation (only show errors for touched fields)
+	$: emailError = emailTouched ? validateEmail(email) : '';
+	$: {
+		passwordError = passwordTouched ? validatePassword(password) : '';
+		if (password) calculatePasswordStrength(password);
+	}
+	$: confirmPasswordError = confirmPasswordTouched ? validateConfirmPassword(confirmPassword, password) : '';
+	$: fullNameError = fullNameTouched ? validateFullName(fullName) : '';
+	$: phoneNumberError = phoneNumberTouched ? validatePhoneNumber(phoneNumber) : '';
+
+	// Format phone number as user types
+	function formatPhoneNumber(value: string): string {
+		const cleaned = value.replace(/\D/g, '');
+		return cleaned;
+	}
+
+	function handlePhoneInput(event: Event) {
+		const target = event.target as HTMLInputElement;
+		phoneNumber = formatPhoneNumber(target.value);
+	}
+
+	// Step validation - reactive variables
+	$: canProceedFromStep1 = (() => {
+		if (!email || !password || !confirmPassword || !agreedToTerms) return false;
+		// Always validate, regardless of touched state
+		const realEmailError = validateEmail(email);
+		const realPasswordError = validatePassword(password);
+		const realConfirmPasswordError = validateConfirmPassword(confirmPassword, password);
+		if (realEmailError || realPasswordError || realConfirmPasswordError) return false;
+		return true;
+	})();
+
+	$: canProceedFromStep2 = (() => {
+		if (!fullName || !phoneNumber) return false;
+		// Always validate, regardless of touched state
+		const realFullNameError = validateFullName(fullName);
+		const realPhoneNumberError = validatePhoneNumber(phoneNumber);
+		if (realFullNameError || realPhoneNumberError) return false;
+		return true;
+	})();
+
+	// Step navigation
+	function nextStep() {
+		error = '';
+		if (currentStep === 1 && !canProceedFromStep1) {
+			error = 'Please fill in all required fields correctly';
+			return;
+		}
+		if (currentStep === 2 && !canProceedFromStep2) {
+			error = 'Please fill in all required fields correctly';
+			return;
+		}
+		if (currentStep < totalSteps) {
+			currentStep++;
+		}
+	}
+
+	function previousStep() {
+		error = '';
+		if (currentStep > 1) {
+			currentStep--;
+		}
+	}
+
+	function skipStep3() {
+		handleSubmit();
+	}
+
+	async function handleSubmit() {
+		if (!canProceedFromStep1 || !canProceedFromStep2) {
+			error = 'Please complete all required fields';
+			currentStep = 1;
 			return;
 		}
 
@@ -17,17 +176,25 @@
 		error = '';
 
 		try {
-			// TODO: Integrate with authService when OAuth is implemented
-			// For now, just validate and show placeholder
-			console.log('Sign up with:', { email, password });
+			const registerData = {
+				emailAddress: email,
+				password: password,
+				fullName: fullName,
+				phoneNumber: phoneNumber.replace(/\D/g, '')
+			};
 
-			// Placeholder - redirect to login after successful registration
-			// await authService.register(email, password);
-			// goto('/login');
+			const response = await authService.register(registerData);
 
-			error = 'Registration API not yet implemented. Coming soon!';
+			if (response.success && response.data) {
+				// Auth service automatically stores tokens and user data
+				// Redirect to browse or onboarding
+				await goto('/browse');
+			} else {
+				error = response.error?.message || 'Registration failed. Please try again.';
+			}
 		} catch (err: any) {
-			error = err.message || 'Registration failed';
+			console.error('Registration error:', err);
+			error = err.message || 'An unexpected error occurred. Please try again.';
 		} finally {
 			loading = false;
 		}
@@ -37,8 +204,6 @@
 		loading = true;
 		error = '';
 		try {
-			// TODO: Implement Google OAuth
-			// await authService.signInWithGoogle();
 			console.log('Google sign up clicked');
 			error = 'Google OAuth not yet implemented. Coming soon!';
 		} catch (err: any) {
@@ -52,8 +217,6 @@
 		loading = true;
 		error = '';
 		try {
-			// TODO: Implement Microsoft OAuth
-			// await authService.signInWithMicrosoft();
 			console.log('Microsoft sign up clicked');
 			error = 'Microsoft OAuth not yet implemented. Coming soon!';
 		} catch (err: any) {
@@ -62,22 +225,16 @@
 			loading = false;
 		}
 	}
-
-	function handleKeyPress(event: KeyboardEvent) {
-		if (event.key === 'Enter') {
-			handleEmailSignUp();
-		}
-	}
 </script>
 
 <svelte:head>
-	<title>Sign Up - DEC_L</title>
+	<title>Sign Up - Tunda Plug</title>
 </svelte:head>
 
 <div class="min-h-screen bg-background-light dark:bg-background-dark flex flex-col">
-	<div class="flex-grow flex flex-col justify-center">
+	<div class="flex-grow flex flex-col justify-center py-8">
 		<!-- Logo -->
-		<div class="flex justify-center pt-8 pb-6">
+		<div class="flex justify-center pt-4 pb-4">
 			<span class="material-symbols-outlined text-white text-5xl">sell</span>
 		</div>
 
@@ -86,58 +243,27 @@
 			Create your account
 		</h2>
 
-		<!-- OAuth Buttons -->
-		<div class="flex justify-center w-full">
-			<div class="flex w-full flex-1 gap-3 max-w-md flex-col items-stretch px-4 py-8">
-				<button
-					on:click={handleGoogleSignUp}
-					disabled={loading}
-					class="flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-16 px-6 py-3 bg-white text-gray-900 text-base font-semibold leading-normal w-full gap-3 hover:bg-[#f8f9fa] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_1px_2px_0_rgba(60,64,67,0.3),0_1px_3px_1px_rgba(60,64,67,0.15)] hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.3),0_4px_8px_3px_rgba(60,64,67,0.15)]"
-				>
-					<svg class="w-[18px] h-[18px]" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-						<path
-							fill="#4285F4"
-							d="M17.64 9.2045c0-.6381-.0573-1.2518-.1636-1.8409H9v3.4814h4.8436c-.2086 1.125-.8427 2.0782-1.7959 2.7164v2.2581h2.9087c1.7018-1.5668 2.6836-3.874 2.6836-6.615z"
-						/>
-						<path
-							fill="#34A853"
-							d="M9 18c2.43 0 4.4673-.806 5.9564-2.1805l-2.9087-2.2581c-.8059.54-1.8368.859-3.0477.859-2.344 0-4.3282-1.5831-5.036-3.7104H.9574v2.3318C2.4382 15.9832 5.4818 18 9 18z"
-						/>
-						<path
-							fill="#FBBC05"
-							d="M3.964 10.71c-.18-.54-.2822-1.1168-.2822-1.71s.1023-1.17.2823-1.71V4.9582H.9573A8.9965 8.9965 0 0 0 0 9c0 1.4523.3477 2.8268.9573 4.0418L3.964 10.71z"
-						/>
-						<path
-							fill="#EA4335"
-							d="M9 3.5795c1.3214 0 2.5077.4541 3.4405 1.346l2.5813-2.5814C13.4632.8918 11.426 0 9 0 5.4818 0 2.4382 2.0168.9573 4.9582L3.964 7.29C4.6718 5.1627 6.6559 3.5795 9 3.5795z"
-						/>
-					</svg>
-					<span class="truncate">Sign up with Google</span>
-				</button>
-
-				<button
-					on:click={handleMicrosoftSignUp}
-					disabled={loading}
-					class="flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-16 px-6 py-3 bg-[#2F2F2F] text-white text-base font-semibold leading-normal w-full gap-3 hover:bg-[#1F1F1F] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed border border-white/20"
-				>
-					<svg class="w-5 h-5" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
-						<rect x="0" y="0" width="11" height="11" fill="#f25022" />
-						<rect x="12" y="0" width="11" height="11" fill="#00a4ef" />
-						<rect x="0" y="12" width="11" height="11" fill="#7fba00" />
-						<rect x="12" y="12" width="11" height="11" fill="#ffb900" />
-					</svg>
-					<span class="truncate">Sign in with Microsoft</span>
-				</button>
+		<!-- Step Indicator -->
+		<div class="flex justify-center w-full px-4 pt-6 pb-4">
+			<div class="flex items-center gap-2 max-w-md w-full">
+				{#each Array(totalSteps) as _, i}
+					<div class="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
+						<div
+							class="h-full bg-primary transition-all duration-300"
+							style="width: {currentStep > i ? '100%' : currentStep === i + 1 ? '50%' : '0%'}"
+						></div>
+					</div>
+				{/each}
 			</div>
 		</div>
 
-		<!-- Divider -->
-		<p class="text-gray-400 text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center">or</p>
+		<!-- Step Counter -->
+		<p class="text-center text-gray-400 text-sm pb-4">Step {currentStep} of {totalSteps}</p>
 
 		<!-- Error Message -->
 		{#if error}
-			<div class="flex justify-center w-full">
-				<div class="max-w-md w-full px-4 py-2">
+			<div class="flex justify-center w-full px-4 pb-4">
+				<div class="max-w-md w-full">
 					<div
 						class="bg-danger-500/10 border border-danger-500 text-danger-500 px-4 py-3 rounded-lg text-sm"
 					>
@@ -147,74 +273,344 @@
 			</div>
 		{/if}
 
-		<!-- Email Field -->
-		<div class="flex justify-center w-full">
-			<div class="flex max-w-md w-full flex-wrap items-end gap-4 px-4 py-3">
-				<label class="flex flex-col min-w-40 flex-1">
-					<p class="text-white text-base font-medium leading-normal pb-2">Email Address</p>
-					<div class="flex w-full flex-1 items-stretch rounded-lg">
+		<!-- Step 1: Account Credentials -->
+		{#if currentStep === 1}
+			<!-- OAuth Buttons -->
+			<div class="flex justify-center w-full">
+				<div class="flex w-full flex-1 gap-3 max-w-md flex-col items-stretch px-4 py-4">
+					<button
+						on:click={handleGoogleSignUp}
+						disabled={loading}
+						class="flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-5 bg-white text-gray-900 text-base font-semibold leading-normal w-full gap-3 hover:bg-[#f8f9fa] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_1px_2px_0_rgba(60,64,67,0.3),0_1px_3px_1px_rgba(60,64,67,0.15)] hover:shadow-[0_1px_3px_0_rgba(60,64,67,0.3),0_4px_8px_3px_rgba(60,64,67,0.15)]"
+					>
+						<svg class="w-[18px] h-[18px]" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+							<path
+								fill="#4285F4"
+								d="M17.64 9.2045c0-.6381-.0573-1.2518-.1636-1.8409H9v3.4814h4.8436c-.2086 1.125-.8427 2.0782-1.7959 2.7164v2.2581h2.9087c1.7018-1.5668 2.6836-3.874 2.6836-6.615z"
+							/>
+							<path
+								fill="#34A853"
+								d="M9 18c2.43 0 4.4673-.806 5.9564-2.1805l-2.9087-2.2581c-.8059.54-1.8368.859-3.0477.859-2.344 0-4.3282-1.5831-5.036-3.7104H.9574v2.3318C2.4382 15.9832 5.4818 18 9 18z"
+							/>
+							<path
+								fill="#FBBC05"
+								d="M3.964 10.71c-.18-.54-.2822-1.1168-.2822-1.71s.1023-1.17.2823-1.71V4.9582H.9573A8.9965 8.9965 0 0 0 0 9c0 1.4523.3477 2.8268.9573 4.0418L3.964 10.71z"
+							/>
+							<path
+								fill="#EA4335"
+								d="M9 3.5795c1.3214 0 2.5077.4541 3.4405 1.346l2.5813-2.5814C13.4632.8918 11.426 0 9 0 5.4818 0 2.4382 2.0168.9573 4.9582L3.964 7.29C4.6718 5.1627 6.6559 3.5795 9 3.5795z"
+							/>
+						</svg>
+						<span class="truncate">Sign up with Google</span>
+					</button>
+
+					<button
+						on:click={handleMicrosoftSignUp}
+						disabled={loading}
+						class="flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-5 bg-[#2F2F2F] text-white text-base font-semibold leading-normal w-full gap-3 hover:bg-[#1F1F1F] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed border border-white/20"
+					>
+						<svg class="w-5 h-5" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
+							<rect x="0" y="0" width="11" height="11" fill="#f25022" />
+							<rect x="12" y="0" width="11" height="11" fill="#00a4ef" />
+							<rect x="0" y="12" width="11" height="11" fill="#7fba00" />
+							<rect x="12" y="12" width="11" height="11" fill="#ffb900" />
+						</svg>
+						<span class="truncate">Sign in with Microsoft</span>
+					</button>
+				</div>
+			</div>
+
+			<p class="text-gray-400 text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center">or</p>
+
+			<!-- Email Field -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full flex-col px-4 py-2">
+					<label class="flex flex-col flex-1">
+						<p class="text-white text-base font-medium leading-normal pb-2">
+							Email Address <span class="text-danger-500">*</span>
+						</p>
 						<input
 							bind:value={email}
-							on:keypress={handleKeyPress}
+							on:blur={() => emailTouched = true}
 							type="email"
-							placeholder="Email Address"
+							placeholder="Enter your email"
 							disabled={loading}
-							class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-2 focus:ring-primary border-none bg-[#2D2D2D] focus:border-none h-14 placeholder:text-gray-500 p-4 text-base font-normal leading-normal disabled:opacity-50 disabled:cursor-not-allowed"
+							class="rounded-lg text-white bg-[#2D2D2D] h-12 px-4 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+							class:border-2={emailError}
+							class:border-danger-500={emailError}
 						/>
-					</div>
-				</label>
+						{#if emailError}
+							<p class="text-danger-500 text-xs mt-1">{emailError}</p>
+						{/if}
+					</label>
+				</div>
 			</div>
-		</div>
 
-		<!-- Password Field -->
-		<div class="flex justify-center w-full">
-			<div class="flex max-w-md w-full flex-wrap items-end gap-4 px-4 py-3">
-				<label class="flex flex-col min-w-40 flex-1">
-					<p class="text-white text-base font-medium leading-normal pb-2">Password</p>
-					<div class="flex w-full flex-1 items-stretch rounded-lg">
+			<!-- Password Field -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full flex-col px-4 py-2">
+					<label class="flex flex-col flex-1">
+						<p class="text-white text-base font-medium leading-normal pb-2">
+							Password <span class="text-danger-500">*</span>
+						</p>
 						<input
 							bind:value={password}
-							on:keypress={handleKeyPress}
+							on:blur={() => passwordTouched = true}
 							type="password"
-							placeholder="Password"
+							placeholder="Create a password"
 							disabled={loading}
-							class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-2 focus:ring-primary border-none bg-[#2D2D2D] focus:border-none h-14 placeholder:text-gray-500 p-4 text-base font-normal leading-normal disabled:opacity-50 disabled:cursor-not-allowed"
+							class="rounded-lg text-white bg-[#2D2D2D] h-12 px-4 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+							class:border-2={passwordError}
+							class:border-danger-500={passwordError}
 						/>
-					</div>
-				</label>
+						{#if password && !passwordError}
+							<div class="mt-2">
+								<div class="flex items-center gap-2 mb-1">
+									<div class="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+										<div
+											class="h-full transition-all duration-300 {passwordStrength.color}"
+											style="width: {(passwordStrength.score / 6) * 100}%"
+										></div>
+									</div>
+									<span class="text-xs text-gray-400">{passwordStrength.message}</span>
+								</div>
+							</div>
+						{/if}
+						{#if passwordError}
+							<p class="text-danger-500 text-xs mt-1">{passwordError}</p>
+						{/if}
+					</label>
+				</div>
 			</div>
-		</div>
 
-		<!-- Spacer -->
-		<div class="h-5"></div>
-
-		<!-- Sign Up Button -->
-		<div class="flex justify-center w-full">
-			<div class="flex flex-1 gap-3 max-w-md flex-col items-stretch px-4 py-3">
-				<button
-					on:click={handleEmailSignUp}
-					disabled={loading}
-					class="flex min-w-[84px] max-w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-16 px-6 py-3 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em] w-full hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-				>
-					<span class="truncate">{loading ? 'Signing up...' : 'Sign Up'}</span>
-				</button>
+			<!-- Confirm Password Field -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full flex-col px-4 py-2">
+					<label class="flex flex-col flex-1">
+						<p class="text-white text-base font-medium leading-normal pb-2">
+							Confirm Password <span class="text-danger-500">*</span>
+						</p>
+						<input
+							bind:value={confirmPassword}
+							on:blur={() => confirmPasswordTouched = true}
+							type="password"
+							placeholder="Confirm your password"
+							disabled={loading}
+							class="rounded-lg text-white bg-[#2D2D2D] h-12 px-4 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+							class:border-2={confirmPasswordError}
+							class:border-danger-500={confirmPasswordError}
+						/>
+						{#if confirmPasswordError}
+							<p class="text-danger-500 text-xs mt-1">{confirmPasswordError}</p>
+						{/if}
+					</label>
+				</div>
 			</div>
-		</div>
+
+			<!-- Terms Checkbox -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full px-4 py-3">
+					<label class="flex items-start gap-3 cursor-pointer">
+						<input
+							type="checkbox"
+							bind:checked={agreedToTerms}
+							disabled={loading}
+							class="mt-1 w-5 h-5 rounded border-2 border-gray-400 bg-transparent checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+						/>
+						<p class="text-gray-400 text-sm leading-normal">
+							I agree to the <a href="/terms" class="text-primary hover:underline">Terms of Service</a>
+							and <a href="/privacy" class="text-primary hover:underline">Privacy Policy</a>
+							<span class="text-danger-500">*</span>
+						</p>
+					</label>
+				</div>
+			</div>
+
+			<!-- Next Button -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full px-4 py-3">
+					<button
+						on:click={nextStep}
+						disabled={loading || !canProceedFromStep1}
+						class="w-full h-12 rounded-lg bg-primary text-background-dark text-base font-bold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						Continue
+					</button>
+				</div>
+			</div>
+		{/if}
+
+		<!-- Step 2: Personal Information -->
+		{#if currentStep === 2}
+			<p class="text-center text-gray-300 text-sm px-4 pb-6">
+				Help us personalize your experience
+			</p>
+
+			<!-- Full Name Field -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full flex-col px-4 py-2">
+					<label class="flex flex-col flex-1">
+						<p class="text-white text-base font-medium leading-normal pb-2">
+							Full Name <span class="text-danger-500">*</span>
+						</p>
+						<input
+							bind:value={fullName}
+							on:blur={() => fullNameTouched = true}
+							type="text"
+							placeholder="Enter your full name"
+							disabled={loading}
+							class="rounded-lg text-white bg-[#2D2D2D] h-12 px-4 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+							class:border-2={fullNameError}
+							class:border-danger-500={fullNameError}
+						/>
+						{#if fullNameError}
+							<p class="text-danger-500 text-xs mt-1">{fullNameError}</p>
+						{/if}
+					</label>
+				</div>
+			</div>
+
+			<!-- Phone Number Field -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full flex-col px-4 py-2">
+					<label class="flex flex-col flex-1">
+						<p class="text-white text-base font-medium leading-normal pb-2">
+							Phone Number <span class="text-danger-500">*</span>
+						</p>
+						<input
+							bind:value={phoneNumber}
+							on:input={handlePhoneInput}
+							on:blur={() => phoneNumberTouched = true}
+							type="tel"
+							placeholder="Enter your phone number"
+							disabled={loading}
+							class="rounded-lg text-white bg-[#2D2D2D] h-12 px-4 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+							class:border-2={phoneNumberError}
+							class:border-danger-500={phoneNumberError}
+						/>
+						{#if phoneNumberError}
+							<p class="text-danger-500 text-xs mt-1">{phoneNumberError}</p>
+						{:else}
+							<p class="text-gray-500 text-xs mt-1">10-15 digits, numbers only</p>
+						{/if}
+					</label>
+				</div>
+			</div>
+
+			<!-- Navigation Buttons -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full gap-3 px-4 py-3">
+					<button
+						on:click={previousStep}
+						disabled={loading}
+						class="flex-1 h-12 rounded-lg bg-transparent border-2 border-primary text-primary text-base font-bold hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						Back
+					</button>
+					<button
+						on:click={nextStep}
+						disabled={loading || !canProceedFromStep2}
+						class="flex-1 h-12 rounded-lg bg-primary text-background-dark text-base font-bold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						Continue
+					</button>
+				</div>
+			</div>
+		{/if}
+
+		<!-- Step 3: Optional Profile -->
+		{#if currentStep === 3}
+			<p class="text-center text-gray-300 text-sm px-4 pb-2">
+				Enhance your profile (optional)
+			</p>
+			<p class="text-center text-gray-500 text-xs px-4 pb-6">You can complete this later</p>
+
+			<!-- Profile Picture URL Field -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full flex-col px-4 py-2">
+					<label class="flex flex-col flex-1">
+						<p class="text-white text-base font-medium leading-normal pb-2">Profile Picture URL</p>
+						<input
+							bind:value={profilePicture}
+							type="url"
+							placeholder="https://example.com/photo.jpg"
+							disabled={loading}
+							class="rounded-lg text-white bg-[#2D2D2D] h-12 px-4 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+						/>
+					</label>
+				</div>
+			</div>
+
+			<!-- Location Field -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full flex-col px-4 py-2">
+					<label class="flex flex-col flex-1">
+						<p class="text-white text-base font-medium leading-normal pb-2">Location</p>
+						<input
+							bind:value={location}
+							type="text"
+							placeholder="City, Country"
+							maxlength="255"
+							disabled={loading}
+							class="rounded-lg text-white bg-[#2D2D2D] h-12 px-4 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+						/>
+					</label>
+				</div>
+			</div>
+
+			<!-- Bio Field -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full flex-col px-4 py-2">
+					<label class="flex flex-col flex-1">
+						<p class="text-white text-base font-medium leading-normal pb-2">Bio</p>
+						<textarea
+							bind:value={bio}
+							placeholder="Tell us about yourself..."
+							maxlength="500"
+							rows="3"
+							disabled={loading}
+							class="rounded-lg text-white bg-[#2D2D2D] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-500 resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+						></textarea>
+						<p class="text-gray-500 text-xs mt-1">{bio.length}/500 characters</p>
+					</label>
+				</div>
+			</div>
+
+			<!-- Navigation Buttons -->
+			<div class="flex justify-center w-full">
+				<div class="flex max-w-md w-full gap-3 px-4 py-3">
+					<button
+						on:click={previousStep}
+						disabled={loading}
+						class="flex-1 h-12 rounded-lg bg-transparent border-2 border-primary text-primary text-base font-bold hover:bg-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						Back
+					</button>
+					<button
+						on:click={skipStep3}
+						disabled={loading}
+						class="flex-1 h-12 rounded-lg bg-transparent border-2 border-gray-600 text-gray-400 text-base font-bold hover:bg-gray-600/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						Skip
+					</button>
+					<button
+						on:click={handleSubmit}
+						disabled={loading}
+						class="flex-1 h-12 rounded-lg bg-primary text-background-dark text-base font-bold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						{loading ? 'Creating...' : 'Complete'}
+					</button>
+				</div>
+			</div>
+		{/if}
 	</div>
 
 	<!-- Footer -->
-	<div class="flex flex-col items-center justify-center gap-4 px-4 pb-12 pt-6 text-center">
+	<div class="flex flex-col items-center justify-center gap-3 px-4 pb-8 pt-4 text-center">
 		<p class="text-gray-400 text-sm">
 			Already have an account? <a href="/login" class="font-bold text-primary hover:underline"
 				>Log In</a
 			>
-		</p>
-		<p class="text-gray-500 text-xs max-w-xs">
-			By signing up, you agree to our <a
-				href="/terms"
-				class="font-bold text-primary hover:underline">Terms of Service</a
-			>
-			and <a href="/privacy" class="font-bold text-primary hover:underline">Privacy Policy</a>.
 		</p>
 	</div>
 </div>

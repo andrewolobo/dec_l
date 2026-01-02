@@ -61,14 +61,20 @@ export async function loginWithOAuth(data: OAuthLoginDTO): Promise<ApiResponse<A
 /**
  * Refresh access token using refresh token
  */
-export async function refreshToken(refreshToken: string): Promise<ApiResponse<AuthTokens>> {
-	const response = await apiClient.post<ApiResponse<AuthTokens>>('/auth/refresh', {
+export async function refreshToken(refreshToken: string): Promise<ApiResponse<{ accessToken: string }>> {
+	const response = await apiClient.post<ApiResponse<{ accessToken: string }>>('/auth/refresh', {
 		refreshToken
 	} as RefreshTokenDTO);
 
-	// Update tokens in localStorage
+	// Update access token in localStorage (keep existing refresh token)
 	if (response.data.success && response.data.data) {
-		setAuthTokens(response.data.data);
+		const currentTokens = getAuthTokens();
+		if (currentTokens) {
+			setAuthTokens({
+				accessToken: response.data.data.accessToken,
+				refreshToken: currentTokens.refreshToken
+			});
+		}
 	}
 
 	return response.data;

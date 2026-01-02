@@ -1,11 +1,11 @@
-# DEC_L - Digital Exchange Classifieds
+# Tunda Plug
 
 A modern classifieds platform with separate API and web applications.
 
 ## Project Structure
 
 ```
-DEC_L/
+Tunda Plug/
 ├── apps/
 │   ├── api/          Backend REST API (Express + TypeScript + Prisma)
 │   └── web/          Frontend application (SvelteKit + TypeScript)

@@ -1,4 +1,4 @@
-# DEC_L Web UI
+# Tunda Plug Web UI
 
 Modern classifieds platform built with SvelteKit, TypeScript, and TailwindCSS.
 
@@ -7,7 +7,7 @@ Modern classifieds platform built with SvelteKit, TypeScript, and TailwindCSS.
 ### Prerequisites
 
 - Node.js 18+ and npm
-- Running DEC_L API server (see `apps/api`)
+- Running Tunda Plug API server (see `apps/api`)
 
 ### Installation
 

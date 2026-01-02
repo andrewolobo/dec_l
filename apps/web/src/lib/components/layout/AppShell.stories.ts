@@ -18,7 +18,7 @@ export const Default: Story = {
 		Component: AppShell,
 		slot: `
 			<div style="padding: 2rem;">
-				<h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">Welcome to ReGoods</h1>
+				<h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">Welcome to Tunda Plug</h1>
 				<p style="color: var(--color-text-secondary);">The main content area of your application.</p>
 			</div>
 		`

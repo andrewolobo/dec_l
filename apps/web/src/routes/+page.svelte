@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-	<title>ReGoods - Give Your Goods a Second Life</title>
+	<title>Tunda Plug - Give Your Goods a Second Life</title>
 	<meta name="description" content="The easiest way to buy and sell furniture, decor, and more in your neighborhood. Community driven commerce reimagined." />
 </svelte:head>
 
@@ -23,7 +23,7 @@
 		<button onclick={toggleMenu} class="flex size-12 shrink-0 items-center justify-start text-slate-900 dark:text-white hover:text-primary transition-colors">
 			<Icon name="menu" size={28} />
 		</button>
-		<h2 class="text-slate-900 dark:text-white text-xl font-extrabold leading-tight tracking-[-0.015em] flex-1 text-center">Bamboo Tree</h2>
+		<h2 class="text-slate-900 dark:text-white text-xl font-extrabold leading-tight tracking-[-0.015em] flex-1 text-center">Tunda Plug</h2>
 		<div class="flex w-12 items-center justify-end">
 			<a href="/login" class="text-primary hover:text-primary/80 text-base font-bold leading-normal tracking-[0.015em] shrink-0 transition-colors">
 				Log In
@@ -35,36 +35,38 @@
 	<div class="p-4">
 		<div class="relative w-full h-[500px] rounded-xl overflow-hidden shadow-lg group">
 			<div class="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
-				<img 
-					src="/images/hero-banner.png" 
-					alt="Hero banner" 
-					class="w-full h-full object-cover"
-					style="image-rendering: -webkit-optimize-contrast;"
-				/>
+<img 
+        src="/images/hero-banner.jpg" 
+        alt="Hero banner" 
+        class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+    />
 			</div>
 			<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
 			<div class="absolute bottom-0 left-0 w-full p-6 flex flex-col gap-4">
 				<div class="flex flex-col gap-2">
 					<h1 class="text-white tracking-tight text-4xl font-extrabold leading-[1.1]">
-						Give Your Goods a Second Life
+						Give Your Wares a Second Home
 					</h1>
-					<p class="text-gray-200 text-lg font-medium leading-relaxed max-w-[90%]">
-						The easiest way to buy and sell furniture, decor, and more in your neighborhood.
+					<p class="text-white/90 text-lg leading-normal max-w-lg">
+						Old Gems, New Vibes
 					</p>
 				</div>
-				<div class="pt-2">
-					<a href="/register" class="flex w-full sm:w-auto min-w-[140px] cursor-pointer items-center justify-center rounded-xl h-12 px-6 bg-primary text-background-dark text-base font-bold transition-transform active:scale-95 hover:bg-primary/90 shadow-[0_0_15px_rgba(19,236,236,0.3)]">
-						Get Started
+				<div class="flex gap-3">
+					<a href="/browse" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-background-dark text-base font-bold hover:bg-primary/90 transition-colors">
+						<span class="truncate">Browse Listings</span>
+					</a>
+					<a href="/register" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 text-base font-bold hover:bg-white/20 transition-colors">
+						<span class="truncate">Get Started</span>
 					</a>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- Headline: Why ReGoods? -->
-	<div class="pt-8 px-4 pb-4">
+	<!-- Headline: Why Tunda Plug? -->
+	<div class="pt-8 px-4 pb-4 justify-center" >
 		<h2 class="text-slate-900 dark:text-white tracking-tight text-[28px] font-bold leading-tight">
-			Why ReGoods?
+			Why Tunda Plug?
 		</h2>
 		<p class="text-slate-500 dark:text-gray-400 text-base mt-1">
 			Community driven commerce reimagined.

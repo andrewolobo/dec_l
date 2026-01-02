@@ -1,6 +1,6 @@
 # Form Components
 
-A comprehensive collection of 12 reusable form components built with Svelte for the DEC_L application.
+A comprehensive collection of 12 reusable form components built with Svelte for the Tunda Plug application.
 
 ## Components
 

@@ -1,6 +1,6 @@
 # Button & Action Components
 
-A collection of reusable button and action components for the ReGoods application.
+A collection of reusable button and action components for the Tunda Plug application.
 
 ## Components
 
@@ -118,10 +118,10 @@ Share content via multiple channels (WhatsApp, Facebook, Twitter, Copy Link).
 </script>
 
 <ShareButton
-	url="https://regoods.com/posts/123"
+	url="https://tundaplug.com/posts/123"
 	title="Vintage Leather Chair"
 	description="Beautiful vintage chair in great condition"
-	image="https://regoods.com/images/chair.jpg"
+	image="https://tundaplug.com/images/chair.jpg"
 />
 ```
 

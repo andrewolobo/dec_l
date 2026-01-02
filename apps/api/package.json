@@ -1,7 +1,7 @@
 {
-  "name": "@dec_l/api",
+  "name": "@tunda-plug/api",
   "version": "1.0.0",
-  "description": "DEC_L Backend API",
+  "description": "Tunda Plug Backend API",
   "main": "dist/server.js",
   "scripts": {
     "test": "jest",

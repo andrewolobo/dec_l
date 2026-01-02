@@ -1,8 +1,8 @@
 {
-    "name": "dec_l",
+    "name": "tunda-plug",
     "version": "1.0.0",
     "private": true,
-    "description": "Digital Exchange Classifieds - Monorepo",
+    "description": "Tunda Plug - Monorepo",
     "workspaces": [
         "apps/*",
         "packages/*"

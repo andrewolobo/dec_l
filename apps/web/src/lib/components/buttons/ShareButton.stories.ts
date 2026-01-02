@@ -26,7 +26,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	args: {
-		url: 'https://regoods.com/post/123',
+		url: 'https://tundaplug.com/post/123',
 		title: 'iPhone 12 Pro Max',
 		text: 'Check out this amazing deal!'
 	}
@@ -34,7 +34,7 @@ export const Default: Story = {
 
 export const WithCustomText: Story = {
 	args: {
-		url: 'https://regoods.com/post/456',
+		url: 'https://tundaplug.com/post/456',
 		title: 'Vintage Camera',
 		text: 'Rare find! Vintage Nikon F3 in excellent condition.'
 	}
@@ -42,6 +42,6 @@ export const WithCustomText: Story = {
 
 export const MinimalInfo: Story = {
 	args: {
-		url: 'https://regoods.com/post/789'
+		url: 'https://tundaplug.com/post/789'
 	}
 };
