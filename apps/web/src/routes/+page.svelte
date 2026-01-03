@@ -75,37 +75,37 @@
 
 	<!-- Feature Carousel -->
 	<div class="flex overflow-x-auto pb-6 [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pl-4 pr-4 gap-4 snap-x snap-mandatory">
-		<!-- Feature 1 -->
-		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
-			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
-				style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuALMYPO7yByU8e4XHbe2HZY3ZyiW8hmZvKYuwII2Kjxwz1Go_6tpEeYOO_Nt6QYRLKAgbmKvRQBfj0ZFbVb5ceLHurxDjcOqgu7TLlgalKaAiGlsmVJYeQebBrfspXlk-UysyM-TN3CZq2Jq2d5VB311FggmRa0zvDFMXTI6kMdjIATF8EoDnJ2VqRpnJs6KF-Iys2FflkcDIBcUCX5T909FWJzaUlayli1kOHTwJAkT1DOnCIFOD_PP85zORFXLEZiZqaf5nzx9KWI')">
-				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
-				<div class="absolute bottom-4 left-4 right-4">
-					<div class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary">
-						<Icon name="grid_view" />
-					</div>
-					<p class="text-white text-xl font-bold leading-tight">Scroll, Love, Buy</p>
-					<p class="text-primary text-sm font-medium mt-1">Shop like you social with our visual feed.</p>
-				</div>
-			</div>
-		</div>
 
-		<!-- Feature 2 -->
+
+				<!-- Feature 2 -->
 		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
 			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
-				style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqsnELwugthYzKN395lf_39Fz-FXyZ9N67CBUt73c9mQ1H5Q6N40snxoyEzwPJiG04HTcojfEKZvTk2O-jeLw9i0YIq1vBTGGUdjsqutFlk9kwIT-P96Xb3daGxz4ht7dIjVR4HYh3ktQOpYgFfkoH3Pp-ibUKmjHWlOndSJyauwwWtK-qB0QUxBqc97J3r5tPRh-8ptvQjFgcno2-VH4ffYjE28meNDyHoZM3PYbSuGyMb7fP3KBxdL0a8d1-J6GYsSi2opT0jDFP')">
+				style="background-image: url('/images/feature-2.jpg')">
 				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
 				<div class="absolute bottom-4 left-4 right-4">
 					<div class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary">
 						<Icon name="photo_camera" />
 					</div>
-					<p class="text-white text-xl font-bold leading-tight">Snap. Post. Sold.</p>
-					<p class="text-primary text-sm font-medium mt-1">Listing takes 30 seconds with our camera.</p>
+					<p class="text-white text-xl font-bold leading-tight">Snap. Post. Sell.</p>
+					<p class="text-primary text-sm font-medium mt-1">List with us in under 30 seconds</p>
 				</div>
 			</div>
 		</div>
-
-		<!-- Feature 3 -->
+				<!-- Feature 5 -->
+		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
+			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
+				style="background-image: url('/images/feature-7.png')">
+				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
+				<div class="absolute bottom-4 left-4 right-4">
+					<div class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary">
+						<Icon name="chat_bubble" />
+					</div>
+					<p class="text-white text-xl font-bold leading-tight">Get it Chap Chap</p>
+					<p class="text-primary text-sm font-medium mt-1">Choose how you receive your items</p>
+				</div>
+			</div>
+		</div>
+				<!-- Feature 4 -->
 		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
 			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
 				style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBW4cJu_UimkXkzFVLr7IrdVUkHMbMkbRucrRqiKAEeABEe-lhdHO07vqFVtStgsp8zNEVwtaTQcRiZEjoNUjA4gEOWFDRfCDJKjknlO1jSPaUneQVAL8u4uXHDVLN8hMssraeIs9gEwlEpVZW8wd0ErmiZYltRIADPMcBkBuYfIZemHWDZ3SFPYYbbZscl4GoVowlBn6HlU6jvwvySowmKJq47snQAcHArOugiIcr8pjrE1dOtB405ZowrCaN2-0_Y3xdGDPexh9-P')">
@@ -115,40 +115,45 @@
 						<Icon name="chat_bubble" />
 					</div>
 					<p class="text-white text-xl font-bold leading-tight">Safe & Simple Chat</p>
-					<p class="text-primary text-sm font-medium mt-1">No spam, just sales locally.</p>
+					<p class="text-primary text-sm font-medium mt-1">Get in touch securely and easily.</p>
 				</div>
 			</div>
 		</div>
-
-		<!-- Feature 4 -->
+				<!-- Feature 3 -->
 		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
 			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
-				style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBW4cJu_UimkXkzFVLr7IrdVUkHMbMkbRucrRqiKAEeABEe-lhdHO07vqFVtStgsp8zNEVwtaTQcRiZEjoNUjA4gEOWFDRfCDJKjknlO1jSPaUneQVAL8u4uXHDVLN8hMssraeIs9gEwlEpVZW8wd0ErmiZYltRIADPMcBkBuYfIZemHWDZ3SFPYYbbZscl4GoVowlBn6HlU6jvwvySowmKJq47snQAcHArOugiIcr8pjrE1dOtB405ZowrCaN2-0_Y3xdGDPexh9-P')">
+				style="background-image: url('/images/feature-6.png')">
 				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
 				<div class="absolute bottom-4 left-4 right-4">
 					<div class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary">
 						<Icon name="chat_bubble" />
 					</div>
-					<p class="text-white text-xl font-bold leading-tight">Safe & Simple Chat</p>
-					<p class="text-primary text-sm font-medium mt-1">No spam, just sales locally.</p>
+					<p class="text-white text-xl font-bold leading-tight">Trusted, Verified & Secure</p>
+					<p class="text-primary text-sm font-medium mt-1">No spam, No Scams</p>
+				</div>
+			</div>
+		</div>
+				<!-- Feature 1 -->
+		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
+			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
+				style="background-image: url('/images/feature-1.png')">
+				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
+				<div class="absolute bottom-4 left-4 right-4">
+					<div class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary">
+						<Icon name="grid_view" />
+					</div>
+					<p class="text-white text-xl font-bold leading-tight">Shop with ease</p>
+					<p class="text-primary text-sm font-medium mt-1">Frictionless retail therapy</p>
 				</div>
 			</div>
 		</div>
 
-		<!-- Feature 5 -->
-		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
-			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
-				style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBW4cJu_UimkXkzFVLr7IrdVUkHMbMkbRucrRqiKAEeABEe-lhdHO07vqFVtStgsp8zNEVwtaTQcRiZEjoNUjA4gEOWFDRfCDJKjknlO1jSPaUneQVAL8u4uXHDVLN8hMssraeIs9gEwlEpVZW8wd0ErmiZYltRIADPMcBkBuYfIZemHWDZ3SFPYYbbZscl4GoVowlBn6HlU6jvwvySowmKJq47snQAcHArOugiIcr8pjrE1dOtB405ZowrCaN2-0_Y3xdGDPexh9-P')">
-				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
-				<div class="absolute bottom-4 left-4 right-4">
-					<div class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary">
-						<Icon name="chat_bubble" />
-					</div>
-					<p class="text-white text-xl font-bold leading-tight">Safe & Simple Chat</p>
-					<p class="text-primary text-sm font-medium mt-1">No spam, just sales locally.</p>
-				</div>
-			</div>
-		</div>
+
+
+
+
+
+
 	</div>
 
 	<!-- Community Benefits Headline -->

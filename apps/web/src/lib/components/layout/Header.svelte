@@ -5,12 +5,11 @@
 	 * Provides consistent navigation across all pages
 	 */
 	
-	import type { AuthUserDTO } from '$lib/types/auth.types';
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { isAuthenticated, currentUser } from '$lib/stores';
+	import { unreadCount } from '$lib/stores/message.store';
 	
 	interface Props {
-		/** Current authenticated user */
-		user?: AuthUserDTO;
 		/** Show/hide search bar */
 		showSearch?: boolean;
 		/** Transparent background with glassmorphism */
@@ -22,7 +21,6 @@
 	}
 	
 	let {
-		user,
 		showSearch = true,
 		transparent = false,
 		onSearch,
@@ -35,9 +33,6 @@
 	
 	// User menu state
 	let showUserMenu = $state(false);
-	
-	// Notifications
-	let unreadNotifications = $state(3); // TODO: Connect to real data
 	
 	function handleSearch(e: Event) {
 		const target = e.target as HTMLInputElement;
@@ -129,22 +124,22 @@
 			</a>
 			
 			<!-- Notifications -->
-			{#if user}
+			{#if $isAuthenticated}
 				<button
 					class="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
 					aria-label="Notifications"
 				>
 					<Icon name="notifications" size={24} />
-					{#if unreadNotifications > 0}
+					{#if $unreadCount > 0}
 						<span class="absolute top-1 right-1 w-5 h-5 bg-danger-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
-							{unreadNotifications}
+							{$unreadCount > 9 ? '9+' : $unreadCount}
 						</span>
 					{/if}
 				</button>
 			{/if}
 			
 			<!-- User Menu -->
-			{#if user}
+			{#if $isAuthenticated && $currentUser}
 				<div class="relative">
 					<button
 						class="flex items-center gap-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -152,8 +147,8 @@
 						aria-label="User menu"
 					>
 						<img
-							src={user.profilePictureUrl || '/default-avatar.png'}
-							alt={user.fullName || 'User'}
+							src={$currentUser.profilePictureUrl || '/default-avatar.png'}
+							alt={$currentUser.fullName || 'User'}
 							class="w-8 h-8 rounded-full object-cover"
 						/>
 						<Icon name="expand_more" size={20} class="hidden sm:block" />
@@ -170,14 +165,12 @@
 							<!-- User Info -->
 							<div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
 								<p class="text-sm font-semibold text-gray-900 dark:text-white">
-									{user.fullName || 'User'}
-								</p>
-								<p class="text-xs text-gray-500 truncate">
-									{user.emailAddress}
-								</p>
-							</div>
-							
-							<!-- Menu Items -->
+								{$currentUser.fullName || 'User'}
+							</p>
+							<p class="text-xs text-gray-500 truncate">
+								{$currentUser.emailAddress}							</p>
+						</div>
+													<!-- Menu Items -->
 							<a
 								href="/profile"
 								class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"

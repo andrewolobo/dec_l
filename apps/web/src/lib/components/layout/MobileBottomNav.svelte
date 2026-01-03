@@ -6,27 +6,31 @@
 	 */
 	
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { isAuthenticated } from '$lib/stores';
+	import { unreadCount } from '$lib/stores/message.store';
 	
 	interface Props {
 		/** Current active route */
 		activeRoute: string;
-		/** Unread message count */
-		unreadMessages?: number;
 	}
 	
 	let {
-		activeRoute,
-		unreadMessages = 0
+		activeRoute
 	}: Props = $props();
 	
-	// Navigation items
-	const navItems = [
-		{ icon: 'home', label: 'Home', route: '/' },
-		{ icon: 'chat', label: 'Messages', route: '/messages' },
-		{ icon: 'add_circle', label: 'Post', route: '/post/create' },
-		{ icon: 'person', label: 'Profile', route: '/profile' },
-		{ icon: 'more_horiz', label: 'More', route: '/more' }
+	// All navigation items
+	const allNavItems = [
+		{ icon: 'home', label: 'Home', route: '/', requiresAuth: false },
+		{ icon: 'chat', label: 'Messages', route: '/messages', requiresAuth: true },
+		{ icon: 'add_circle', label: 'Post', route: '/post/create', requiresAuth: false },
+		{ icon: 'person', label: 'Profile', route: '/profile', requiresAuth: true },
+		{ icon: 'more_horiz', label: 'More', route: '/more', requiresAuth: false }
 	];
+	
+	// Filter navigation items based on auth state
+	const navItems = $derived(
+		allNavItems.filter(item => !item.requiresAuth || $isAuthenticated)
+	);
 	
 	function isActive(route: string): boolean {
 		if (route === '/') {
@@ -37,7 +41,7 @@
 	
 	function getBadgeCount(route: string): number {
 		if (route === '/messages') {
-			return unreadMessages;
+			return $unreadCount;
 		}
 		return 0;
 	}

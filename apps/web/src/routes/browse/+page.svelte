@@ -184,7 +184,7 @@
 				<!-- Placeholder for logo if needed -->
 			</div>
 			<h1 class="flex-1 text-center text-lg font-bold text-slate-900 dark:text-white">
-				Marketplace
+				Home
 			</h1>
 			<div class="flex w-12 items-center justify-end gap-2 md:hidden">
 				<button

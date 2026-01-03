@@ -6,6 +6,8 @@
 	 */
 	
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { isAuthenticated, currentUser } from '$lib/stores';
+	import { unreadCount } from '$lib/stores/message.store';
 	
 	interface Props {
 		/** Current active route */
@@ -22,13 +24,18 @@
 		onNavigate
 	}: Props = $props();
 	
-	// Navigation items
-	const navItems = [
-		{ icon: 'home', label: 'Home', route: '/' },
-		{ icon: 'chat', label: 'Messages', route: '/messages', badge: 5 },
-		{ icon: 'person', label: 'Profile', route: '/profile' },
-		{ icon: 'analytics', label: 'Post Analytics', route: '/analytics' }
+	// All navigation items
+	const allNavItems = [
+		{ icon: 'home', label: 'Home', route: '/', requiresAuth: false },
+		{ icon: 'chat', label: 'Messages', route: '/messages', requiresAuth: true },
+		{ icon: 'person', label: 'Profile', route: '/profile', requiresAuth: true },
+		{ icon: 'analytics', label: 'Post Analytics', route: '/analytics', requiresAuth: true }
 	];
+	
+	// Filter navigation items based on auth state
+	const navItems = $derived(
+		allNavItems.filter(item => !item.requiresAuth || $isAuthenticated)
+	);
 	
 	const adminItems = [
 		{ icon: 'admin_panel_settings', label: 'Admin Dashboard', route: '/admin' },
@@ -36,8 +43,9 @@
 		{ icon: 'report', label: 'Reports', route: '/admin/reports', badge: 12 }
 	];
 	
-	// TODO: Check user role for admin section
-	const isAdmin = true;
+	// TODO: Add isAdmin property to user type and check actual user role
+	// Check actual user role for admin section (temporarily disabled)
+	const isAdmin = $derived(false);
 	
 	function handleNavigation(route: string) {
 		if (onNavigate) {
@@ -84,19 +92,19 @@
 						{item.label}
 					</span>
 					
-					{#if item.badge}
+					{#if item.route === '/messages' && $unreadCount > 0}
 						<span class="px-2 py-0.5 text-xs font-bold rounded-full"
 							class:bg-white={isActive(item.route)}
 							class:text-primary={isActive(item.route)}
 							class:bg-primary={!isActive(item.route)}
 							class:text-white={!isActive(item.route)}
 						>
-							{item.badge}
+							{$unreadCount > 99 ? '99+' : $unreadCount}
 						</span>
 					{/if}
-				{:else if item.badge}
+				{:else if item.route === '/messages' && $unreadCount > 0}
 					<span class="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center">
-						{item.badge > 9 ? '9+' : item.badge}
+						{$unreadCount > 9 ? '9+' : $unreadCount}
 					</span>
 				{/if}
 			</a>

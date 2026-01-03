@@ -5,32 +5,25 @@
 	 * Provides responsive layout structure for authenticated pages
 	 */
 	
-	import type { AuthUserDTO } from '$lib/types/auth.types';
 	import Header from './Header.svelte';
 	import Sidebar from './Sidebar.svelte';
 	import MobileBottomNav from './MobileBottomNav.svelte';
 	
 	interface Props {
-		/** Current authenticated user */
-		user?: AuthUserDTO;
 		/** Show/hide sidebar */
 		showSidebar?: boolean;
 		/** Full width layout (no max-width constraint) */
 		fullWidth?: boolean;
 		/** Current active route */
 		activeRoute?: string;
-		/** Unread message count for badge */
-		unreadMessages?: number;
 		/** Children content */
 		children?: any;
 	}
 	
 	let {
-		user,
 		showSidebar = true,
 		fullWidth = false,
 		activeRoute = '/',
-		unreadMessages = 0,
 		children
 	}: Props = $props();
 	
@@ -49,7 +42,6 @@
 <div class="min-h-screen bg-background-light dark:bg-background-dark">
 	<!-- Header -->
 	<Header 
-		{user} 
 		onMenuToggle={toggleMobileSidebar}
 	/>
 	
@@ -102,7 +94,6 @@
 	<div class="md:hidden">
 		<MobileBottomNav 
 			{activeRoute}
-			{unreadMessages}
 		/>
 	</div>
 </div>
