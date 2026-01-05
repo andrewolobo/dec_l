@@ -9,7 +9,7 @@
 			title: 'Mid-Century Modern Armchair',
 			description:
 				'Vintage armchair in great condition. Minor scuffs on the left leg. Perfect for a reading nook...',
-			price: 250,
+			price: 250000,
 			images: [
 				'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800',
 				'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800',
@@ -30,7 +30,7 @@
 			id: '2',
 			title: 'Vintage Wooden Bookshelf',
 			description: 'Solid oak bookshelf, 5 shelves. Perfect for any living space or office.',
-			price: 150,
+			price: 150000,
 			images: [
 				'https://images.unsplash.com/photo-1594620302200-9a762244a156?w=800',
 				'https://images.unsplash.com/photo-1507032760419-81c77ead6f87?w=800'
@@ -50,7 +50,7 @@
 			id: '3',
 			title: 'Designer Floor Lamp',
 			description: 'Sleek, minimalist floor lamp with a warm LED bulb. Adds a modern touch.',
-			price: 85,
+			price: 85000,
 			images: [
 				'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800',
 				'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800',
@@ -72,7 +72,7 @@
 			id: '4',
 			title: 'Dining Table Set',
 			description: 'Modern dining table with 4 chairs. Excellent condition, barely used.',
-			price: 450,
+			price: 450000,
 			images: ['https://images.unsplash.com/photo-1617806118233-18e1de247200?w=800'],
 			status: 'active' as const,
 			location: 'Austin, TX',
@@ -89,7 +89,7 @@
 			id: '5',
 			title: 'Vintage Rug - Persian Style',
 			description: 'Beautiful hand-woven rug with intricate patterns. Adds warmth to any room.',
-			price: 320,
+			price: 320000,
 			images: [
 				'https://images.unsplash.com/photo-1600166898405-da9535204843?w=800',
 				'https://images.unsplash.com/photo-1610160981843-e36d4e70d0ba?w=800'

@@ -84,8 +84,10 @@
 				href={item.route}
 				onclick={() => handleNavigation(item.route)}
 				class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors relative group"
-				class:bg-primary={isActive(item.route)}
-				class:text-white={isActive(item.route)}
+				class:bg-slate-800={isActive(item.route)}
+				class:dark:bg-slate-700={isActive(item.route)}
+				class:text-slate-900={isActive(item.route)}
+				class:dark:text-slate-100={isActive(item.route)}
 				class:text-gray-700={!isActive(item.route)}
 				class:dark:text-gray-300={!isActive(item.route)}
 				class:hover:bg-gray-100={!isActive(item.route)}
@@ -95,7 +97,7 @@
 				<Icon 
 					name={item.icon} 
 					size={24}
-					class={isActive(item.route) ? 'text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'}
+					class={isActive(item.route) ? 'text-slate-900 dark:text-slate-100' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'}
 				/>
 				
 				{#if !collapsed}

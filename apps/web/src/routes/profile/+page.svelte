@@ -3,6 +3,7 @@
 	import Button from '$lib/components/buttons/Button.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import IconButton from '$lib/components/buttons/IconButton.svelte';
+	import Sidebar from '$lib/components/layout/Sidebar.svelte';
 	import { currentUser } from '$lib/stores';
 	import * as authService from '$lib/services/auth.service';
 
@@ -43,7 +44,16 @@
 	<title>Profile - TundaPlug</title>
 </svelte:head>
 
-<div class="min-h-screen bg-background-light dark:bg-background-dark pb-24">
+<div
+	class="relative flex h-screen w-full flex-col md:flex-row overflow-hidden bg-background-light dark:bg-background-dark"
+>
+	<!-- Side Navigation (Desktop) -->
+	<aside class="hidden md:block">
+		<Sidebar activeRoute="/profile" collapsed={false} />
+	</aside>
+
+	<div class="flex-1 flex flex-col overflow-hidden">
+<div class="min-h-screen bg-background-light dark:bg-background-dark pb-24 md:pb-0 overflow-y-auto">
 	<!-- Top App Bar -->
 	<header
 		class="sticky top-0 z-10 bg-background-light dark:bg-background-dark border-b border-slate-200/30 dark:border-slate-600/20"
@@ -153,8 +163,8 @@
 	</div>
 </div>
 
-<!-- Fixed Logout Button -->
-<div class="fixed bottom-0 left-0 right-0 z-20 bg-background-light dark:bg-background-dark border-t border-slate-200/30 dark:border-slate-600/20">
+<!-- Fixed Logout Button (Mobile Only) -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 z-20 bg-background-light dark:bg-background-dark border-t border-slate-200/30 dark:border-slate-600/20">
 	<div class="max-w-2xl mx-auto">
 		<button
 			onclick={handleLogout}
@@ -167,5 +177,7 @@
 			</div>
 			<p class="text-danger-500 text-base flex-1">Log Out</p>
 		</button>
+	</div>
+</div>
 	</div>
 </div>
