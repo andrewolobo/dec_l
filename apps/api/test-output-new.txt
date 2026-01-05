@@ -1,0 +1,25 @@
+Testing Dynamic SAS URL Generation
+
+=====================================
+
+Test 1: Extract blob name from full URL
+Input: https://declutterimg.blob.core.windows.net/images/123-1234567890-uuid.jpg?sp=racwdli&sig=abc123
+Output: https://declutterimg.blob.core.windows.net/images/123-1234567890-uuid.jpg?sv=2025-11-05&st=2026-01-05T18%3A05%3A10Z&se=2026-01-05T19%3A05%3A10Z&sr=b&sp=r&sig=WkqAE8%2BvifZ9%2FlrosEu%2BfUJeSG3seQwXoTJKNzlYuSw%3D
+✅ Successfully generated URL
+
+Test 2: Generate SAS from blob path
+Input: 123-1234567890-uuid.jpg
+Output: https://declutterimg.blob.core.windows.net/images/123-1234567890-uuid.jpg?sv=2025-11-05&st=2026-01-05T18%3A05%3A10Z&se=2026-01-05T19%3A05%3A10Z&sr=b&sp=r&sig=WkqAE8%2BvifZ9%2FlrosEu%2BfUJeSG3seQwXoTJKNzlYuSw%3D
+✅ Successfully generated URL
+
+Test 3: Handle empty string
+Input: (empty string)
+Output: 
+✅ Returned empty string as expected
+
+Test 4: Check credential initialization
+✅ StorageSharedKeyCredential is initialized
+   Account: declutterimg
+
+=====================================
+Testing Complete!

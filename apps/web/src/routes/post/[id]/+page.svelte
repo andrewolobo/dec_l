@@ -167,18 +167,18 @@
 								{#if post.images.length > 1}
 									<button
 										onclick={previousImage}
-										class="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
-										aria-label="Previous image"
-									>
-										<Icon name="chevron_left" size={24} />
-									</button>
-									<button
-										onclick={nextImage}
-										class="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
-										aria-label="Next image"
-									>
-										<Icon name="chevron_right" size={24} />
-									</button>
+									class="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+									aria-label="Previous image"
+								>
+									<Icon name="chevron_left" size={24} />
+								</button>
+								<button
+									onclick={nextImage}
+									class="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+									aria-label="Next image"
+								>
+									<Icon name="chevron_right" size={24} />
+								</button>
 
 									<!-- Image Counter -->
 									<div

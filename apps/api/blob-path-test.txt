@@ -1,0 +1,109 @@
+Testing Blob Path Storage (Step 5)
+
+========================================
+
+Test 1: Upload service returns blob path (not full URL)
+
+Generated blob path: 123-1767638848698-test-uuid-12345.jpg
+Is blob path (not full URL)? true
+Format correct? [
+  '123-1767638848698-test-uuid-12345.jpg',
+  'jpg',
+  index: 0,
+  input: '123-1767638848698-test-uuid-12345.jpg',
+  groups: undefined
+]
+✅ Upload service now returns blob paths
+
+Test 2: URL transformation works with blob paths
+
+Image 1 (blob path):
+  Input: 123-1234567890-uuid1.jpg
+  Output: https://declutterimg.blob.core.windows.net/images/123-1234567890-uuid1.jpg?sv=20...
+  Has full URL? true
+  Has fresh SAS? true
+
+Image 2 (old full URL):
+  Input: https://declutterimg.blob.core.windows.net/images/456-old.jpg?sig=old...
+  Output: https://declutterimg.blob.core.windows.net/images/456-old.jpg?sv=2025-11-05&st=2...
+  Has full URL? true
+  Has fresh SAS? true
+
+✅ Transformation works with both formats!
+
+Test 3: Backward compatibility with existing data
+
+All URLs transformed to full URLs? true
+All URLs have fresh SAS tokens? true
+Metadata preserved? true
+
+✅ Backward compatibility confirmed!
+
+Test 4: Storage efficiency comparison
+
+Blob path length: 23 characters
+Full URL length: 202 characters
+Savings per image: 179 characters
+Reduction: 88.6%
+
+For 1,000 images:
+  Old storage: 197.27 KB
+  New storage: 22.46 KB
+  Saved: 174.80 KB
+
+✅ Significant storage savings!
+
+Test 5: Security benefits
+
+Old format (full URL in DB):
+  Contains SAS token: true
+  Contains permissions: true
+  Contains expiry: true
+  ❌ Sensitive data in database
+
+New format (blob path in DB):
+  Contains SAS token: false
+  Contains permissions: false
+  Contains expiry: false
+  ✅ No sensitive data in database
+
+✅ Security improved!
+
+Test 6: Blob path extraction for migration
+
+  Input: https://declutterimg.blob.core.windows.net/images/123-uuid.j...
+  Expected: 123-uuid.jpg
+  Got: 123-uuid.jpg
+  ✅ Passed
+
+  Input: https://declutterimg.blob.core.windows.net/images/456-test.p...
+  Expected: 456-test.png
+  Got: 456-test.png
+  ✅ Passed
+
+  Input: 789-already-path.webp...
+  Expected: 789-already-path.webp
+  Got: 789-already-path.webp
+  ✅ Passed
+
+Extraction tests: 3/3 passed
+✅ Migration will work correctly!
+
+========================================
+Step 5 Implementation Tests Complete!
+========================================
+
+Summary:
+✅ Upload service returns blob paths
+✅ URL transformation works with blob paths
+✅ Backward compatible with old URLs
+✅ Significant storage savings (~88%)
+✅ Improved security (no tokens in DB)
+✅ Migration function ready
+
+Next steps:
+1. ✅ Code changes complete
+2. ⏳ Backup database
+3. ⏳ Run migration: npx ts-node migrate-urls-to-blob-paths.ts
+4. ⏳ Verify API responses still work
+5. ⏳ Test new uploads store blob paths

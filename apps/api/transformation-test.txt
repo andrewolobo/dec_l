@@ -1,0 +1,60 @@
+Testing URL Transformation Helpers
+
+=====================================
+
+Test 1: Transform array of post images
+Input images: 3
+Output images: 3
+Sample transformed URL: https://declutterimg.blob.core.windows.net/images/user1-123-uuid1.jpg?sv=2025-11-05&st=2026-01-05T18...
+✅ Successfully transformed image array
+
+Test 2: Transform with custom 15-minute expiry
+Generated SAS token expires at: 2026-01-05T18:26:51Z
+✅ Custom expiry applied
+
+Test 3: Transform empty array
+Input: empty array
+Output length: 0
+✅ Returns empty array as expected
+
+Test 4: Transform undefined images
+Input: undefined
+Output length: 0
+✅ Returns empty array for undefined
+
+Test 5: Transform user profile picture
+Original URL: https://declutterimg.blob.core.windows.net/images/profile-100.jpg?sp=racwdli&sig...
+Transformed URL: https://declutterimg.blob.core.windows.net/images/profile-100.jpg?sv=2025-11-05&...
+✅ Successfully transformed user profile
+
+Test 6: Transform user without profile picture
+Profile picture URL: undefined
+✅ Handled user without profile picture
+
+Test 7: Transform undefined user
+Input: undefined
+Output: undefined
+✅ Returns undefined for undefined user
+
+Test 8: Transform single image URL
+Original: https://declutterimg.blob.core.windows.net/images/single-image.jpg
+Transformed: https://declutterimg.blob.core.windows.net/images/single-image.jpg?sv=2025-11-05&st=2026-01-05T18%3A...
+✅ Successfully transformed single URL
+
+Test 9: Transform empty string
+Input: (empty string)
+Output: (empty string)
+✅ Returns empty string as expected
+
+Test 10: Transform undefined URL
+Input: undefined
+Output: (empty string)
+✅ Returns empty string for undefined
+
+Test 11: Verify metadata preservation
+All IDs and display orders preserved: true
+✅ Metadata preserved correctly
+
+=====================================
+All Transformation Tests Complete!
+✅ All 11 tests passed successfully

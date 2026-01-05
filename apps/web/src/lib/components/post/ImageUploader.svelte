@@ -13,6 +13,9 @@
 	let isUploading = $state(false);
 	let uploadProgress = $state<number[]>([]);
 	let uploadError = $state('');
+	
+	// Map blob paths to preview URLs for display
+	let previewUrlMap = $state<Map<string, string>>(new Map());
 
 	const maxImages = 10;
 	const maxFileSize = 10 * 1024 * 1024; // 10MB
@@ -82,9 +85,16 @@
 			});
 
 			if (result.success && result.data) {
-				// Add all uploaded image URLs to the images array
-				const urls = result.data.map((item) => item.url);
-				images = [...images, ...urls];
+			// Store blob paths (for form submission) and map to preview URLs (for display)
+			const blobPaths = result.data.map((item) => item.url);
+			
+			// Store blob paths in the images array (sent to API)
+			images = [...images, ...blobPaths];
+			
+			// Map each blob path to its preview URL for display
+			result.data.forEach((item) => {
+				previewUrlMap.set(item.url, item.previewUrl);
+			});
 			} else {
 				throw new Error(result.error?.message || 'Upload failed');
 			}
@@ -215,7 +225,7 @@
 					>
 						<!-- Image -->
 						<img
-							src={image}
+							src={previewUrlMap.get(image) || image}
 							alt="Upload {index + 1}"
 							class="w-full h-full object-cover"
 							draggable="true"

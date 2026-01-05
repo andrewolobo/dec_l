@@ -138,8 +138,8 @@
 
 			if (result.success && result.data) {
 				// Redirect to the created post or listings page
-				// goto(`/post/${result.data.id}`);
-				goto('/my-listing');
+				goto(`/post/${result.data.id}`);
+				// goto('/my-listing');
 			} else {
 				throw new Error(result.error?.message || 'Failed to create post');
 			}

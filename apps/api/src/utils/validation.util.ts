@@ -56,7 +56,13 @@ export class ValidationUtil {
     images: Joi.array()
       .items(
         Joi.object({
-          imageUrl: Joi.string().uri().required(),
+          // Accept both blob paths (e.g., "123-uuid.jpg") and full URLs (backward compatibility)
+          imageUrl: Joi.string()
+            .pattern(/^(https?:\/\/.*|[\w-]+\.[a-zA-Z]{2,5})$/)
+            .required()
+            .messages({
+              "string.pattern.base": "imageUrl must be either a valid URL or a blob path (e.g., filename.jpg)",
+            }),
           displayOrder: Joi.number().integer().min(1).required(),
         })
       )

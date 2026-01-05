@@ -12,7 +12,8 @@ import { config } from '$lib/config';
 // ============================================================================
 
 export interface UploadResponse {
-	url: string;
+	url: string; // Blob path for storage (e.g., "123-uuid.jpg")
+	previewUrl: string; // Full URL with SAS token for display
 	filename: string;
 	size: number;
 	mimeType: string;

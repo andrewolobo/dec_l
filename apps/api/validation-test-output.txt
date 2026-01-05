@@ -1,0 +1,32 @@
+Testing Image URL Validation
+
+=====================================
+
+✅ Blob path (new format)
+
+✅ Blob path with PNG
+
+✅ Blob path with WEBP
+
+✅ Full HTTPS URL with SAS token
+
+✅ Full HTTP URL
+
+✅ Empty string
+
+✅ No file extension
+
+✅ Invalid characters
+
+✅ Missing imageUrl
+
+=====================================
+Results: 9/9 tests passed
+=====================================
+
+✅ All validation tests passed!
+   - Blob paths (new format) are accepted
+   - Full URLs (old format) are accepted
+   - Invalid formats are rejected
+
+🎉 Post creation should now work with blob paths!

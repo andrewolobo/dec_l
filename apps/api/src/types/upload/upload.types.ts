@@ -4,7 +4,8 @@ import { ApiResponse } from "../common/api-response.types";
  * Uploaded image data returned to client
  */
 export interface UploadedImageDTO {
-  url: string; // Full signed URL to blob (includes SAS token)
+  url: string; // Blob path for storage (e.g., "123-timestamp-uuid.jpg")
+  previewUrl: string; // Full signed URL with fresh SAS token for immediate display
   filename: string; // Original filename (sanitized)
   size: number; // File size in bytes
   mimeType: string; // MIME type (image/jpeg, image/png, image/webp)
@@ -20,7 +21,8 @@ export type UploadImageResponseDTO = ApiResponse<UploadedImageDTO>;
  */
 export interface BatchUploadResultItem {
   success: boolean;
-  url?: string; // Only present if upload succeeded
+  url?: string; // Blob path for storage (only present if upload succeeded)
+  previewUrl?: string; // Full signed URL for preview (only present if upload succeeded)
   filename: string;
   size: number;
   mimeType: string;

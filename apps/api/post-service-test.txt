@@ -1,0 +1,46 @@
+Testing Post Service URL Transformation
+
+========================================
+
+Test 1: Transform post response with images and user profile
+
+Post ID: 1
+Title: Test Post
+Number of images: 2
+
+Image 1 (Full URL):
+  Original: https://declutterimg.blob.core.windows.net/images/post1-img1.jpg?sp=racwdli&sig=...
+  Transformed: https://declutterimg.blob.core.windows.net/images/post1-img1.jpg?sv=2025-11-05&s...
+  Has fresh SAS? true
+
+Image 2 (Blob path):
+  Original: post1-img2.jpg
+  Transformed: https://declutterimg.blob.core.windows.net/images/post1-img2.jpg?sv=2025-11-05&s...
+  Has fresh SAS? true
+
+User Profile Picture:
+  Original: https://declutterimg.blob.core.windows.net/images/user-10-profile.jpg?sp=racwdli...
+  Transformed: https://declutterimg.blob.core.windows.net/images/user-10-profile.jpg?sv=2025-11...
+  Has fresh SAS? true
+
+✅ Post service transformation working correctly!
+
+Test 2: Verify metadata preservation
+
+Image 1 metadata preserved: true
+Image 2 metadata preserved: true
+User data preserved: true
+Category data preserved: true
+
+✅ All metadata preserved correctly!
+
+Test 3: Post without images or profile picture
+
+Images array: []
+User profile picture: undefined
+
+✅ Handled empty data correctly!
+
+========================================
+Post Service Integration Tests Complete!
+✅ All transformations working as expected

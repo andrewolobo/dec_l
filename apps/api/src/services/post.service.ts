@@ -6,6 +6,7 @@ import {
   userRepository,
   postImageRepository,
 } from "../dal/repositories";
+import { uploadService } from "./upload.service";
 import {
   CreatePostDTO,
   UpdatePostDTO,
@@ -120,7 +121,8 @@ export class PostService {
     viewerId?: number
   ): Promise<ApiResponse<PostResponseDTO>> {
     try {
-      const post = await postRepository.findById(postId);
+      // Use getPostDetails to include images relation with proper ordering
+      const post = await postRepository.getPostDetails(postId);
 
       if (!post) {
         return {
@@ -743,6 +745,31 @@ export class PostService {
     user: any,
     category: any
   ): PostResponseDTO {
+    // Prepare image data
+    const images: PostImageDTO[] =
+      post.images?.map((img: any) => ({
+        id: img.id,
+        imageUrl: img.imageUrl,
+        displayOrder: img.displayOrder,
+      })) || [];
+
+    // Transform image URLs with error handling
+    let transformedImages: PostImageDTO[] = [];
+    try {
+      transformedImages = uploadService.transformImageUrls(images);
+    } catch (error) {
+      console.error("Error transforming image URLs:", error);
+      // Fall back to original images if transformation fails
+      transformedImages = images;
+    }
+
+    // Prepare user data
+    const userData: PostUserDTO = {
+      id: user.id,
+      fullName: user.fullName,
+      profilePictureUrl: user.profilePictureUrl || undefined,
+    };
+
     return {
       id: post.id,
       title: post.title,
@@ -754,22 +781,15 @@ export class PostService {
       contactNumber: post.contactNumber,
       emailAddress: post.emailAddress || undefined,
       status: post.status as PostStatus,
-      user: {
-        id: user.id,
-        fullName: user.fullName,
-        profilePictureUrl: user.profilePictureUrl || undefined,
-      },
+      // Transform user profile picture with fresh SAS token
+      user: uploadService.transformUserProfileUrl(userData) || userData,
       category: {
         id: category.id,
         name: category.name,
         description: category.description || undefined,
       },
-      images:
-        post.images?.map((img: any) => ({
-          id: img.id,
-          imageUrl: img.imageUrl,
-          displayOrder: img.displayOrder,
-        })) || [],
+      // Use transformed images (with error handling above)
+      images: transformedImages,
       likeCount: post.likes?.length || 0,
       viewCount: post.views?.length || 0,
       scheduledPublishTime: post.scheduledPublishTime || undefined,

@@ -7,13 +7,32 @@ import {
   UploadErrorCode,
 } from "../types/upload/upload.types";
 import { ErrorCode } from "../types/common/api-response.types";
+import { PostImageDTO, PostUserDTO } from "../types/post/post.types";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
+import {
+  generateBlobSASQueryParameters,
+  BlobSASPermissions,
+  StorageSharedKeyCredential,
+} from "@azure/storage-blob";
 
 /**
  * Upload service for handling file uploads to Azure Blob Storage
  */
 export class UploadService {
+  private sharedKeyCredential: StorageSharedKeyCredential | null = null;
+
+  constructor() {
+    // Initialize shared key credential once for performance
+    // Only if storage account key is available
+    if (azureConfig.storageAccountKey) {
+      this.sharedKeyCredential = new StorageSharedKeyCredential(
+        azureConfig.blobStorageAccount,
+        azureConfig.storageAccountKey
+      );
+    }
+  }
+
   /**
    * Upload a single image to Azure Blob Storage
    */
@@ -40,14 +59,16 @@ export class UploadService {
         file.mimetype
       );
 
-      // Generate signed URL
-      const url = this.generateSignedUrl(blobName);
+      // Return blob path for storage and full URL for preview
+      const url = blobName; // Store blob path in database
+      const previewUrl = this.generateDynamicSasUrl(blobName); // Generate fresh SAS for preview
 
       // Return success response
       return {
         success: true,
         data: {
           url,
+          previewUrl,
           filename: file.originalname,
           size: file.size,
           mimeType: file.mimetype,
@@ -147,12 +168,14 @@ export class UploadService {
         file.mimetype
       );
 
-      // Generate signed URL
-      const url = this.generateSignedUrl(blobName);
+      // Return blob path for storage and full URL for preview
+      const url = blobName; // Store in database
+      const previewUrl = this.generateDynamicSasUrl(blobName); // Display in UI
 
       return {
         success: true,
         url,
+        previewUrl,
         filename: file.originalname,
         size: file.size,
         mimeType: file.mimetype,
@@ -409,6 +432,142 @@ export class UploadService {
       // Log but don't throw - best effort cleanup
       console.error(`Failed to cleanup blob ${blobName}:`, error.message);
     }
+  }
+
+  /**
+   * Generate a dynamic SAS URL for a blob with short-lived token
+   * @param blobUrl - The full blob URL or blob path
+   * @param expiryMinutes - How long the SAS token is valid (default: from config)
+   * @returns Signed URL with fresh SAS token
+   */
+  public generateDynamicSasUrl(
+    blobUrl: string, 
+    expiryMinutes: number = azureConfig.sas.defaultExpiryMinutes
+  ): string {
+    if (!blobUrl) return '';
+
+    // Check if we have the storage account key for credential-based SAS
+    if (!this.sharedKeyCredential) {
+      console.warn('Storage account key not configured. Falling back to static SAS token.');
+      // Fallback to existing static SAS method
+      const blobName = this.extractBlobName(blobUrl);
+      return this.generateSignedUrl(blobName);
+    }
+
+    // Extract blob name from full URL or use as-is if already a path
+    const blobName = this.extractBlobName(blobUrl);
+
+    const startsOn = new Date();
+    const expiresOn = new Date(startsOn.getTime() + expiryMinutes * 60 * 1000);
+
+    // Generate SAS token with read-only permissions
+    const sasToken = generateBlobSASQueryParameters(
+      {
+        containerName: azureConfig.containerName,
+        blobName,
+        permissions: BlobSASPermissions.parse('r'), // Read-only
+        startsOn,
+        expiresOn,
+      },
+      this.sharedKeyCredential
+    ).toString();
+
+    const baseUrl = `https://${azureConfig.blobStorageAccount}.blob.core.windows.net/${azureConfig.containerName}/${blobName}`;
+    return `${baseUrl}?${sasToken}`;
+  }
+
+  /**
+   * Extract blob name from a full Azure blob URL
+   * @param blobUrl - Full URL or blob path
+   * @returns Blob name/path
+   */
+  private extractBlobName(blobUrl: string): string {
+    // If it's already just a path (no http), return as-is
+    if (!blobUrl.startsWith('http://') && !blobUrl.startsWith('https://')) {
+      return blobUrl;
+    }
+
+    try {
+      // Remove query parameters (SAS token)
+      const urlWithoutQuery = blobUrl.split('?')[0];
+      
+      // Parse URL and extract path
+      const url = new URL(urlWithoutQuery);
+      const pathParts = url.pathname.split('/').filter(Boolean);
+      
+      // Remove container name (first part) and return the rest
+      // e.g., /images/123-uuid.jpg -> 123-uuid.jpg
+      if (pathParts.length > 1) {
+        return pathParts.slice(1).join('/');
+      }
+      
+      // If only one part, it's likely just the blob name
+      return pathParts[0] || blobUrl;
+    } catch (error) {
+      // If URL parsing fails, try to extract blob name manually
+      const match = blobUrl.match(/\/images\/(.+?)(?:\?|$)/);
+      if (match) {
+        return match[1];
+      }
+      // Last resort: return as-is
+      return blobUrl;
+    }
+  }
+
+  /**
+   * Transform an array of post images with fresh SAS URLs
+   * @param images - Array of post images with existing URLs
+   * @param expiryMinutes - How long the SAS token is valid (default: from config)
+   * @returns Array of images with fresh SAS tokens
+   */
+  public transformImageUrls(
+    images: PostImageDTO[] | undefined,
+    expiryMinutes?: number
+  ): PostImageDTO[] {
+    if (!images || images.length === 0) return [];
+
+    return images.map(img => ({
+      ...img,
+      imageUrl: this.generateDynamicSasUrl(img.imageUrl, expiryMinutes),
+    }));
+  }
+
+  /**
+   * Transform a user's profile picture URL with fresh SAS token
+   * @param user - User object with profile picture URL
+   * @param expiryMinutes - How long the SAS token is valid (default: from config)
+   * @returns User object with fresh SAS token in profile picture URL
+   */
+  public transformUserProfileUrl(
+    user: PostUserDTO | undefined,
+    expiryMinutes?: number
+  ): PostUserDTO | undefined {
+    if (!user) return undefined;
+
+    // If no profile picture, return as-is
+    if (!user.profilePictureUrl) return user;
+
+    return {
+      ...user,
+      profilePictureUrl: this.generateDynamicSasUrl(
+        user.profilePictureUrl,
+        expiryMinutes
+      ),
+    };
+  }
+
+  /**
+   * Transform a single image URL with fresh SAS token
+   * @param imageUrl - The image URL to transform
+   * @param expiryMinutes - How long the SAS token is valid (default: from config)
+   * @returns URL with fresh SAS token
+   */
+  public transformSingleImageUrl(
+    imageUrl: string | undefined,
+    expiryMinutes?: number
+  ): string {
+    if (!imageUrl) return '';
+    return this.generateDynamicSasUrl(imageUrl, expiryMinutes);
   }
 
   /**
