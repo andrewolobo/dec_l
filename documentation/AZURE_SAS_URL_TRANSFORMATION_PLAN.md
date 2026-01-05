@@ -6,26 +6,26 @@ Implement dynamic SAS token generation in API responses to securely serve images
 
 ## Current State Analysis
 
-| Aspect | Current State |
-|--------|---------------|
-| **Azure Package** | `@azure/storage-blob` v12.29.1 ✅ |
-| **SAS Token Type** | Static token from env (not dynamically generated) |
-| **URL Storage** | Full signed URL stored in `PostImage.imageUrl` |
-| **Response Transform** | `mapToPostResponse` - no URL transformation |
-| **Dynamic SAS Generation** | ❌ Not implemented |
-| **Centralized URL Utility** | ❌ None exists |
+| Aspect                      | Current State                                     |
+| --------------------------- | ------------------------------------------------- |
+| **Azure Package**           | `@azure/storage-blob` v12.29.1 ✅                 |
+| **SAS Token Type**          | Static token from env (not dynamically generated) |
+| **URL Storage**             | Full signed URL stored in `PostImage.imageUrl`    |
+| **Response Transform**      | `mapToPostResponse` - no URL transformation       |
+| **Dynamic SAS Generation**  | ❌ Not implemented                                |
+| **Centralized URL Utility** | ❌ None exists                                    |
 
 ## Relevant Files
 
-| Purpose | File Path |
-|---------|-----------|
-| Azure config | `apps/api/src/config/azure.config.ts` |
-| Upload service | `apps/api/src/services/upload.service.ts` |
-| Post service (response mapping) | `apps/api/src/services/post.service.ts` |
-| Post controller | `apps/api/src/controllers/post.controller.ts` |
-| Image types | `apps/api/src/types/upload.types.ts` |
-| Image repository | `apps/api/src/dal/repositories/image.repository.ts` |
-| Prisma schema | `apps/api/prisma/schema.prisma` |
+| Purpose                         | File Path                                           |
+| ------------------------------- | --------------------------------------------------- |
+| Azure config                    | `apps/api/src/config/azure.config.ts`               |
+| Upload service                  | `apps/api/src/services/upload.service.ts`           |
+| Post service (response mapping) | `apps/api/src/services/post.service.ts`             |
+| Post controller                 | `apps/api/src/controllers/post.controller.ts`       |
+| Image types                     | `apps/api/src/types/upload.types.ts`                |
+| Image repository                | `apps/api/src/dal/repositories/image.repository.ts` |
+| Prisma schema                   | `apps/api/prisma/schema.prisma`                     |
 
 ---
 
@@ -53,18 +53,18 @@ import {
  */
 public generateDynamicSasUrl(blobUrl: string, expiryMinutes: number = 60): string {
   if (!blobUrl) return '';
-  
+
   // Extract blob name from full URL or use as-is if already a path
   const blobName = this.extractBlobName(blobUrl);
-  
+
   const sharedKeyCredential = new StorageSharedKeyCredential(
     azureConfig.blobStorageAccount,
     azureConfig.storageAccountKey
   );
-  
+
   const startsOn = new Date();
   const expiresOn = new Date(startsOn.getTime() + expiryMinutes * 60 * 1000);
-  
+
   const sasToken = generateBlobSASQueryParameters({
     containerName: azureConfig.containerName,
     blobName,
@@ -72,7 +72,7 @@ public generateDynamicSasUrl(blobUrl: string, expiryMinutes: number = 60): strin
     startsOn,
     expiresOn,
   }, sharedKeyCredential).toString();
-  
+
   const baseUrl = `https://${azureConfig.blobStorageAccount}.blob.core.windows.net/${azureConfig.containerName}/${blobName}`;
   return `${baseUrl}?${sasToken}`;
 }
@@ -85,7 +85,7 @@ private extractBlobName(blobUrl: string): string {
   if (!blobUrl.startsWith('http')) {
     return blobUrl;
   }
-  
+
   try {
     const url = new URL(blobUrl);
     // Remove leading slash and container name from path
@@ -114,12 +114,12 @@ export const azureConfig = {
   baseUrl: process.env.BLOB_URL || "",
   sasToken: process.env.SAS_TOKEN || "",
   storageAccountKey: process.env.AZURE_STORAGE_ACCOUNT_KEY || "", // ADD THIS
-  
+
   // SAS token settings
   sas: {
-    defaultExpiryMinutes: 60,      // Default expiry for API responses
-    shortExpiryMinutes: 15,         // For sensitive images
-    longExpiryMinutes: 1440,        // 24 hours for special cases
+    defaultExpiryMinutes: 60, // Default expiry for API responses
+    shortExpiryMinutes: 15, // For sensitive images
+    longExpiryMinutes: 1440, // 24 hours for special cases
   },
 
   upload: {
@@ -149,7 +149,7 @@ import { PostImageDTO, PostUserDTO } from '../types/post.types';
  */
 public transformImageUrls(images: PostImageDTO[] | undefined): PostImageDTO[] {
   if (!images || images.length === 0) return [];
-  
+
   return images.map(img => ({
     ...img,
     imageUrl: this.generateDynamicSasUrl(img.imageUrl),
@@ -161,10 +161,10 @@ public transformImageUrls(images: PostImageDTO[] | undefined): PostImageDTO[] {
  */
 public transformUserProfileUrl(user: PostUserDTO | undefined): PostUserDTO | undefined {
   if (!user) return undefined;
-  
+
   return {
     ...user,
-    profilePictureUrl: user.profilePictureUrl 
+    profilePictureUrl: user.profilePictureUrl
       ? this.generateDynamicSasUrl(user.profilePictureUrl)
       : undefined,
   };
@@ -205,7 +205,7 @@ private mapToPostResponse(
     viewCount: post.viewCount,
     createdAt: post.createdAt,
     updatedAt: post.updatedAt,
-    
+
     // Transform image URLs with fresh SAS tokens
     images: uploadService.transformImageUrls(
       post.images?.map((img: any) => ({
@@ -214,14 +214,14 @@ private mapToPostResponse(
         displayOrder: img.displayOrder,
       }))
     ),
-    
+
     // Transform user profile picture URL
     user: uploadService.transformUserProfileUrl({
       id: user.id,
       fullName: user.fullName,
       profilePictureUrl: user.profilePictureUrl,
     }),
-    
+
     category: category ? {
       id: category.id,
       name: category.name,
@@ -245,7 +245,7 @@ For new images, store only the blob path instead of the full URL:
 async addImage(postId: number, data: { imageUrl: string; displayOrder: number }) {
   // Strip base URL if present, store only blob path
   const blobPath = this.extractBlobPath(data.imageUrl);
-  
+
   return prisma.postImage.create({
     data: {
       postId,
@@ -257,7 +257,7 @@ async addImage(postId: number, data: { imageUrl: string; displayOrder: number })
 
 private extractBlobPath(fullUrl: string): string {
   if (!fullUrl.startsWith('http')) return fullUrl;
-  
+
   try {
     const url = new URL(fullUrl.split('?')[0]); // Remove query params
     const pathParts = url.pathname.split('/').filter(Boolean);
@@ -280,6 +280,7 @@ AZURE_STORAGE_ACCOUNT_KEY=your_storage_account_key_here
 ```
 
 **To get the key:**
+
 1. Go to Azure Portal → Storage Account → Access Keys
 2. Copy `key1` or `key2`
 
@@ -290,6 +291,7 @@ AZURE_STORAGE_ACCOUNT_KEY=your_storage_account_key_here
 ### Phase 1: Backward Compatible (Recommended First)
 
 The `extractBlobName` function handles both formats:
+
 - Full URLs: `https://declutterimg.blob.core.windows.net/images/posts/123/uuid.jpg?sv=...`
 - Blob paths: `posts/123/uuid.jpg`
 
@@ -314,12 +316,12 @@ WHERE ImageURL LIKE 'https://%';
 
 ## Configuration Decisions
 
-| Decision | Recommendation | Rationale |
-|----------|----------------|-----------|
-| SAS Token Duration | 60 minutes | Balance between security and UX (cached images) |
-| User Profile Images | Include in transformation | Consistency, may also be private |
-| Migration Approach | Handle both formats first | No downtime, migrate later |
-| Storage Format | Blob path only (long-term) | Cleaner, smaller DB, no token in DB |
+| Decision            | Recommendation             | Rationale                                       |
+| ------------------- | -------------------------- | ----------------------------------------------- |
+| SAS Token Duration  | 60 minutes                 | Balance between security and UX (cached images) |
+| User Profile Images | Include in transformation  | Consistency, may also be private                |
+| Migration Approach  | Handle both formats first  | No downtime, migrate later                      |
+| Storage Format      | Blob path only (long-term) | Cleaner, smaller DB, no token in DB             |
 
 ---
 
@@ -338,6 +340,7 @@ WHERE ImageURL LIKE 'https://%';
 ## Rollback Plan
 
 If issues arise:
+
 1. Remove `uploadService.transformImageUrls()` calls
 2. Revert to returning `img.imageUrl` directly
 3. Ensure static SAS token in `.env` is still valid
