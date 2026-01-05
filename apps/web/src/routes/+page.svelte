@@ -1,12 +1,12 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
-	
+
 	let mobileMenuOpen = false;
-	
+
 	function toggleMenu() {
 		mobileMenuOpen = !mobileMenuOpen;
 	}
-	
+
 	function closeMenu() {
 		mobileMenuOpen = false;
 	}
@@ -14,18 +14,31 @@
 
 <svelte:head>
 	<title>Tunda Plug - Give Your Goods a Second Life</title>
-	<meta name="description" content="The easiest way to buy and sell furniture, decor, and more in your neighborhood. Community driven commerce reimagined." />
+	<meta
+		name="description"
+		content="The easiest way to buy and sell furniture, decor, and more in your neighborhood. Community driven commerce reimagined."
+	/>
 </svelte:head>
 
 <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden pb-24">
 	<!-- Top App Bar -->
-	<div class="sticky top-0 z-50 flex items-center bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-4 pb-2 justify-between border-b border-gray-200 dark:border-white/5">
-		<button onclick={toggleMenu} class="flex size-12 shrink-0 items-center justify-start text-slate-900 dark:text-white hover:text-primary transition-colors">
+	<div
+		class="sticky top-0 z-50 flex items-center bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-4 pb-2 justify-between border-b border-gray-200 dark:border-white/5"
+	>
+		<button
+			onclick={toggleMenu}
+			class="flex size-12 shrink-0 items-center justify-start text-slate-900 dark:text-white hover:text-primary transition-colors"
+		>
 			<Icon name="menu" size={28} />
 		</button>
-		<h2 class="text-slate-900 dark:text-white text-xl font-extrabold leading-tight tracking-[-0.015em] flex-1 text-center">Tunda Plug</h2>
+		<div class="flex-1 flex justify-center">
+			<img src="/images/tunda-hub-logo.fw.png" alt="Tunda Plug" class="h-8 object-contain" />
+		</div>
 		<div class="flex w-12 items-center justify-end">
-			<a href="/login" class="text-primary hover:text-primary/80 text-base font-bold leading-normal tracking-[0.015em] shrink-0 transition-colors">
+			<a
+				href="/login"
+				class="text-primary hover:text-primary/80 text-base font-bold leading-normal tracking-[0.015em] shrink-0 transition-colors"
+			>
 				Log In
 			</a>
 		</div>
@@ -35,27 +48,33 @@
 	<div class="p-4">
 		<div class="relative w-full h-[500px] rounded-xl overflow-hidden shadow-lg group">
 			<div class="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
-<img 
-        src="/images/hero-banner.jpg" 
-        alt="Hero banner" 
-        class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-    />
+				<img
+					src="/images/hero-banner.jpg"
+					alt="Hero banner"
+					class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+				/>
 			</div>
-			<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+			<div
+				class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
+			></div>
 			<div class="absolute bottom-0 left-0 w-full p-6 flex flex-col gap-4">
 				<div class="flex flex-col gap-2">
 					<h1 class="text-white tracking-tight text-4xl font-extrabold leading-[1.1]">
 						Give Your Wares a Second Home
 					</h1>
-					<p class="text-white/90 text-lg leading-normal max-w-lg">
-						Old Gems, New Vibes
-					</p>
+					<p class="text-white/90 text-lg leading-normal max-w-lg">Old Gems, New Vibes</p>
 				</div>
 				<div class="flex gap-3">
-					<a href="/browse" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-background-dark text-base font-bold hover:bg-primary/90 transition-colors">
+					<a
+						href="/browse"
+						class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-background-dark text-base font-bold hover:bg-primary/90 transition-colors"
+					>
 						<span class="truncate">Browse Listings</span>
 					</a>
-					<a href="/register" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 text-base font-bold hover:bg-white/20 transition-colors">
+					<a
+						href="/register"
+						class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 text-base font-bold hover:bg-white/20 transition-colors"
+					>
 						<span class="truncate">Get Started</span>
 					</a>
 				</div>
@@ -64,7 +83,7 @@
 	</div>
 
 	<!-- Headline: Why Tunda Plug? -->
-	<div class="pt-8 px-4 pb-4 justify-center" >
+	<div class="pt-8 px-4 pb-4 justify-center">
 		<h2 class="text-slate-900 dark:text-white tracking-tight text-[28px] font-bold leading-tight">
 			Why Tunda Plug?
 		</h2>
@@ -74,16 +93,24 @@
 	</div>
 
 	<!-- Feature Carousel -->
-	<div class="flex overflow-x-auto pb-6 [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pl-4 pr-4 gap-4 snap-x snap-mandatory">
-
-
-				<!-- Feature 2 -->
-		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
-			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
-				style="background-image: url('/images/feature-2.jpg')">
-				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
+	<div
+		class="flex overflow-x-auto md:grid md:grid-cols-3 md:overflow-visible pb-6 [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pl-4 pr-4 gap-4 snap-x snap-mandatory md:snap-none"
+	>
+		<!-- Feature 2 -->
+		<div
+			class="snap-center shrink-0 w-[80%] max-w-[300px] md:w-full md:max-w-none flex flex-col gap-3"
+		>
+			<div
+				class="w-full aspect-[4/5] md:aspect-[8/3] bg-cover bg-center rounded-2xl relative overflow-hidden"
+				style="background-image: url('/images/feature-2.jpg'); background-position: 30% 40%"
+			>
+				<div
+					class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"
+				></div>
 				<div class="absolute bottom-4 left-4 right-4">
-					<div class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary">
+					<div
+						class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary"
+					>
 						<Icon name="photo_camera" />
 					</div>
 					<p class="text-white text-xl font-bold leading-tight">Snap. Post. Sell.</p>
@@ -91,13 +118,21 @@
 				</div>
 			</div>
 		</div>
-				<!-- Feature 5 -->
-		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
-			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
-				style="background-image: url('/images/feature-7.png')">
-				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
+		<!-- Feature 5 -->
+		<div
+			class="snap-center shrink-0 w-[80%] max-w-[300px] md:w-full md:max-w-none flex flex-col gap-3"
+		>
+			<div
+				class="w-full aspect-[4/5] md:aspect-[8/3] bg-cover bg-center rounded-2xl relative overflow-hidden"
+				style="background-image: url('/images/feature-7.png'); background-position: 30% 46%"
+			>
+				<div
+					class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"
+				></div>
 				<div class="absolute bottom-4 left-4 right-4">
-					<div class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary">
+					<div
+						class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary"
+					>
 						<Icon name="chat_bubble" />
 					</div>
 					<p class="text-white text-xl font-bold leading-tight">Get it Chap Chap</p>
@@ -105,13 +140,21 @@
 				</div>
 			</div>
 		</div>
-				<!-- Feature 4 -->
-		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
-			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
-				style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBW4cJu_UimkXkzFVLr7IrdVUkHMbMkbRucrRqiKAEeABEe-lhdHO07vqFVtStgsp8zNEVwtaTQcRiZEjoNUjA4gEOWFDRfCDJKjknlO1jSPaUneQVAL8u4uXHDVLN8hMssraeIs9gEwlEpVZW8wd0ErmiZYltRIADPMcBkBuYfIZemHWDZ3SFPYYbbZscl4GoVowlBn6HlU6jvwvySowmKJq47snQAcHArOugiIcr8pjrE1dOtB405ZowrCaN2-0_Y3xdGDPexh9-P')">
-				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
+		<!-- Feature 4 -->
+		<div
+			class="snap-center shrink-0 w-[80%] max-w-[300px] md:w-full md:max-w-none flex flex-col gap-3"
+		>
+			<div
+				class="w-full aspect-[4/5] md:aspect-[8/3] bg-cover bg-center rounded-2xl relative overflow-hidden"
+				style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBW4cJu_UimkXkzFVLr7IrdVUkHMbMkbRucrRqiKAEeABEe-lhdHO07vqFVtStgsp8zNEVwtaTQcRiZEjoNUjA4gEOWFDRfCDJKjknlO1jSPaUneQVAL8u4uXHDVLN8hMssraeIs9gEwlEpVZW8wd0ErmiZYltRIADPMcBkBuYfIZemHWDZ3SFPYYbbZscl4GoVowlBn6HlU6jvwvySowmKJq47snQAcHArOugiIcr8pjrE1dOtB405ZowrCaN2-0_Y3xdGDPexh9-P'); background-position: 30% 66%"
+			>
+				<div
+					class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"
+				></div>
 				<div class="absolute bottom-4 left-4 right-4">
-					<div class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary">
+					<div
+						class="bg-primary/20 backdrop-blur-md rounded-full size-10 flex items-center justify-center mb-3 text-primary"
+					>
 						<Icon name="chat_bubble" />
 					</div>
 					<p class="text-white text-xl font-bold leading-tight">Safe & Simple Chat</p>
@@ -119,8 +162,8 @@
 				</div>
 			</div>
 		</div>
-				<!-- Feature 3 -->
-		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
+		<!-- Feature 3 -->
+		<!-- <div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
 			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
 				style="background-image: url('/images/feature-6.png')">
 				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
@@ -132,9 +175,9 @@
 					<p class="text-primary text-sm font-medium mt-1">No spam, No Scams</p>
 				</div>
 			</div>
-		</div>
-				<!-- Feature 1 -->
-		<div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
+		</div> -->
+		<!-- Feature 1 -->
+		<!-- <div class="snap-center shrink-0 w-[80%] max-w-[300px] flex flex-col gap-3">
 			<div class="w-full aspect-[4/5] bg-cover bg-center rounded-2xl relative overflow-hidden"
 				style="background-image: url('/images/feature-1.png')">
 				<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-90"></div>
@@ -146,14 +189,7 @@
 					<p class="text-primary text-sm font-medium mt-1">Frictionless retail therapy</p>
 				</div>
 			</div>
-		</div>
-
-
-
-
-
-
-
+		</div> -->
 	</div>
 
 	<!-- Community Benefits Headline -->
@@ -165,25 +201,41 @@
 
 	<!-- Benefits Grid -->
 	<div class="px-4 grid grid-cols-2 gap-3 mb-8">
-		<div class="bg-white dark:bg-white/5 rounded-xl p-4 flex flex-col gap-2 border border-gray-100 dark:border-white/5">
+		<div
+			class="bg-white dark:bg-white/5 rounded-xl p-4 flex flex-col gap-2 border border-gray-100 dark:border-white/5"
+		>
 			<Icon name="verified_user" size={30} class="text-primary" />
 			<h4 class="text-slate-900 dark:text-white font-bold text-base">Verified Sellers</h4>
-			<p class="text-slate-500 dark:text-gray-400 text-xs leading-normal">ID checked for peace of mind.</p>
+			<p class="text-slate-500 dark:text-gray-400 text-xs leading-normal">
+				ID checked for peace of mind.
+			</p>
 		</div>
-		<div class="bg-white dark:bg-white/5 rounded-xl p-4 flex flex-col gap-2 border border-gray-100 dark:border-white/5">
+		<div
+			class="bg-white dark:bg-white/5 rounded-xl p-4 flex flex-col gap-2 border border-gray-100 dark:border-white/5"
+		>
 			<Icon name="location_on" size={30} class="text-primary" />
 			<h4 class="text-slate-900 dark:text-white font-bold text-base">Local Pickup</h4>
-			<p class="text-slate-500 dark:text-gray-400 text-xs leading-normal">Meet nearby, save on shipping.</p>
+			<p class="text-slate-500 dark:text-gray-400 text-xs leading-normal">
+				Meet nearby, save on shipping.
+			</p>
 		</div>
-		<div class="bg-white dark:bg-white/5 rounded-xl p-4 flex flex-col gap-2 border border-gray-100 dark:border-white/5">
+		<div
+			class="bg-white dark:bg-white/5 rounded-xl p-4 flex flex-col gap-2 border border-gray-100 dark:border-white/5"
+		>
 			<Icon name="eco" size={30} class="text-primary" />
 			<h4 class="text-slate-900 dark:text-white font-bold text-base">Eco-Friendly</h4>
-			<p class="text-slate-500 dark:text-gray-400 text-xs leading-normal">Reduce waste by reusing.</p>
+			<p class="text-slate-500 dark:text-gray-400 text-xs leading-normal">
+				Reduce waste by reusing.
+			</p>
 		</div>
-		<div class="bg-white dark:bg-white/5 rounded-xl p-4 flex flex-col gap-2 border border-gray-100 dark:border-white/5">
+		<div
+			class="bg-white dark:bg-white/5 rounded-xl p-4 flex flex-col gap-2 border border-gray-100 dark:border-white/5"
+		>
 			<Icon name="credit_card" size={30} class="text-primary" />
 			<h4 class="text-slate-900 dark:text-white font-bold text-base">Secure Pay</h4>
-			<p class="text-slate-500 dark:text-gray-400 text-xs leading-normal">Hold funds until pickup.</p>
+			<p class="text-slate-500 dark:text-gray-400 text-xs leading-normal">
+				Hold funds until pickup.
+			</p>
 		</div>
 	</div>
 
@@ -193,29 +245,40 @@
 			<Icon name="trending_up" size={16} class="text-primary" />
 			<p class="text-xs font-bold text-primary uppercase tracking-wider">Just Sold Nearby</p>
 		</div>
-		<div class="flex gap-4 px-4 overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-			<div class="flex items-center gap-3 bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-full pr-4 p-1 shrink-0">
-				<div class="size-8 rounded-full bg-cover bg-center"
-					style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC82WUkf8NiRB4oKXVJD4zUbkZRj8NXXNuQKGHc78ZH4n5OaE56gddTDMgT7gvJnq81fb1o1CCNgP8ep5GUBdRLiw54gGlEzeiFetAMeru0tE0zqwZn2-XFTDljUCE19DHiV_vgdrEW4outN_Cr43D3ERF3xVBUPfi6ksDrsi5I8Pmc7119E_9j-IUjQxyaytEwwpZxODnfJMsH6JMvlfSIY8zT2SbphBmpnjNSo05LSTxTftW0afEoZIz5IipkMarYPUwG21gWJVtA')">
-				</div>
+		<div
+			class="flex gap-4 px-4 overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+		>
+			<div
+				class="flex items-center gap-3 bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-full pr-4 p-1 shrink-0"
+			>
+				<div
+					class="size-8 rounded-full bg-cover bg-center"
+					style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC82WUkf8NiRB4oKXVJD4zUbkZRj8NXXNuQKGHc78ZH4n5OaE56gddTDMgT7gvJnq81fb1o1CCNgP8ep5GUBdRLiw54gGlEzeiFetAMeru0tE0zqwZn2-XFTDljUCE19DHiV_vgdrEW4outN_Cr43D3ERF3xVBUPfi6ksDrsi5I8Pmc7119E_9j-IUjQxyaytEwwpZxODnfJMsH6JMvlfSIY8zT2SbphBmpnjNSo05LSTxTftW0afEoZIz5IipkMarYPUwG21gWJVtA')"
+				></div>
 				<div class="flex flex-col">
 					<span class="text-xs font-bold text-slate-900 dark:text-white">Vintage Lamp</span>
 					<span class="text-[10px] text-slate-500 dark:text-gray-400">Sold 2m ago</span>
 				</div>
 			</div>
-			<div class="flex items-center gap-3 bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-full pr-4 p-1 shrink-0">
-				<div class="size-8 rounded-full bg-cover bg-center"
-					style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD8NHVcG0kvgqBqMwTKEYbea4xjDJvl_Vp1aA5pxXV496YoWTUvXqtpe9LcOanMtM8biPUJJn2RABA2t4p0_YAJmY8vRBYJAw64OHU8Xaa9exg0X96H6cZpaLGrLeknNW7lETamC14g-6Dc2_6ivJ10v7PrTeOOPNd9zTqQDCytQP6alvhTXDmEDyrR9z_BtXxdQOc5ndj1sFavO3_-LDqmV6u5QFuTmIJZ-RTUIu6avlD9Y2A2TfHkY1561XU7JPSKHj08NqwZ_rok')">
-				</div>
+			<div
+				class="flex items-center gap-3 bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-full pr-4 p-1 shrink-0"
+			>
+				<div
+					class="size-8 rounded-full bg-cover bg-center"
+					style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD8NHVcG0kvgqBqMwTKEYbea4xjDJvl_Vp1aA5pxXV496YoWTUvXqtpe9LcOanMtM8biPUJJn2RABA2t4p0_YAJmY8vRBYJAw64OHU8Xaa9exg0X96H6cZpaLGrLeknNW7lETamC14g-6Dc2_6ivJ10v7PrTeOOPNd9zTqQDCytQP6alvhTXDmEDyrR9z_BtXxdQOc5ndj1sFavO3_-LDqmV6u5QFuTmIJZ-RTUIu6avlD9Y2A2TfHkY1561XU7JPSKHj08NqwZ_rok')"
+				></div>
 				<div class="flex flex-col">
 					<span class="text-xs font-bold text-slate-900 dark:text-white">Fixie Bike</span>
 					<span class="text-[10px] text-slate-500 dark:text-gray-400">Sold 5m ago</span>
 				</div>
 			</div>
-			<div class="flex items-center gap-3 bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-full pr-4 p-1 shrink-0">
-				<div class="size-8 rounded-full bg-cover bg-center"
-					style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAbmnz7tqUGQIukL1EGuGhJEJDUXOdNMTnfYFJm0xJvQYAk3K5VnXhfsmq8IuXSfuV5lDoNpiACSJ333mzW3ZgqA_zVPmx7sMXB_5S122h0kah8bA96u6CQOqkUVEbAVNktvxJkLdlhW3IohGt6jBrHdUV3qD5iM9Y4sDZyEcSLOTGKpyn8S75TwIdlcFpL4qLgnMrBNnGEz77HIBHlY_XFcP5IRGzK3Z6mPM3uNmNHyFIQXSSh7j7X2A7hKqJVloKwLh46e-v8wSpj')">
-				</div>
+			<div
+				class="flex items-center gap-3 bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-full pr-4 p-1 shrink-0"
+			>
+				<div
+					class="size-8 rounded-full bg-cover bg-center"
+					style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAbmnz7tqUGQIukL1EGuGhJEJDUXOdNMTnfYFJm0xJvQYAk3K5VnXhfsmq8IuXSfuV5lDoNpiACSJ333mzW3ZgqA_zVPmx7sMXB_5S122h0kah8bA96u6CQOqkUVEbAVNktvxJkLdlhW3IohGt6jBrHdUV3qD5iM9Y4sDZyEcSLOTGKpyn8S75TwIdlcFpL4qLgnMrBNnGEz77HIBHlY_XFcP5IRGzK3Z6mPM3uNmNHyFIQXSSh7j7X2A7hKqJVloKwLh46e-v8wSpj')"
+				></div>
 				<div class="flex flex-col">
 					<span class="text-xs font-bold text-slate-900 dark:text-white">Oak Table</span>
 					<span class="text-[10px] text-slate-500 dark:text-gray-400">Sold 12m ago</span>
@@ -225,13 +288,19 @@
 	</div>
 
 	<!-- Dual CTA Block (Fixed Bottom) -->
-	<div class="fixed bottom-0 left-0 w-full p-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-lg border-t border-gray-200 dark:border-white/5 z-40">
+	<div
+		class="fixed bottom-0 left-0 w-full p-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-lg border-t border-gray-200 dark:border-white/5 z-40"
+	>
 		<div class="flex gap-3 max-w-md mx-auto">
-			<button class="flex-1 h-12 rounded-xl bg-transparent border-2 border-primary text-primary dark:text-primary font-bold text-sm flex items-center justify-center gap-2 hover:bg-primary/10 transition-colors">
+			<button
+				class="flex-1 h-12 rounded-xl bg-transparent border-2 border-primary text-primary dark:text-primary font-bold text-sm flex items-center justify-center gap-2 hover:bg-primary/10 transition-colors"
+			>
 				<Icon name="add_circle" size={20} />
 				Post Item
 			</button>
-			<button class="flex-[2] h-12 rounded-xl bg-primary text-background-dark font-bold text-sm flex items-center justify-center gap-2 shadow-[0_0_10px_rgba(19,236,236,0.2)] hover:shadow-[0_0_15px_rgba(19,236,236,0.4)] transition-shadow">
+			<button
+				class="flex-[2] h-12 rounded-xl bg-primary text-background-dark font-bold text-sm flex items-center justify-center gap-2 shadow-[0_0_10px_rgba(19,236,236,0.2)] hover:shadow-[0_0_15px_rgba(19,236,236,0.4)] transition-shadow"
+			>
 				<Icon name="explore" size={20} />
 				Browse Nearby
 			</button>
@@ -241,20 +310,38 @@
 
 <!-- Mobile Menu Overlay -->
 {#if mobileMenuOpen}
-	<button
-		onclick={closeMenu}
-		class="fixed inset-0 bg-black/50 z-[60]"
-		aria-label="Close menu"
+	<button onclick={closeMenu} class="fixed inset-0 bg-black/50 z-[60]" aria-label="Close menu"
 	></button>
-	<div class="fixed top-0 left-0 h-full w-[280px] bg-background-light dark:bg-background-dark shadow-xl z-[70] p-6 overflow-y-auto">
-		<button onclick={closeMenu} class="mb-6 text-slate-900 dark:text-white hover:text-primary transition-colors">
+	<div
+		class="fixed top-0 left-0 h-full w-[280px] bg-background-light dark:bg-background-dark shadow-xl z-[70] p-6 overflow-y-auto"
+	>
+		<button
+			onclick={closeMenu}
+			class="mb-6 text-slate-900 dark:text-white hover:text-primary transition-colors"
+		>
 			<Icon name="close" size={28} />
 		</button>
 		<nav class="space-y-4">
-			<a href="/" class="block text-slate-900 dark:text-white hover:text-primary transition-colors text-lg font-medium">Home</a>
-			<a href="/browse" class="block text-slate-900 dark:text-white hover:text-primary transition-colors text-lg font-medium">Browse</a>
-			<a href="/sell" class="block text-slate-900 dark:text-white hover:text-primary transition-colors text-lg font-medium">Sell</a>
-			<a href="/about" class="block text-slate-900 dark:text-white hover:text-primary transition-colors text-lg font-medium">About</a>
+			<a
+				href="/"
+				class="block text-slate-900 dark:text-white hover:text-primary transition-colors text-lg font-medium"
+				>Home</a
+			>
+			<a
+				href="/browse"
+				class="block text-slate-900 dark:text-white hover:text-primary transition-colors text-lg font-medium"
+				>Browse</a
+			>
+			<a
+				href="/sell"
+				class="block text-slate-900 dark:text-white hover:text-primary transition-colors text-lg font-medium"
+				>Sell</a
+			>
+			<a
+				href="/about"
+				class="block text-slate-900 dark:text-white hover:text-primary transition-colors text-lg font-medium"
+				>About</a
+			>
 		</nav>
 	</div>
 {/if}

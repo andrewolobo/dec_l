@@ -1,0 +1,440 @@
+<!doctype html>
+
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>My Listings</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#13ecec",
+              "background-light": "#f6f8f8",
+              "background-dark": "#102222",
+              "card-dark": "#162a2a", // Slightly lighter than background for cards
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+              lg: "1rem",
+              xl: "1.5rem",
+              "2xl": "2rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+    </style>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen flex flex-col overflow-x-hidden pb-20"
+  >
+    <!-- Sticky Header -->
+    <header
+      class="sticky top-0 z-40 w-full bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-white/5 transition-all duration-300"
+    >
+      <div class="flex items-center justify-between px-4 py-3 h-16">
+        <h1 class="text-xl font-extrabold tracking-tight">My Listings</h1>
+        <button
+          class="flex items-center justify-center w-10 h-10 rounded-full bg-transparent hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+        >
+          <span class="material-symbols-outlined text-2xl">tune</span>
+        </button>
+      </div>
+    </header>
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col w-full max-w-md mx-auto">
+      <!-- Primary CTA -->
+      <div class="px-4 py-4 w-full">
+        <button
+          class="group relative w-full flex items-center justify-center gap-3 bg-primary hover:bg-primary/90 text-background-dark h-14 rounded-xl font-bold text-lg shadow-[0_0_20px_rgba(19,236,236,0.3)] transition-all active:scale-[0.98]"
+        >
+          <span class="material-symbols-outlined font-bold">add_circle</span>
+          <span>Create New Post</span>
+        </button>
+      </div>
+      <!-- Filter Chips -->
+      <div
+        class="flex gap-3 px-4 py-2 overflow-x-auto no-scrollbar w-full mb-2"
+      >
+        <!-- Active Chip -->
+        <button
+          class="flex-shrink-0 px-5 py-2 rounded-full bg-primary/20 border border-primary/30 text-primary font-semibold text-sm transition-colors whitespace-nowrap"
+        >
+          All
+        </button>
+        <!-- Inactive Chips -->
+        <button
+          class="flex-shrink-0 px-5 py-2 rounded-full bg-gray-200 dark:bg-card-dark text-gray-600 dark:text-gray-400 font-medium text-sm border border-transparent hover:border-gray-300 dark:hover:border-white/10 transition-colors whitespace-nowrap"
+        >
+          Active
+        </button>
+        <button
+          class="flex-shrink-0 px-5 py-2 rounded-full bg-gray-200 dark:bg-card-dark text-gray-600 dark:text-gray-400 font-medium text-sm border border-transparent hover:border-gray-300 dark:hover:border-white/10 transition-colors whitespace-nowrap"
+        >
+          Sold
+        </button>
+        <button
+          class="flex-shrink-0 px-5 py-2 rounded-full bg-gray-200 dark:bg-card-dark text-gray-600 dark:text-gray-400 font-medium text-sm border border-transparent hover:border-gray-300 dark:hover:border-white/10 transition-colors whitespace-nowrap"
+        >
+          Expired
+        </button>
+      </div>
+      <!-- Listings Feed -->
+      <div class="flex flex-col gap-4 px-4 py-2">
+        <!-- Card 1: Active -->
+        <div
+          class="group relative flex flex-col sm:flex-row gap-4 p-3 bg-white dark:bg-card-dark rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden transition-transform active:scale-[0.99]"
+        >
+          <!-- Image -->
+          <div
+            class="relative w-full sm:w-32 aspect-[4/3] sm:aspect-square flex-shrink-0 rounded-xl overflow-hidden bg-gray-800"
+          >
+            <div
+              class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+              data-alt="Vintage mid-century brass table lamp"
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuAelfv_YjMJ820ynVdCdZf_H5kEqr1v8xJ294zPoMmoW5OQje8qJp7qfU8W08RLXrR2tVxUqa9qHzOjGVqXGbPvU5934txAWvsEUi9fR1QtpJkOf6q1Z1H6lVJACGPoYgaknbSW5LLBjnmSRUeirhz_njBhDHJveikqbgDvSdjcGaVDj5TYUGzDrSM5YymKtjOZ6Di9S-5txPFDnCnNayem91fHBACKQ-rpGV25w8hJra7MmsDzwxWm8kC2msn3gAU8_wKxnmV3ZXeU&quot;);
+              "
+            ></div>
+            <div
+              class="absolute top-2 left-2 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md"
+            >
+              <span
+                class="text-[10px] font-bold text-white uppercase tracking-wider"
+                >2 days ago</span
+              >
+            </div>
+          </div>
+          <!-- Content -->
+          <div class="flex-1 flex flex-col justify-between min-w-0">
+            <div>
+              <div class="flex justify-between items-start mb-1">
+                <!-- Status Badge -->
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wide"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  Active
+                </span>
+                <!-- Menu -->
+                <button
+                  class="text-gray-400 hover:text-white p-1 -mr-2 -mt-2 rounded-full hover:bg-white/10"
+                >
+                  <span class="material-symbols-outlined text-xl"
+                    >more_horiz</span
+                  >
+                </button>
+              </div>
+              <h3
+                class="text-lg font-bold text-slate-900 dark:text-white leading-tight truncate pr-4"
+              >
+                Vintage Mid-Century Lamp
+              </h3>
+              <div
+                class="flex items-center gap-2 mt-1 text-sm text-gray-500 dark:text-gray-400"
+              >
+                <span class="material-symbols-outlined text-base"
+                  >visibility</span
+                >
+                <span>24 views</span>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center justify-between">
+              <span class="text-xl font-bold text-primary">$45</span>
+              <button
+                class="text-sm font-semibold text-gray-500 hover:text-white transition-colors"
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Card 2: Pending -->
+        <div
+          class="group relative flex flex-col sm:flex-row gap-4 p-3 bg-white dark:bg-card-dark rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden transition-transform active:scale-[0.99]"
+        >
+          <!-- Image -->
+          <div
+            class="relative w-full sm:w-32 aspect-[4/3] sm:aspect-square flex-shrink-0 rounded-xl overflow-hidden bg-gray-800"
+          >
+            <div
+              class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+              data-alt="White minimalist Ikea desk in bright room"
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuAya_I0mnwkpN3ntJnTR6CLSJfUbtmIICN0gLhjCNdxpgt-bB3ptDtHeli0hnJQJ8-3FjieIQhUHZ-n-gNe2GdfwSBWNB5OC6TygpC_dY2zDMsn8FvTypYeTTy1KHhNV859N4BUWyAtqDvd7yknv1zFQ7FeaQIZMvOoxA16S1i3Qq-u-rJ1WbeMk4dQOIbdeTEjubvix37iLbqErsVbCegb9-tLuppEo9k12dDYuw-LPkmLNHV4GpmZ1ayoFeHq-BdYOUXiBIs8Er7m&quot;);
+              "
+            ></div>
+            <div
+              class="absolute top-2 left-2 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md"
+            >
+              <span
+                class="text-[10px] font-bold text-white uppercase tracking-wider"
+                >1 week ago</span
+              >
+            </div>
+          </div>
+          <!-- Content -->
+          <div class="flex-1 flex flex-col justify-between min-w-0">
+            <div>
+              <div class="flex justify-between items-start mb-1">
+                <!-- Status Badge -->
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-500 text-xs font-bold uppercase tracking-wide"
+                >
+                  <span class="material-symbols-outlined text-[14px]"
+                    >hourglass_empty</span
+                  >
+                  Pending
+                </span>
+                <button
+                  class="text-gray-400 hover:text-white p-1 -mr-2 -mt-2 rounded-full hover:bg-white/10"
+                >
+                  <span class="material-symbols-outlined text-xl"
+                    >more_horiz</span
+                  >
+                </button>
+              </div>
+              <h3
+                class="text-lg font-bold text-slate-900 dark:text-white leading-tight truncate pr-4"
+              >
+                Ikea Malm Desk - White
+              </h3>
+              <div
+                class="flex items-center gap-2 mt-1 text-sm text-gray-500 dark:text-gray-400"
+              >
+                <span class="material-symbols-outlined text-base">chat</span>
+                <span>8 inquiries</span>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center justify-between">
+              <span class="text-xl font-bold text-slate-900 dark:text-white"
+                >$120</span
+              >
+              <button
+                class="text-sm font-semibold text-gray-500 hover:text-white transition-colors"
+              >
+                Manage
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Card 3: Sold -->
+        <div
+          class="group relative flex flex-col sm:flex-row gap-4 p-3 bg-white dark:bg-card-dark rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden opacity-75 hover:opacity-100 transition-opacity"
+        >
+          <!-- Image -->
+          <div
+            class="relative w-full sm:w-32 aspect-[4/3] sm:aspect-square flex-shrink-0 rounded-xl overflow-hidden bg-gray-800 grayscale"
+          >
+            <div
+              class="absolute inset-0 bg-cover bg-center"
+              data-alt="Silver chrome espresso machine on kitchen counter"
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuAOCSJPr8Pdq3vf-JJdqHzpqztz6hsJQdZOv_b9e8Ka9dvmJTEW_gUpSHWn--tPY60bbtHgWMGvqEqBhSqUTUvHCj_2nTpAwLB_2Hs3w9ko2_o9DIRWynBJMVBhKX7raDtxUZxrCvMA5K4pCA3NXdGrsH80KHTAw-gBLoKRujhVIurXPB5y7Tr_IQpl416VekVWSnVKFGfhn8b2DTNkVcgdlA2-K68Ij54CPOfRn4Z5uE2vTiv9d1fLpllQNNXmSAVS7YaWT1f0BtCX&quot;);
+              "
+            ></div>
+            <div class="absolute inset-0 bg-black/20"></div>
+          </div>
+          <!-- Content -->
+          <div class="flex-1 flex flex-col justify-between min-w-0">
+            <div>
+              <div class="flex justify-between items-start mb-1">
+                <!-- Status Badge -->
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-600/20 text-gray-400 text-xs font-bold uppercase tracking-wide"
+                >
+                  <span class="material-symbols-outlined text-[14px]"
+                    >check_circle</span
+                  >
+                  Sold
+                </span>
+                <button
+                  class="text-gray-400 hover:text-white p-1 -mr-2 -mt-2 rounded-full hover:bg-white/10"
+                >
+                  <span class="material-symbols-outlined text-xl"
+                    >more_horiz</span
+                  >
+                </button>
+              </div>
+              <h3
+                class="text-lg font-bold text-gray-500 dark:text-gray-400 line-through decoration-2 decoration-gray-500 truncate pr-4"
+              >
+                Breville Espresso Machine
+              </h3>
+              <div
+                class="flex items-center gap-2 mt-1 text-sm text-gray-500 dark:text-gray-400"
+              >
+                <span>Sold on Oct 12</span>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center justify-between">
+              <span class="text-xl font-bold text-gray-500">$250</span>
+              <button
+                class="text-sm font-semibold text-gray-500 hover:text-white transition-colors"
+              >
+                Relist
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Card 4: Expired -->
+        <div
+          class="group relative flex flex-col sm:flex-row gap-4 p-3 bg-white dark:bg-card-dark rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden transition-transform active:scale-[0.99]"
+        >
+          <!-- Image -->
+          <div
+            class="relative w-full sm:w-32 aspect-[4/3] sm:aspect-square flex-shrink-0 rounded-xl overflow-hidden bg-gray-800"
+          >
+            <div
+              class="absolute inset-0 bg-cover bg-center opacity-80"
+              data-alt="Vintage road bicycle leaning against a brick wall"
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuB-ByODM0NPoBDen7fgTyc2GcXoEsf1jLQMZ0062DMBvgl5hrL_uk0OpnaYdqgwVyI0jo-Qqad18Sp1uJc17CJOBLTDnBZ9P0AHX7F3F07jXlC4iF1qo62BeuFdpndBLocq8Sh-cPiEujG2bMOSsyf3-a5SiSb8rohFR9esvLenLRyMkWU78q44StlmhZsE3uFDXrrGHH5Bf3caWxqHL5oOysBVpSTUKThoggNSvj43KbfRvJmgEM2UjvxkzHUjHjGpeaf6F3m9joP-&quot;);
+              "
+            ></div>
+          </div>
+          <!-- Content -->
+          <div class="flex-1 flex flex-col justify-between min-w-0">
+            <div>
+              <div class="flex justify-between items-start mb-1">
+                <!-- Status Badge -->
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 text-red-400 text-xs font-bold uppercase tracking-wide"
+                >
+                  <span class="material-symbols-outlined text-[14px]"
+                    >error</span
+                  >
+                  Expired
+                </span>
+                <button
+                  class="text-gray-400 hover:text-white p-1 -mr-2 -mt-2 rounded-full hover:bg-white/10"
+                >
+                  <span class="material-symbols-outlined text-xl"
+                    >more_horiz</span
+                  >
+                </button>
+              </div>
+              <h3
+                class="text-lg font-bold text-slate-900 dark:text-white leading-tight truncate pr-4"
+              >
+                Road Bike - 54cm Frame
+              </h3>
+              <div
+                class="flex items-center gap-2 mt-1 text-sm text-gray-500 dark:text-gray-400"
+              >
+                <span>Expired yesterday</span>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center justify-between">
+              <span class="text-xl font-bold text-slate-900 dark:text-white"
+                >$300</span
+              >
+              <button
+                class="text-sm font-semibold text-primary hover:text-white transition-colors"
+              >
+                Renew
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom Spacer -->
+      <div class="h-6"></div>
+    </main>
+    <!-- Bottom Navigation -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-lg border-t border-gray-200 dark:border-white/5 pb-5 pt-3"
+    >
+      <div class="flex items-center justify-around max-w-md mx-auto px-2">
+        <button
+          class="flex flex-col items-center justify-center w-16 gap-1 group"
+        >
+          <span
+            class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[26px]"
+            >home</span
+          >
+          <span
+            class="text-[10px] font-medium text-gray-400 group-hover:text-primary"
+            >Home</span
+          >
+        </button>
+        <button
+          class="flex flex-col items-center justify-center w-16 gap-1 group"
+        >
+          <span
+            class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[26px]"
+            >search</span
+          >
+          <span
+            class="text-[10px] font-medium text-gray-400 group-hover:text-primary"
+            >Sell</span
+          >
+        </button>
+        <button
+          class="flex flex-col items-center justify-center w-16 gap-1 group"
+        >
+          <span
+            class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[26px]"
+            >chat_bubble</span
+          >
+          <span
+            class="text-[10px] font-medium text-gray-400 group-hover:text-primary"
+            >Messages</span
+          >
+        </button>
+        <button
+          class="flex flex-col items-center justify-center w-16 gap-1 group"
+        >
+          <span
+            class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[26px]"
+            >person</span
+          >
+          <span
+            class="text-[10px] font-medium text-gray-400 group-hover:text-primary"
+            >Profile</span
+          >
+        </button>
+      </div>
+    </nav>
+  </body>
+</html>

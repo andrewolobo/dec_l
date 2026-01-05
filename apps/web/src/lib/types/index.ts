@@ -15,3 +15,6 @@ export * from './category.types';
 
 // Payment Types
 export * from './payment.types';
+
+// Message Types
+export * from './message.types';

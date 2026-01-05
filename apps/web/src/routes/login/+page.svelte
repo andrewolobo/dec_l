@@ -84,13 +84,15 @@
 	<div class="flex-grow flex flex-col justify-center">
 		<!-- Logo -->
 		<div class="flex justify-center pt-8 pb-6">
-			<span class="material-symbols-outlined text-white text-5xl">sell</span>
+			<div class="flex-1 flex justify-center">
+				<img src="/images/tunda-hub-logo.fw.png" alt="Tunda Plug" class="h-8 object-contain" />
+			</div>
 		</div>
 
 		<!-- Title -->
-		<h2 class="text-white text-2xl font-bold leading-tight tracking-[-0.015em] text-center px-4">
+		<h6 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] text-center px-4">
 			Welcome back
-		</h2>
+		</h6>
 
 		<!-- OAuth Buttons -->
 		<div class="flex justify-center w-full">

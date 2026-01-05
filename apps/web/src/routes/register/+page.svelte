@@ -28,14 +28,14 @@
 	// UI state
 	let loading = false;
 	let error = '';
-	
+
 	// Touched state for validation
 	let emailTouched = false;
 	let passwordTouched = false;
 	let confirmPasswordTouched = false;
 	let fullNameTouched = false;
 	let phoneNumberTouched = false;
-	
+
 	// Validation errors
 	let emailError = '';
 	let passwordError = '';
@@ -161,7 +161,9 @@
 		passwordError = passwordTouched ? validatePassword(password) : '';
 		if (password) calculatePasswordStrength(password);
 	}
-	$: confirmPasswordError = confirmPasswordTouched ? validateConfirmPassword(confirmPassword, password) : '';
+	$: confirmPasswordError = confirmPasswordTouched
+		? validateConfirmPassword(confirmPassword, password)
+		: '';
 	$: fullNameError = fullNameTouched ? validateFullName(fullName) : '';
 	$: phoneNumberError = phoneNumberTouched ? validatePhoneNumber(phoneNumber) : '';
 
@@ -238,7 +240,7 @@
 			if (response.success && response.data) {
 				// Auth service automatically stores tokens and user data
 				// All profile data including avatar is now saved in registration
-				
+
 				// Redirect to browse or onboarding
 				await goto('/browse');
 			} else {
@@ -287,13 +289,15 @@
 	<div class="flex-grow flex flex-col justify-center py-8">
 		<!-- Logo -->
 		<div class="flex justify-center pt-4 pb-4">
-			<span class="material-symbols-outlined text-white text-5xl">sell</span>
+			<div class="flex-1 flex justify-center">
+				<img src="/images/tunda-hub-logo.fw.png" alt="Tunda Plug" class="h-8 object-contain" />
+			</div>
 		</div>
 
 		<!-- Title -->
-		<h2 class="text-white text-2xl font-bold leading-tight tracking-[-0.015em] text-center px-4">
+		<h1 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] text-center px-4">
 			Create your account
-		</h2>
+		</h1>
 
 		<!-- Step Indicator -->
 		<div class="flex justify-center w-full px-4 pt-6 pb-4">
@@ -383,7 +387,7 @@
 						</p>
 						<input
 							bind:value={email}
-							on:blur={() => emailTouched = true}
+							on:blur={() => (emailTouched = true)}
 							type="email"
 							placeholder="Enter your email"
 							disabled={loading}
@@ -407,7 +411,7 @@
 						</p>
 						<input
 							bind:value={password}
-							on:blur={() => passwordTouched = true}
+							on:blur={() => (passwordTouched = true)}
 							type="password"
 							placeholder="Create a password"
 							disabled={loading}
@@ -444,7 +448,7 @@
 						</p>
 						<input
 							bind:value={confirmPassword}
-							on:blur={() => confirmPasswordTouched = true}
+							on:blur={() => (confirmPasswordTouched = true)}
 							type="password"
 							placeholder="Confirm your password"
 							disabled={loading}
@@ -470,7 +474,9 @@
 							class="mt-1 w-5 h-5 rounded border-2 border-gray-400 bg-transparent checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
 						/>
 						<p class="text-gray-400 text-sm leading-normal">
-							I agree to the <a href="/terms" class="text-primary hover:underline">Terms of Service</a>
+							I agree to the <a href="/terms" class="text-primary hover:underline"
+								>Terms of Service</a
+							>
 							and <a href="/privacy" class="text-primary hover:underline">Privacy Policy</a>
 							<span class="text-danger-500">*</span>
 						</p>
@@ -494,9 +500,7 @@
 
 		<!-- Step 2: Personal Information -->
 		{#if currentStep === 2}
-			<p class="text-center text-gray-300 text-sm px-4 pb-6">
-				Help us personalize your experience
-			</p>
+			<p class="text-center text-gray-300 text-sm px-4 pb-6">Help us personalize your experience</p>
 
 			<!-- Full Name Field -->
 			<div class="flex justify-center w-full">
@@ -507,7 +511,7 @@
 						</p>
 						<input
 							bind:value={fullName}
-							on:blur={() => fullNameTouched = true}
+							on:blur={() => (fullNameTouched = true)}
 							type="text"
 							placeholder="Enter your full name"
 							disabled={loading}
@@ -570,15 +574,13 @@
 
 		<!-- Step 3: Optional Profile -->
 		{#if currentStep === 3}
-			<p class="text-center text-gray-300 text-sm px-4 pb-2">
-				Enhance your profile (optional)
-			</p>
+			<p class="text-center text-gray-300 text-sm px-4 pb-2">Enhance your profile (optional)</p>
 			<p class="text-center text-gray-500 text-xs px-4 pb-6">You can complete this later</p>
 
 			<!-- Avatar Picker -->
 			<div class="flex justify-center w-full">
 				<div class="flex max-w-2xl w-full flex-col px-4 py-2">
-					<AvatarPicker email={email} bind:selected={profilePicture} />
+					<AvatarPicker {email} bind:selected={profilePicture} />
 				</div>
 			</div>
 

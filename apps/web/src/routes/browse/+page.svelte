@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
+	import MobileBottomNav from '$lib/components/layout/MobileBottomNav.svelte';
 	import PostCard, { type Post } from '$lib/components/cards/PostCard.svelte';
 
 	// Mock data for feed listings
@@ -124,81 +125,35 @@
 	</aside>
 
 	<div class="flex-1 flex flex-col overflow-hidden">
-	<!-- Top App Bar -->
-	<header
-		class="fixed top-0 z-10 w-full md:relative bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm"
-	>
-		<div class="flex items-center p-4 max-w-2xl mx-auto">
-			<div class="flex size-12 shrink-0 items-center md:hidden">
-				<!-- Placeholder for logo if needed -->
+		<!-- Top App Bar -->
+		<header
+			class="fixed top-0 z-10 w-full md:relative bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm"
+		>
+			<div class="flex items-center p-4 max-w-2xl mx-auto">
+				<div class="flex size-12 shrink-0 items-center md:hidden">
+					<!-- Placeholder for logo if needed -->
+				</div>
+				<h1 class="flex-1 text-center text-lg font-bold text-slate-900 dark:text-white">Home</h1>
+				<div class="flex w-12 items-center justify-end gap-2 md:hidden">
+					<button
+						class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-slate-700 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+					>
+						<span class="material-symbols-outlined text-2xl">search</span>
+					</button>
+				</div>
 			</div>
-			<h1 class="flex-1 text-center text-lg font-bold text-slate-900 dark:text-white">
-				Home
-			</h1>
-			<div class="flex w-12 items-center justify-end gap-2 md:hidden">
-				<button
-					class="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full text-slate-700 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
-				>
-					<span class="material-symbols-outlined text-2xl">search</span>
-				</button>
+		</header>
+
+		<!-- Main Content Feed -->
+		<main class="flex-1 overflow-y-auto pb-24 md:pb-0 pt-20 md:pt-0">
+			<div class="flex flex-col gap-[5px] max-w-2xl mx-auto">
+				{#each posts as post (post.id)}
+					<PostCard {post} variant="feed" showUser={true} />
+				{/each}
 			</div>
-		</div>
-	</header>
+		</main>
 
-	<!-- Main Content Feed -->
-	<main class="flex-1 overflow-y-auto pb-24 md:pb-0 pt-20 md:pt-0">
-		<div class="flex flex-col gap-[5px] max-w-2xl mx-auto">
-			{#each posts as post (post.id)}
-				<PostCard {post} variant="feed" showUser={true} />
-			{/each}
-		</div>
-	</main>
-
-	<!-- Bottom Navigation Bar (Mobile Only) -->
-	<nav
-		class="md:hidden fixed bottom-0 z-10 w-full border-t border-slate-200/50 bg-background-light/80 dark:border-slate-800/50 dark:bg-background-dark/80 backdrop-blur-sm"
-	>
-		<div class="flex h-16 items-center justify-around px-2">
-			<a
-				href="/browse"
-				class="flex flex-1 flex-col items-center justify-center gap-1 {activeTab === 'home'
-					? 'text-primary'
-					: 'text-slate-500 dark:text-slate-400'} hover:text-primary transition-colors"
-			>
-				<span
-					class="material-symbols-outlined text-2xl"
-					style="font-variation-settings: 'FILL' {activeTab === 'home' ? 1 : 0};">home</span
-				>
-				<p class="text-xs font-medium">Home</p>
-			</a>
-			<a
-				href="/sell"
-				class="flex flex-1 flex-col items-center justify-center gap-1 {activeTab === 'sell'
-					? 'text-primary'
-					: 'text-slate-500 dark:text-slate-400'} hover:text-primary transition-colors"
-			>
-				<span class="material-symbols-outlined text-2xl">add_circle</span>
-				<p class="text-xs font-medium">Sell</p>
-			</a>
-			<a
-				href="/messages"
-				class="flex flex-1 flex-col items-center justify-center gap-1 {activeTab === 'messages'
-					? 'text-primary'
-					: 'text-slate-500 dark:text-slate-400'} hover:text-primary transition-colors"
-			>
-				<span class="material-symbols-outlined text-2xl">chat_bubble</span>
-				<p class="text-xs font-medium">Messages</p>
-			</a>
-			<a
-				href="/profile"
-				class="flex flex-1 flex-col items-center justify-center gap-1 {activeTab === 'profile'
-					? 'text-primary'
-					: 'text-slate-500 dark:text-slate-400'} hover:text-primary transition-colors"
-			>
-				<span class="material-symbols-outlined text-2xl">person</span>
-				<p class="text-xs font-medium">Profile</p>
-			</a>
-		</div>
-	</nav>
+		<!-- Bottom Navigation Bar (Mobile Only) -->
+		<MobileBottomNav activeRoute="/browse" />
 	</div>
 </div>

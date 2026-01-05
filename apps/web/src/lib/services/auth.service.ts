@@ -62,7 +62,9 @@ export async function loginWithOAuth(data: OAuthLoginDTO): Promise<ApiResponse<A
 /**
  * Refresh access token using refresh token
  */
-export async function refreshToken(refreshToken: string): Promise<ApiResponse<{ accessToken: string }>> {
+export async function refreshToken(
+	refreshToken: string
+): Promise<ApiResponse<{ accessToken: string }>> {
 	const response = await apiClient.post<ApiResponse<{ accessToken: string }>>('/auth/refresh', {
 		refreshToken
 	} as RefreshTokenDTO);
@@ -157,7 +159,7 @@ function setAuthData(authResponse: AuthResponse): void {
 
 	setAuthTokens(authResponse.tokens);
 	localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authResponse.user));
-	
+
 	// Update the user store to trigger reactivity
 	userStore.setCurrentUser(authResponse.user as any);
 }
@@ -181,7 +183,7 @@ export function clearAuthData(): void {
 	localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
 	localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
 	localStorage.removeItem(STORAGE_KEYS.USER);
-	
+
 	// Clear the user store
 	userStore.setCurrentUser(null);
 }
