@@ -10,6 +10,7 @@ import type {
 	LikeResponseDTO
 } from '$types/post.types';
 import { postStore } from '$lib/stores/post.store';
+import { userStore } from '$lib/stores/user.store';
 import { handleError } from '$lib/utils/error-handler';
 
 /**
@@ -252,8 +253,25 @@ export async function getPostsByUser(
  */
 export async function getMyPosts(
 	options: { page?: number; limit?: number } = {}
-): Promise<ApiResponse<PaginatedResponse<PostResponseDTO>>> {
+): Promise<PaginatedResponse<PostResponseDTO>> {
 	try {
+		// Get current user ID from store
+		const userId = userStore.getCurrentUserId();
+
+		if (!userId) {
+			postStore.setMyPostsError('User not authenticated');
+			return {
+				success: false,
+				data: [],
+				pagination: { total: 0, page: 1, limit: 20, pages: 0 },
+				error: {
+					code: 'UNAUTHORIZED',
+					message: 'User not authenticated',
+					statusCode: 401
+				}
+			};
+		}
+
 		const { page = 1, limit = 20 } = options;
 
 		const params = new URLSearchParams({
@@ -262,12 +280,14 @@ export async function getMyPosts(
 		});
 
 		postStore.setMyPostsLoading(true);
-		const response = await apiClient.get<ApiResponse<PaginatedResponse<PostResponseDTO>>>(
-			`/posts/my-posts?${params.toString()}`
+
+		// Use existing /posts/user/:userId endpoint
+		const response = await apiClient.get<PaginatedResponse<PostResponseDTO>>(
+			`/posts/user/${userId}?${params.toString()}`
 		);
 
 		if (response.data.success && response.data.data) {
-			const { data: posts, pagination } = response.data.data;
+			const { data: posts, pagination } = response.data;
 			const hasMore = pagination.page < pagination.pages;
 
 			if (page === 1) {

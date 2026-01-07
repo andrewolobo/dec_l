@@ -6,12 +6,8 @@
 	import ListingCard from '$lib/components/cards/ListingCard.svelte';
 	import type { PostResponseDTO } from '$lib/types/post.types';
 	import { PostStatus } from '$lib/types/post.types';
-	import {
-		getMockListings,
-		getMockListingsCount,
-		filterListingsByStatus,
-		getListingCountByStatus
-	} from '$lib/utils/mock-listings';
+	import { getMyPosts, loadMoreMyPosts } from '$lib/services/post.service';
+	import { myPosts, myPostsLoading, myPostsError, myPostsHasMore } from '$lib/stores/post.store';
 
 	// Filter states
 	type FilterStatus =
@@ -22,38 +18,88 @@
 		| PostStatus.DRAFT;
 	let activeFilter = $state<FilterStatus>('all');
 
-	// Listings state
+	// Listings state from store
 	let listings = $state<PostResponseDTO[]>([]);
-	let filteredListings = $state<PostResponseDTO[]>([]);
 	let isLoading = $state(false);
 	let hasMore = $state(true);
+	let error = $state<string | null>(null);
 	let page = $state(1);
-	const pageSize = 10;
+	const pageSize = 20;
+
+	// Subscribe to store updates
+	$effect(() => {
+		const unsubscribe = myPosts.subscribe((posts) => {
+			listings = posts;
+		});
+		return unsubscribe;
+	});
+
+	$effect(() => {
+		const unsubscribe = myPostsLoading.subscribe((loading) => {
+			isLoading = loading;
+		});
+		return unsubscribe;
+	});
+
+	$effect(() => {
+		const unsubscribe = myPostsError.subscribe((err) => {
+			error = err;
+		});
+		return unsubscribe;
+	});
+
+	$effect(() => {
+		const unsubscribe = myPostsHasMore.subscribe((more) => {
+			hasMore = more;
+		});
+		return unsubscribe;
+	});
+
+	// Client-side filtering
+	let filteredListings = $derived(
+		activeFilter === 'all' ? listings : listings.filter((post) => post.status === activeFilter)
+	);
 
 	// Infinite scroll observer
 	let loadMoreTrigger = $state<HTMLElement | undefined>();
 	let observer: IntersectionObserver;
 
-	// Filter configuration with counts
+	// Filter configuration with counts from real data
 	const filters = $derived([
-		{ id: 'all' as FilterStatus, label: 'All', count: getListingCountByStatus('all') },
-		{ id: PostStatus.ACTIVE, label: 'Active', count: getListingCountByStatus(PostStatus.ACTIVE) },
+		{ id: 'all' as FilterStatus, label: 'All', count: listings.length },
+		{
+			id: PostStatus.ACTIVE,
+			label: 'Active',
+			count: listings.filter((l) => l.status === PostStatus.ACTIVE).length
+		},
 		{
 			id: PostStatus.PENDING_PAYMENT,
 			label: 'Pending',
-			count: getListingCountByStatus(PostStatus.PENDING_PAYMENT)
+			count: listings.filter((l) => l.status === PostStatus.PENDING_PAYMENT).length
 		},
 		{
 			id: PostStatus.EXPIRED,
 			label: 'Expired',
-			count: getListingCountByStatus(PostStatus.EXPIRED)
+			count: listings.filter((l) => l.status === PostStatus.EXPIRED).length
 		},
-		{ id: PostStatus.DRAFT, label: 'Draft', count: getListingCountByStatus(PostStatus.DRAFT) }
+		{
+			id: PostStatus.DRAFT,
+			label: 'Draft',
+			count: listings.filter((l) => l.status === PostStatus.DRAFT).length
+		}
 	]);
 
 	// Load initial listings
 	onMount(() => {
-		loadListings();
+		// Load initial page
+		getMyPosts({ page: 1, limit: pageSize })
+			.then(() => {
+				page = 2; // Next page to load
+			})
+			.catch((err) => {
+				console.error('Failed to load initial listings:', err);
+			});
+
 		setupInfiniteScroll();
 
 		return () => {
@@ -62,33 +108,29 @@
 	});
 
 	// Load more listings
-	function loadListings() {
+	async function loadListings() {
 		if (isLoading || !hasMore) return;
 
-		isLoading = true;
-
-		// Simulate API delay
-		setTimeout(() => {
-			const newListings = getMockListings(page, pageSize);
-
-			if (newListings.length === 0) {
-				hasMore = false;
-			} else {
-				listings = [...listings, ...newListings];
+		try {
+			const result = await loadMoreMyPosts(page);
+			if (result) {
 				page += 1;
+			} else {
+				hasMore = false;
 			}
-
-			isLoading = false;
-		}, 500);
+		} catch (err) {
+			console.error('Failed to load more listings:', err);
+			error = err instanceof Error ? err.message : 'Failed to load listings';
+		}
 	}
 
 	// Setup infinite scroll observer
 	function setupInfiniteScroll() {
 		observer = new IntersectionObserver(
-			(entries) => {
+			async (entries) => {
 				const [entry] = entries;
 				if (entry.isIntersecting && !isLoading && hasMore) {
-					loadListings();
+					await loadListings();
 				}
 			},
 			{
@@ -100,11 +142,6 @@
 			observer.observe(loadMoreTrigger);
 		}
 	}
-
-	// Filter listings when activeFilter or listings change
-	$effect(() => {
-		filteredListings = filterListingsByStatus(listings, activeFilter);
-	});
 
 	// Handle filter change
 	function setFilter(filter: 'all' | PostStatus) {
@@ -212,6 +249,18 @@
 				</h1>
 			</div>
 		</div>
+
+		<!-- Error Display -->
+		{#if error}
+			<div
+				class="mx-4 mt-4 max-w-2xl mx-auto px-4 py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+			>
+				<div class="flex items-center gap-2">
+					<Icon name="error" size={20} class="text-red-600 dark:text-red-400" />
+					<p class="text-red-800 dark:text-red-200">{error}</p>
+				</div>
+			</div>
+		{/if}
 
 		<!-- Listings Grid -->
 		<div class="px-4 py-6 max-w-2xl mx-auto">

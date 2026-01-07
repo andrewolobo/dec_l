@@ -115,10 +115,23 @@ router.delete(
 
 /**
  * @route   POST /api/v1/posts/:id/like
- * @desc    Toggle like on a post
+ * @desc    Like a post (or toggle like)
  * @access  Private
  */
 router.post(
+  "/:id/like",
+  authenticate,
+  createLimiter,
+  validateParams(postIdSchema),
+  postController.toggleLike
+);
+
+/**
+ * @route   DELETE /api/v1/posts/:id/like
+ * @desc    Unlike a post
+ * @access  Private
+ */
+router.delete(
   "/:id/like",
   authenticate,
   createLimiter,

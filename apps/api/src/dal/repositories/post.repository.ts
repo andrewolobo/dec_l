@@ -351,8 +351,9 @@ export class PostRepository extends BaseRepository<Post> {
         images: {
           orderBy: { displayOrder: "asc" },
         },
-        likes: true,
-        views: true,
+        _count: {
+          select: { likes: true, views: true },
+        },
       },
       orderBy: { createdAt: "desc" },
     });

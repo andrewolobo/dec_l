@@ -6,10 +6,11 @@
 	import MobileBottomNav from '$lib/components/layout/MobileBottomNav.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import SellerRatingDisplay from '$lib/components/common/SellerRatingDisplay.svelte';
-	import { getPost } from '$lib/services/post.service';
+	import { getPost, likePost, unlikePost } from '$lib/services/post.service';
 	import * as ratingService from '$lib/services/rating.service';
 	import type { PostResponseDTO } from '$lib/types/post.types';
 	import type { SellerScoreDTO } from '$lib/types/rating.types';
+	import { userStore } from '$lib/stores/user.store';
 
 	let post = $state<PostResponseDTO | null>(null);
 	let sellerScore = $state<SellerScoreDTO | null>(null);
@@ -17,6 +18,7 @@
 	let error = $state<string | null>(null);
 	let currentImageIndex = $state(0);
 	let showContactInfo = $state(false);
+	let isLiking = $state(false);
 
 	// Get post ID from URL
 	$effect(() => {
@@ -96,6 +98,51 @@
 		showContactInfo = true;
 	}
 
+	async function handleLike() {
+		if (!post || isLiking) return;
+
+		// Check if user is authenticated
+		const isAuthenticated = userStore.isAuthenticated();
+		if (!isAuthenticated) {
+			// Redirect to login or show message
+			alert('Please log in to like posts');
+			return;
+		}
+
+		isLiking = true;
+
+		try {
+			const wasLiked = post.isLiked;
+			
+			if (wasLiked) {
+				const result = await unlikePost(post.id);
+				if (result.success && result.data) {
+					// Update local post state
+					post = { 
+						...post, 
+						isLiked: result.data.liked,
+						likeCount: result.data.likeCount
+					};
+				}
+			} else {
+				const result = await likePost(post.id);
+				if (result.success && result.data) {
+					// Update local post state
+					post = { 
+						...post, 
+						isLiked: result.data.liked,
+						likeCount: result.data.likeCount
+					};
+				}
+			}
+		} catch (err) {
+			console.error('Error toggling like:', err);
+			alert('Failed to update like. Please try again.');
+		} finally {
+			isLiking = false;
+		}
+	}
+
 	function handleMessage() {
 		if (post?.user.id) {
 			const autoMessage = encodeURIComponent(`I'm interested in: ${post.title}`);
@@ -138,10 +185,16 @@
 						<Icon name="share" size={20} />
 					</button>
 					<button
-						class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-						aria-label="Favorite"
+						onclick={handleLike}
+						class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors {isLiking ? 'opacity-50 cursor-not-allowed' : ''}"
+						aria-label={post?.isLiked ? 'Unlike' : 'Like'}
+						disabled={isLiking}
 					>
-						<Icon name="favorite" size={20} />
+						<Icon 
+							name={post?.isLiked ? 'favorite' : 'favorite_border'} 
+							size={20} 
+							class={post?.isLiked ? 'text-red-500' : ''}
+						/>
 					</button>
 				</div>
 			</div>
@@ -186,7 +239,7 @@
 								<img
 									src={post.images[currentImageIndex].imageUrl}
 									alt={post.title}
-									class="w-full h-full object-contain"
+									class="w-full h-full object-cover"
 								/>
 
 								<!-- Navigation Arrows -->

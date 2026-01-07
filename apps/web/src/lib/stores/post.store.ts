@@ -549,6 +549,10 @@ export const myPostsError: Readable<string | null> = derived(
 	postStore,
 	($store) => $store.myPostsError
 );
+export const myPostsHasMore: Readable<boolean> = derived(
+	postStore,
+	($store) => $store.myPostsHasMore
+);
 
 export const drafts: Readable<PostResponseDTO[]> = derived(postStore, ($store) => $store.drafts);
 export const draftsLoading: Readable<boolean> = derived(

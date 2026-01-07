@@ -135,11 +135,20 @@ export class PostService {
         };
       }
 
-      // Track view if viewer provided
+      // Track view - always increment view count
+      // If viewer is authenticated, link to their user ID
+      // Otherwise, create anonymous view record
       if (viewerId) {
         await viewRepository.create({
           postId,
           userId: viewerId,
+        });
+      } else {
+        // For anonymous users, still track the view
+        // We'll create a view without userId (anonymous view)
+        await viewRepository.create({
+          postId,
+          userId: null, // Anonymous view
         });
       }
 
@@ -790,8 +799,8 @@ export class PostService {
       },
       // Use transformed images (with error handling above)
       images: transformedImages,
-      likeCount: post.likes?.length || 0,
-      viewCount: post.views?.length || 0,
+      likeCount: post._count?.likes || 0,
+      viewCount: post._count?.views || 0,
       scheduledPublishTime: post.scheduledPublishTime || undefined,
       publishedAt: post.publishedAt || undefined,
       expiresAt: post.expiresAt || undefined,
