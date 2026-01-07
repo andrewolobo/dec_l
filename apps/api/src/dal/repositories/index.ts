@@ -8,6 +8,7 @@ export { PaymentRepository } from "./payment.repository";
 export { ViewRepository } from "./view.repository";
 export { PricingTierRepository } from "./pricingtier.repository";
 export { MessageRepository } from "./message.repository";
+export { SellerRatingRepository } from "./sellerrating.repository";
 
 // Import classes for instantiation
 import { UserRepository } from "./user.repository";
@@ -19,6 +20,7 @@ import { PaymentRepository } from "./payment.repository";
 import { ViewRepository } from "./view.repository";
 import { PricingTierRepository } from "./pricingtier.repository";
 import { MessageRepository } from "./message.repository";
+import { SellerRatingRepository } from "./sellerrating.repository";
 
 // Singleton instances for easy import
 export const userRepository = new UserRepository();
@@ -30,3 +32,4 @@ export const paymentRepository = new PaymentRepository();
 export const viewRepository = new ViewRepository();
 export const pricingTierRepository = new PricingTierRepository();
 export const messageRepository = new MessageRepository();
+export const sellerRatingRepository = new SellerRatingRepository();

@@ -18,3 +18,6 @@ export * from './user.service';
 
 // Upload Service
 export * from './upload.service';
+
+// Rating Service
+export * from './rating.service';

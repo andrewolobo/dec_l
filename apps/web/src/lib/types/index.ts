@@ -18,3 +18,6 @@ export * from './payment.types';
 
 // Message Types
 export * from './message.types';
+
+// Rating Types
+export * from './rating.types';

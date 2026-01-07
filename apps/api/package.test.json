@@ -1,0 +1,49 @@
+{
+    "name": "seller-rating-tests",
+    "version": "1.0.0",
+    "description": "Test suite for Seller Rating System",
+    "scripts": {
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:coverage": "jest --coverage",
+        "test:integration": "jest --testPathPattern=integration",
+        "test:api": "jest rating.api.test.ts",
+        "test:service": "jest rating.service.integration.test.ts",
+        "test:e2e": "cd ../web && npx playwright test",
+        "test:e2e:headed": "cd ../web && npx playwright test --headed",
+        "test:all": "npm run test && npm run test:e2e",
+        "verify-aggregates": "ts-node scripts/verify-aggregates.ts",
+        "check-health": "ts-node scripts/check-health.ts",
+        "test:performance": "jest --testPathPattern=performance"
+    },
+    "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/src"
+        ],
+        "testMatch": [
+            "**/__tests__/**/*.test.ts"
+        ],
+        "collectCoverageFrom": [
+            "src/services/**/*.ts",
+            "src/dal/repositories/**/*.ts",
+            "src/routes/**/*.ts",
+            "!src/**/*.d.ts"
+        ],
+        "coverageThreshold": {
+            "global": {
+                "branches": 80,
+                "functions": 80,
+                "lines": 80,
+                "statements": 80
+            }
+        },
+        "setupFilesAfterEnv": [
+            "<rootDir>/src/__tests__/setup.ts"
+        ],
+        "moduleNameMapper": {
+            "^@/(.*)$": "<rootDir>/src/$1"
+        }
+    }
+}

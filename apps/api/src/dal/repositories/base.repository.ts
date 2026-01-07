@@ -1,5 +1,5 @@
-﻿import prisma from '../prisma.client';
-import { Prisma } from '@prisma/client';
+﻿import prisma from "../prisma.client";
+import { Prisma } from "@prisma/client";
 
 /**
  * Base Repository
@@ -10,9 +10,13 @@ export abstract class BaseRepository<T> {
 
   /**
    * Get Prisma delegate for the model
+   * Converts PascalCase ModelName to camelCase for Prisma client access
    */
   protected getModel() {
-    return (prisma as any)[this.modelName.toLowerCase()];
+    // Convert PascalCase to camelCase (e.g., "SellerRating" -> "sellerRating")
+    const camelCaseModel =
+      this.modelName.charAt(0).toLowerCase() + this.modelName.slice(1);
+    return (prisma as any)[camelCaseModel];
   }
 
   /**

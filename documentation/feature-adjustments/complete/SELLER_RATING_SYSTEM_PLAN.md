@@ -25,6 +25,7 @@ Implementation of a 5-point rating system that allows users to rate sellers base
 ### Existing Schema Structure
 
 **No rating system currently exists.** The application has:
+
 - ✅ Like system for posts
 - ✅ View tracking for engagement
 - ✅ Message system for buyer-seller communication
@@ -50,8 +51,8 @@ model SellerRating {
   postId    Int?     @map("PostID")
   rating    Int      @map("Rating") // 1-5 scale
   comment   String?  @db.Text @map("Comment")
-  createdAt DateTime @default(now()) @map("CreatedAt") @db.Timestamp
-  updatedAt DateTime @updatedAt @map("UpdatedAt") @db.Timestamp
+  createdAt DateTime @default(now()) @map("CreatedAt")
+  updatedAt DateTime @updatedAt @map("UpdatedAt")
 
   // Relations (implicit - no FK constraints in DB)
   seller    User     @relation("RatingsReceived", fields: [sellerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -66,7 +67,14 @@ model SellerRating {
 }
 ```
 
+**Database Compatibility Notes:**
+
+- `createdAt` and `updatedAt` fields use generic `DateTime` type without `@db.Timestamp` annotation
+- This ensures compatibility with both PostgreSQL (TIMESTAMPTZ) and SQL Server (DATETIME2)
+- Prisma automatically maps to the appropriate native type based on the configured database provider
+
 **Design Decisions:**
+
 - `postId` is optional to allow general seller ratings (not tied to specific transaction)
 - Unique constraint on `[sellerId, raterId, postId]` prevents duplicate ratings per transaction
 - `comment` is optional for text reviews
@@ -79,21 +87,28 @@ Add aggregate fields for performance:
 ```prisma
 model User {
   // ... existing fields
-  
+
   // Rating aggregate fields (denormalized for performance)
   sellerRating     Decimal?  @default(0) @db.Decimal(3, 2) @map("SellerRating")
   totalRatings     Int       @default(0) @map("TotalRatings")
   positiveRatings  Int       @default(0) @map("PositiveRatings")
-  
+
   // Rating relations
   ratingsReceived  SellerRating[] @relation("RatingsReceived")
   ratingsGiven     SellerRating[] @relation("RatingsGiven")
-  
+
   // ... existing relations
 }
 ```
 
+**Database Compatibility Notes:**
+
+- `Decimal(3, 2)` is supported by both PostgreSQL (NUMERIC/DECIMAL) and SQL Server (DECIMAL)
+- Allows values like 0.00 to 5.00 (perfect for star ratings)
+- Default value of 0 ensures no NULL handling needed for new users
+
 **Benefits:**
+
 - Fast score retrieval without aggregation queries
 - Supports sorting/filtering users by rating
 - Minimal read latency for high-traffic pages
@@ -105,9 +120,9 @@ Add relation to ratings:
 ```prisma
 model Post {
   // ... existing fields
-  
+
   ratings  SellerRating[]
-  
+
   // ... existing relations
 }
 ```
@@ -118,30 +133,127 @@ model Post {
 
 ### Phase 1: Database Migration
 
+#### Step 1a: Prisma Migration (Recommended)
+
 ```bash
 cd apps/api
 npx prisma migrate dev --name add_seller_rating_system
 ```
 
+This will automatically generate SQL for your configured database provider.
+
+#### Step 1b: Manual Migration Scripts (Alternative)
+
+If you need to run migrations manually or support multiple database types:
+
+**For PostgreSQL:**
+
+```sql
+-- Create SellerRatings table
+CREATE TABLE "SellerRatings" (
+    "RatingID" SERIAL NOT NULL,
+    "SellerID" INTEGER NOT NULL,
+    "RaterID" INTEGER NOT NULL,
+    "PostID" INTEGER,
+    "Rating" INTEGER NOT NULL,
+    "Comment" TEXT,
+    "CreatedAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "UpdatedAt" TIMESTAMPTZ NOT NULL,
+
+    CONSTRAINT "SellerRatings_pkey" PRIMARY KEY ("RatingID")
+);
+
+-- Create unique constraint
+CREATE UNIQUE INDEX "UQ_SellerRatings_Seller_Rater_Post" ON "SellerRatings"("SellerID", "RaterID", "PostID");
+
+-- Create indexes for performance
+CREATE INDEX "IX_SellerRatings_SellerID" ON "SellerRatings"("SellerID");
+CREATE INDEX "IX_SellerRatings_RaterID" ON "SellerRatings"("RaterID");
+CREATE INDEX "IX_SellerRatings_PostID" ON "SellerRatings"("PostID");
+
+-- Add rating aggregate columns to Users table
+ALTER TABLE "Users" ADD COLUMN "SellerRating" DECIMAL(3, 2) DEFAULT 0;
+ALTER TABLE "Users" ADD COLUMN "TotalRatings" INTEGER DEFAULT 0;
+ALTER TABLE "Users" ADD COLUMN "PositiveRatings" INTEGER DEFAULT 0;
+```
+
+**For SQL Server:**
+
+```sql
+-- Create SellerRatings table
+CREATE TABLE [SellerRatings] (
+    [RatingID] INT IDENTITY(1,1) NOT NULL,
+    [SellerID] INT NOT NULL,
+    [RaterID] INT NOT NULL,
+    [PostID] INT NULL,
+    [Rating] INT NOT NULL,
+    [Comment] NVARCHAR(MAX) NULL,
+    [CreatedAt] DATETIME2 NOT NULL DEFAULT GETDATE(),
+    [UpdatedAt] DATETIME2 NOT NULL,
+
+    CONSTRAINT [PK_SellerRatings] PRIMARY KEY ([RatingID])
+);
+GO
+
+-- Create unique constraint
+CREATE UNIQUE NONCLUSTERED INDEX [UQ_SellerRatings_Seller_Rater_Post]
+ON [SellerRatings]([SellerID], [RaterID], [PostID]);
+GO
+
+-- Create indexes for performance
+CREATE NONCLUSTERED INDEX [IX_SellerRatings_SellerID] ON [SellerRatings]([SellerID]);
+CREATE NONCLUSTERED INDEX [IX_SellerRatings_RaterID] ON [SellerRatings]([RaterID]);
+CREATE NONCLUSTERED INDEX [IX_SellerRatings_PostID] ON [SellerRatings]([PostID]);
+GO
+
+-- Add rating aggregate columns to Users table
+ALTER TABLE [Users] ADD [SellerRating] DECIMAL(3, 2) DEFAULT 0;
+ALTER TABLE [Users] ADD [TotalRatings] INT DEFAULT 0;
+ALTER TABLE [Users] ADD [PositiveRatings] INT DEFAULT 0;
+GO
+```
+
+**Migration Verification:**
+
+```bash
+# Check migration status
+npx prisma migrate status
+
+# Generate Prisma Client
+npx prisma generate
+
+# Verify schema
+npx prisma db pull
+```
+
 **Tasks:**
-1. Add `SellerRating` table
-2. Add rating columns to `Users` table
-3. Generate Prisma client
-4. Verify migration in development database
+
+1. ✅ Add `SellerRating` table with proper column types for target database
+2. ✅ Add rating aggregate columns to `Users` table
+3. ✅ Create indexes for query performance
+4. ✅ Generate Prisma client
+5. ✅ Verify migration in development database
+6. ✅ Test on both PostgreSQL and SQL Server (if applicable)
 
 ### Phase 2: Data Access Layer
 
-**Create:** `apps/api/src/repositories/SellerRatingRepository.ts`
+**Create:** `apps/api/src/dal/repositories/sellerrating.repository.ts`
 
 ```typescript
-import { BaseRepository } from './BaseRepository';
-import { SellerRating, Prisma } from '@prisma/client';
+import { BaseRepository } from "./base.repository";
+import { SellerRating, Prisma } from "@prisma/client";
+import prisma from "../prisma.client";
 
+/**
+ * SellerRating Repository
+ * Handles all database operations for seller ratings
+ */
 export class SellerRatingRepository extends BaseRepository<SellerRating> {
-  constructor() {
-    super('sellerRating');
-  }
+  protected modelName: Prisma.ModelName = "SellerRating";
 
+  /**
+   * Create a new rating
+   */
   async createRating(data: {
     sellerId: number;
     raterId: number;
@@ -152,8 +264,11 @@ export class SellerRatingRepository extends BaseRepository<SellerRating> {
     return this.create(data);
   }
 
-  async getRatingsByUser(sellerId: number, limit: number = 10): Promise<SellerRating[]> {
-    return this.findMany({
+  /**
+   * Get all ratings for a seller with rater and post details
+   */
+  async getRatingsByUser(sellerId: number, limit: number = 10): Promise<any[]> {
+    return this.findAll({
       where: { sellerId },
       include: {
         rater: {
@@ -170,23 +285,27 @@ export class SellerRatingRepository extends BaseRepository<SellerRating> {
           },
         },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
       take: limit,
     });
   }
 
+  /**
+   * Calculate aggregate seller scores
+   * Compatible with both PostgreSQL and SQL Server
+   */
   async calculateSellerScore(sellerId: number): Promise<{
     averageRating: number;
     totalRatings: number;
     positiveRatings: number;
   }> {
-    const result = await this.prisma.sellerRating.aggregate({
+    const result = await prisma.sellerRating.aggregate({
       where: { sellerId },
       _avg: { rating: true },
       _count: { id: true },
     });
 
-    const positiveCount = await this.prisma.sellerRating.count({
+    const positiveCount = await prisma.sellerRating.count({
       where: { sellerId, rating: { gte: 4 } },
     });
 
@@ -197,13 +316,37 @@ export class SellerRatingRepository extends BaseRepository<SellerRating> {
     };
   }
 
+  /**
+   * Check if a user has already rated a specific post
+   */
   async hasUserRatedPost(raterId: number, postId: number): Promise<boolean> {
-    const rating = await this.findFirst({
-      where: { raterId, postId },
-    });
+    const rating = await this.findOne({ raterId, postId });
     return !!rating;
   }
+
+  /**
+   * Get rating by seller, rater, and post combination
+   */
+  async findRating(
+    sellerId: number,
+    raterId: number,
+    postId?: number
+  ): Promise<SellerRating | null> {
+    return this.findOne({ sellerId, raterId, postId });
+  }
 }
+```
+
+**Update:** `apps/api/src/dal/repositories/index.ts`
+
+Add the new repository export:
+
+```typescript
+// ... existing exports
+export { SellerRatingRepository } from "./sellerrating.repository";
+
+// Add to singleton instances
+export const sellerRatingRepository = new SellerRatingRepository();
 ```
 
 ### Phase 3: Service Layer
@@ -211,20 +354,20 @@ export class SellerRatingRepository extends BaseRepository<SellerRating> {
 **Create:** `apps/api/src/services/RatingService.ts`
 
 ```typescript
-import { SellerRatingRepository } from '../repositories/SellerRatingRepository';
-import { UserRepository } from '../repositories/UserRepository';
-import { PaymentRepository } from '../repositories/PaymentRepository';
-import { ValidationError, NotFoundError, ForbiddenError } from '../errors';
+import { SellerRatingRepository } from "../dal/repositories/sellerrating.repository";
+import { UserRepository } from "../dal/repositories/user.repository";
+import { MessageRepository } from "../dal/repositories/message.repository";
+import { ValidationError, NotFoundError, ForbiddenError } from "../errors";
 
 export class RatingService {
   private ratingRepo: SellerRatingRepository;
   private userRepo: UserRepository;
-  private paymentRepo: PaymentRepository;
+  private messageRepo: MessageRepository;
 
   constructor() {
     this.ratingRepo = new SellerRatingRepository();
     this.userRepo = new UserRepository();
-    this.paymentRepo = new PaymentRepository();
+    this.messageRepo = new MessageRepository();
   }
 
   async createRating(data: {
@@ -236,17 +379,17 @@ export class RatingService {
   }) {
     // Validation
     if (data.rating < 1 || data.rating > 5) {
-      throw new ValidationError('Rating must be between 1 and 5');
+      throw new ValidationError("Rating must be between 1 and 5");
     }
 
     if (data.sellerId === data.raterId) {
-      throw new ForbiddenError('Cannot rate yourself');
+      throw new ForbiddenError("Cannot rate yourself");
     }
 
     // Check if seller exists
     const seller = await this.userRepo.findById(data.sellerId);
     if (!seller) {
-      throw new NotFoundError('Seller not found');
+      throw new NotFoundError("Seller not found");
     }
 
     // Check for duplicate rating
@@ -256,25 +399,23 @@ export class RatingService {
         data.postId
       );
       if (existingRating) {
-        throw new ValidationError('You have already rated this transaction');
+        throw new ValidationError(
+          "You have already rated this seller for this post"
+        );
       }
     }
 
-    // Optional: Verify payment/transaction completed
-    if (data.postId) {
-      const confirmedPayment = await this.paymentRepo.findFirst({
-        where: {
-          postId: data.postId,
-          userId: data.raterId,
-          status: 'Confirmed',
-        },
-      });
+    // Verify message exchange between buyer and seller
+    const hasInteraction = await this.messageRepo.findOne({
+      OR: [
+        { senderId: data.raterId, recipientId: data.sellerId },
+        { senderId: data.sellerId, recipientId: data.raterId },
+      ],
+      isDeleted: false,
+    });
 
-      if (!confirmedPayment) {
-        throw new ForbiddenError(
-          'Can only rate after confirmed transaction'
-        );
-      }
+    if (!hasInteraction) {
+      throw new ForbiddenError("Can only rate seller after message exchange");
     }
 
     // Create rating
@@ -292,11 +433,12 @@ export class RatingService {
 
   async getSellerScore(sellerId: number) {
     const scores = await this.ratingRepo.calculateSellerScore(sellerId);
-    
+
     // Calculate positive ratio score
-    const score = scores.totalRatings > 0
-      ? (scores.positiveRatings / scores.totalRatings) * 5
-      : 0;
+    const score =
+      scores.totalRatings > 0
+        ? (scores.positiveRatings / scores.totalRatings) * 5
+        : 0;
 
     return {
       score: Math.round(score * 10) / 10, // Round to 1 decimal
@@ -308,10 +450,11 @@ export class RatingService {
 
   private async updateSellerAggregates(sellerId: number) {
     const scores = await this.ratingRepo.calculateSellerScore(sellerId);
-    
-    const positiveRatioScore = scores.totalRatings > 0
-      ? (scores.positiveRatings / scores.totalRatings) * 5
-      : 0;
+
+    const positiveRatioScore =
+      scores.totalRatings > 0
+        ? (scores.positiveRatings / scores.totalRatings) * 5
+        : 0;
 
     await this.userRepo.update(sellerId, {
       sellerRating: positiveRatioScore,
@@ -365,16 +508,16 @@ export interface SellerScoreDTO {
 **Create:** `apps/api/src/routes/ratings.routes.ts`
 
 ```typescript
-import { Router } from 'express';
-import { RatingService } from '../services/RatingService';
-import { authenticate } from '../middleware/auth';
-import { validateRequest } from '../middleware/validation';
+import { Router } from "express";
+import { RatingService } from "../services/RatingService";
+import { authenticate } from "../middleware/auth";
+import { validateRequest } from "../middleware/validation";
 
 const router = Router();
 const ratingService = new RatingService();
 
 // POST /api/v1/ratings - Create a new rating
-router.post('/', authenticate, validateRequest, async (req, res, next) => {
+router.post("/", authenticate, validateRequest, async (req, res, next) => {
   try {
     const { sellerId, postId, rating, comment } = req.body;
     const raterId = req.user!.id;
@@ -397,7 +540,7 @@ router.post('/', authenticate, validateRequest, async (req, res, next) => {
 });
 
 // GET /api/v1/ratings/seller/:sellerId - Get ratings for a seller
-router.get('/seller/:sellerId', async (req, res, next) => {
+router.get("/seller/:sellerId", async (req, res, next) => {
   try {
     const sellerId = parseInt(req.params.sellerId);
     const limit = parseInt(req.query.limit as string) || 10;
@@ -414,7 +557,7 @@ router.get('/seller/:sellerId', async (req, res, next) => {
 });
 
 // GET /api/v1/ratings/seller/:sellerId/score - Get seller score
-router.get('/seller/:sellerId/score', async (req, res, next) => {
+router.get("/seller/:sellerId/score", async (req, res, next) => {
   try {
     const sellerId = parseInt(req.params.sellerId);
     const score = await ratingService.getSellerScore(sellerId);
@@ -434,11 +577,11 @@ export default router;
 **Update:** `apps/api/src/routes/index.ts`
 
 ```typescript
-import ratingRoutes from './ratings.routes';
+import ratingRoutes from "./ratings.routes";
 
 // ... existing routes
 
-app.use('/api/v1/ratings', ratingRoutes);
+app.use("/api/v1/ratings", ratingRoutes);
 ```
 
 ### Phase 6: Update User Endpoints
@@ -448,19 +591,20 @@ app.use('/api/v1/ratings', ratingRoutes);
 Update `GET /api/v1/users/:id` to include seller rating in response:
 
 ```typescript
-router.get('/:id', async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const user = await userService.getUserById(parseInt(req.params.id));
-    
+
     // Include rating info
     const response = {
       ...user,
       sellerScore: {
         score: user.sellerRating || 0,
         totalRatings: user.totalRatings || 0,
-        displayText: user.totalRatings >= 3 
-          ? `${user.sellerRating?.toFixed(1)} ★`
-          : 'New Seller',
+        displayText:
+          user.totalRatings >= 3
+            ? `${user.sellerRating?.toFixed(1)} ★`
+            : "New Seller",
       },
     };
 
@@ -542,35 +686,125 @@ onMount(async () => {
 
 ## Technical Considerations
 
-### 1. Rating Eligibility Logic
+### 0. Multi-Database Support
 
-**Recommended:** Require confirmed payment before allowing rating.
+**Database Compatibility:**
 
-```typescript
-// In RatingService.createRating()
-const confirmedPayment = await this.paymentRepo.findFirst({
-  where: {
-    postId: data.postId,
-    userId: data.raterId,
-    status: 'Confirmed',
-  },
-});
+The implementation is designed to work seamlessly with both PostgreSQL and SQL Server:
 
-if (!confirmedPayment) {
-  throw new ForbiddenError('Can only rate after confirmed transaction');
+**Data Types:**
+
+- `DECIMAL(3, 2)` - Supported by both databases for rating scores (0.00 to 5.00)
+- `TEXT` / `NVARCHAR(MAX)` - Prisma automatically maps based on provider
+- `TIMESTAMPTZ` (PostgreSQL) / `DATETIME2` (SQL Server) - Handled by Prisma DateTime
+- `SERIAL` (PostgreSQL) / `IDENTITY` (SQL Server) - Auto-increment handled by `@default(autoincrement())`
+
+**Aggregation Functions:**
+
+- `AVG()`, `COUNT()`, `SUM()` - Standard SQL functions supported by both databases
+- Prisma's aggregate methods (`_avg`, `_count`) are database-agnostic
+
+**Index Syntax:**
+
+- Prisma generates appropriate index syntax for each database
+- `@@index` directives work uniformly across providers
+
+**Testing Requirement:**
+
+- Run integration tests on both PostgreSQL and SQL Server instances
+- Verify migration scripts execute successfully on both platforms
+- Test aggregate calculations return identical results
+
+**Configuration:**
+
+```env
+# PostgreSQL
+DATABASE_URL="postgresql://user:password@localhost:5432/dec_l_db"
+
+# SQL Server
+DATABASE_URL="sqlserver://localhost:1433;database=DEC_L;user=sa;password=YourPassword;encrypt=true"
+```
+
+Update `prisma/schema.prisma` datasource provider accordingly:
+
+```prisma
+datasource db {
+  provider = "postgresql" // or "sqlserver"
+  url      = env("DATABASE_URL")
 }
 ```
 
-**Alternative:** Allow rating after any message exchange (more lenient, higher risk of abuse).
+### 1. Rating Eligibility Logic
+
+**Current Implementation:** Allow rating after any message exchange between buyer and seller.
+
+```typescript
+// In RatingService.createRating()
+const hasInteraction = await this.messageRepo.findOne({
+  OR: [
+    { senderId: data.raterId, recipientId: data.sellerId },
+    { senderId: data.sellerId, recipientId: data.raterId },
+  ],
+  isDeleted: false,
+});
+
+if (!hasInteraction) {
+  throw new ForbiddenError("Can only rate seller after message exchange");
+}
+```
+
+**Benefits:**
+
+- More inclusive - captures all buyer-seller interactions
+- Encourages communication before transactions
+- Lower barrier to building seller reputation
+- Useful for scenarios where payment isn't tracked in the system
+
+**Considerations:**
+
+- Higher risk of rating manipulation (users could message just to leave ratings)
+- May include ratings from non-buyers (users who inquired but didn't purchase)
+- Consider adding additional validation (e.g., minimum message count, time between messages)
+
+**Alternative (Stricter):** Require confirmed payment before allowing rating:
+
+```typescript
+// Stricter approach - requires payment
+const confirmedPayment = await paymentRepo.findOne({
+  postId: data.postId,
+  userId: data.raterId,
+  status: "Confirmed",
+});
+
+if (!confirmedPayment) {
+  throw new ForbiddenError("Can only rate after confirmed transaction");
+}
+```
+
+**Enhanced Validation (Optional):**
+
+```typescript
+// Require bidirectional message exchange (conversation)
+const messageCount = await this.messageRepo.count({
+  OR: [
+    { senderId: data.raterId, recipientId: data.sellerId },
+    { senderId: data.sellerId, recipientId: data.raterId },
+  ],
+  isDeleted: false,
+});
+
+if (messageCount < 2) {
+  throw new ForbiddenError("Requires at least 2 messages exchanged to rate");
+}
+```
 
 ### 2. Score Display Threshold
 
 **Recommended:** Show "New Seller" instead of score for sellers with < 3 ratings.
 
 ```typescript
-const displayText = user.totalRatings >= 3 
-  ? `${user.sellerRating?.toFixed(1)} ★`
-  : 'New Seller';
+const displayText =
+  user.totalRatings >= 3 ? `${user.sellerRating?.toFixed(1)} ★` : "New Seller";
 ```
 
 **Rationale:** Prevents premature judgments based on insufficient data.
@@ -580,6 +814,7 @@ const displayText = user.totalRatings >= 3
 **Current Design:** Ratings are immutable (cannot be edited after creation).
 
 **Future Enhancement:** Allow editing within 24 hours:
+
 - Add `isEdited` boolean and `editedAt` timestamp
 - Track edit history in separate table if needed
 - Update aggregate scores on edit
@@ -601,11 +836,13 @@ model SellerRating {
 ### 5. Performance Optimization
 
 **Aggregate Updates:**
+
 - Current approach: Synchronous update on each rating creation
 - Alternative: Async queue for high-volume scenarios
 - Future: Scheduled batch recalculation (e.g., hourly cron job)
 
 **Caching:**
+
 - Cache seller scores in Redis for frequently viewed profiles
 - TTL: 5-10 minutes
 - Invalidate on new rating creation
@@ -613,6 +850,7 @@ model SellerRating {
 ### 6. Score Calculation Formula
 
 **Current Formula:**
+
 ```
 score = (positive_ratings / total_ratings) × 5
 where positive_ratings = count(rating >= 4)
@@ -621,11 +859,13 @@ where positive_ratings = count(rating >= 4)
 **Alternative Formulas to Consider:**
 
 1. **Simple Average:**
+
    ```
    score = sum(all_ratings) / count(all_ratings)
    ```
 
 2. **Weighted by Recency:**
+
    ```
    score = (recent_ratings × 0.7) + (older_ratings × 0.3)
    ```
@@ -707,7 +947,7 @@ async function initializeRatings() {
       positiveRatings: 0,
     },
   });
-  console.log('All users initialized with default ratings');
+  console.log("All users initialized with default ratings");
 }
 ```
 
@@ -741,6 +981,8 @@ async function initializeRatings() {
 
 ### Dashboard Queries
 
+**PostgreSQL:**
+
 ```sql
 -- Average rating across platform
 SELECT AVG("Rating") FROM "SellerRatings";
@@ -759,23 +1001,69 @@ GROUP BY "Rating"
 ORDER BY "Rating" DESC;
 ```
 
+**SQL Server:**
+
+```sql
+-- Average rating across platform
+SELECT AVG([Rating]) FROM [SellerRatings];
+
+-- Top rated sellers
+SELECT TOP 10 [SellerID], [SellerRating], [TotalRatings]
+FROM [Users]
+WHERE [TotalRatings] >= 5
+ORDER BY [SellerRating] DESC;
+
+-- Rating distribution
+SELECT [Rating], COUNT(*) as [Count]
+FROM [SellerRatings]
+GROUP BY [Rating]
+ORDER BY [Rating] DESC;
+```
+
+**Using Prisma (Database-Agnostic - Recommended):**
+
+```typescript
+// Average rating across platform
+const avgRating = await prisma.sellerRating.aggregate({
+  _avg: { rating: true },
+});
+
+// Top rated sellers
+const topSellers = await prisma.user.findMany({
+  where: { totalRatings: { gte: 5 } },
+  orderBy: { sellerRating: "desc" },
+  take: 10,
+  select: { id: true, fullName: true, sellerRating: true, totalRatings: true },
+});
+
+// Rating distribution
+const distribution = await prisma.sellerRating.groupBy({
+  by: ["rating"],
+  _count: { rating: true },
+  orderBy: { rating: "desc" },
+});
+```
+
 ---
 
 ## Future Enhancements
 
 ### Short-term (1-3 months)
+
 - [ ] Allow sellers to respond to ratings
 - [ ] Add "verified purchase" badge for payment-based ratings
 - [ ] Email notification when seller receives new rating
 - [ ] Filter/sort posts by seller rating
 
 ### Medium-term (3-6 months)
+
 - [ ] Rating moderation queue for admins
 - [ ] Dispute resolution workflow
 - [ ] Rating analytics dashboard for sellers
 - [ ] Buyer rating system (rate buyers for payment speed, communication)
 
 ### Long-term (6+ months)
+
 - [ ] Machine learning for fake rating detection
 - [ ] Seller reputation badges ("Top Seller", "5-Star Seller")
 - [ ] Integration with Instagram posts (show rating)
@@ -786,12 +1074,14 @@ ORDER BY "Rating" DESC;
 ## Success Criteria
 
 ### Launch Goals (30 days)
+
 - [ ] 20% of completed transactions result in ratings
 - [ ] Average rating >= 4.0 across platform
 - [ ] < 1% of ratings flagged/disputed
 - [ ] Zero downtime during rollout
 
 ### Long-term Goals (90 days)
+
 - [ ] 40% rating adoption rate
 - [ ] Correlation between seller rating and transaction volume
 - [ ] Positive user feedback on feature

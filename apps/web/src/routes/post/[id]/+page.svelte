@@ -5,10 +5,14 @@
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
 	import MobileBottomNav from '$lib/components/layout/MobileBottomNav.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import SellerRatingDisplay from '$lib/components/common/SellerRatingDisplay.svelte';
 	import { getPost } from '$lib/services/post.service';
+	import * as ratingService from '$lib/services/rating.service';
 	import type { PostResponseDTO } from '$lib/types/post.types';
+	import type { SellerScoreDTO } from '$lib/types/rating.types';
 
 	let post = $state<PostResponseDTO | null>(null);
+	let sellerScore = $state<SellerScoreDTO | null>(null);
 	let isLoading = $state(true);
 	let error = $state<string | null>(null);
 	let currentImageIndex = $state(0);
@@ -34,6 +38,10 @@
 
 			if (result.success && result.data) {
 				post = result.data;
+				// Load seller rating score
+				if (post.user.id) {
+					loadSellerScore(post.user.id);
+				}
 			} else {
 				error = result.error?.message || 'Failed to load post';
 			}
@@ -41,6 +49,18 @@
 			error = err instanceof Error ? err.message : 'An error occurred';
 		} finally {
 			isLoading = false;
+		}
+	}
+
+	async function loadSellerScore(userId: number) {
+		try {
+			const result = await ratingService.getSellerScore(userId);
+			if (result.success && result.data) {
+				sellerScore = result.data;
+			}
+		} catch (err) {
+			console.error('Error loading seller score:', err);
+			// Not critical, so don't show error to user
 		}
 	}
 
@@ -380,10 +400,23 @@
 						{/if}
 
 						<div class="flex-1">
-							<p class="font-semibold text-slate-900 dark:text-white">
+							<button
+								onclick={() => post && goto(`/profile/${post.user.id}`)}
+								class="font-semibold text-slate-900 dark:text-white hover:text-[#13ecec] dark:hover:text-[#13ecec] transition-colors text-left"
+							>
 								{post.user.fullName}
-							</p>
+							</button>
 							<p class="text-sm text-slate-600 dark:text-slate-400">Seller</p>
+							
+							{#if sellerScore}
+								<div class="mt-1">
+									<SellerRatingDisplay
+										{sellerScore}
+										size="small"
+										showDetails={false}
+									/>
+								</div>
+							{/if}
 						</div>
 					</div>
 
@@ -391,7 +424,7 @@
 						onclick={() => post && goto(`/profile/${post.user.id}`)}
 						class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-sm font-medium"
 					>
-						View Profile
+						View Profile & Reviews
 					</button>
 				</div>
 

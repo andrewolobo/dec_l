@@ -4,8 +4,16 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import IconButton from '$lib/components/buttons/IconButton.svelte';
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
+	import SellerRatingDisplay from '$lib/components/common/SellerRatingDisplay.svelte';
+	import RatingList from '$lib/components/common/RatingList.svelte';
+	import RatingDistribution from '$lib/components/common/RatingDistribution.svelte';
 	import { currentUser } from '$lib/stores';
 	import * as authService from '$lib/services/auth.service';
+	import * as ratingService from '$lib/services/rating.service';
+	import { apiClient } from '$lib/services/api.client';
+	import type { ApiResponse, PaginatedResponse } from '$lib/types/api.types';
+	import type { PostResponseDTO } from '$lib/types/post.types';
+	import { onMount } from 'svelte';
 
 	// Mock user data - replace with actual data from store
 	const user = $derived(
@@ -17,12 +25,60 @@
 		}
 	);
 
-	// Mock stats - replace with actual data
-	const stats = {
-		listings: 24,
-		sold: 15,
-		rating: 4.8
-	};
+	// Stats with real rating data
+	let stats = $state({
+		listings: 0,
+		sold: 0
+	});
+
+	let sellerScore = $state({
+		sellerId: user.id || 0,
+		averageRating: 0,
+		totalRatings: 0,
+		positiveRatings: 0,
+		displayText: 'New Seller'
+	});
+
+	let isLoadingRatings = $state(true);
+	let showRatingsSection = $state(false);
+
+	// Load user's posts count
+	async function loadPostsCount() {
+		if (!user.id) return;
+		
+		try {
+			const response = await apiClient.get<ApiResponse<PaginatedResponse<PostResponseDTO>>>(
+				`/posts/user/${user.id}`,
+				{ params: { page: 1, limit: 1 } }
+			);
+			
+			if (response.data.success && response.data.pagination) {
+				stats.listings = response.data.pagination.total || 0;
+			}
+		} catch (err) {
+			console.error('Error loading posts count:', err);
+		}
+	}
+
+	// Load seller ratings on mount
+	onMount(async () => {
+		if (user.id) {
+			try {
+				// Load ratings
+				const scoreResult = await ratingService.getSellerScore(user.id);
+				if (scoreResult.success && scoreResult.data) {
+					sellerScore = scoreResult.data;
+				}
+			} catch (error) {
+				console.error('Error loading seller ratings:', error);
+			} finally {
+				isLoadingRatings = false;
+			}
+			
+			// Load posts count
+			loadPostsCount();
+		}
+	});
 
 	// Navigation items
 	const navItems = [
@@ -120,19 +176,52 @@
 						<p class="text-slate-900 dark:text-white text-2xl font-bold">{stats.listings}</p>
 						<p class="text-slate-500 dark:text-[#92c9c9] text-sm">Listings</p>
 					</div>
-					<div
+					<!-- <div
 						class="flex min-w-[111px] flex-1 basis-[fit-content] flex-col gap-2 rounded-xl border border-slate-200 dark:border-[#326767] dark:bg-transparent p-3 items-center text-center"
 					>
 						<p class="text-slate-900 dark:text-white text-2xl font-bold">{stats.sold}</p>
 						<p class="text-slate-500 dark:text-[#92c9c9] text-sm">Sold</p>
-					</div>
-					<div
-						class="flex min-w-[111px] flex-1 basis-[fit-content] flex-col gap-2 rounded-xl border border-slate-200 dark:border-[#326767] ark:bg-transparent p-3 items-center text-center"
+					</div> -->
+					<button
+						onclick={() => (showRatingsSection = !showRatingsSection)}
+						class="flex min-w-[111px] flex-1 basis-[fit-content] flex-col gap-2 rounded-xl border border-slate-200 dark:border-[#326767] dark:bg-transparent p-3 items-center text-center hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors"
 					>
-						<p class="text-slate-900 dark:text-white text-2xl font-bold">{stats.rating} ★</p>
-						<p class="text-slate-500 dark:text-[#92c9c9] text-sm">Rating</p>
-					</div>
+						{#if isLoadingRatings}
+							<div class="text-slate-400 dark:text-slate-500 text-2xl font-bold">...</div>
+						{:else}
+							<SellerRatingDisplay
+								sellerScore={sellerScore}
+								showDetails={false}
+							/>
+						{/if}
+						<p class="text-slate-500 dark:text-[#92c9c9] text-sm">Seller Rating</p>
+					</button>
 				</div>
+
+				<!-- Ratings Section (Expandable) -->
+				{#if showRatingsSection && !isLoadingRatings && sellerScore.totalRatings > 0}
+					<div class="px-4 py-3 space-y-4">
+						<!-- Rating Distribution -->
+						<div
+							class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-[#326767] p-4"
+						>
+							<h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">
+								Rating Breakdown
+							</h3>
+							<RatingDistribution sellerId={user.id} />
+						</div>
+
+						<!-- Recent Ratings -->
+						<div
+							class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-[#326767] p-4"
+						>
+							<h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">
+								Recent Reviews
+							</h3>
+							<RatingList sellerId={user.id} showEdit={true} initialLimit={5} />
+						</div>
+					</div>
+				{/if}
 
 				<!-- Divider -->
 				<div class="px-4 py-3">

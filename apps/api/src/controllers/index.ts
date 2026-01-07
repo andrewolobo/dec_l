@@ -10,3 +10,4 @@ export { categoryController } from "./category.controller";
 export { paymentController } from "./payment.controller";
 export { uploadController } from "./upload.controller";
 export { messageController } from "./message.controller";
+export { ratingController } from "./rating.controller";
