@@ -182,10 +182,28 @@ export class MessageService {
         };
       }
 
+      // Add performance monitoring in development
+      const startTime =
+        process.env.NODE_ENV === "development" ? Date.now() : null;
+
       const conversations = await messageRepository.getConversationList(
         userId,
         options
       );
+
+      // Log performance metrics in development
+      if (startTime) {
+        const duration = Date.now() - startTime;
+        console.log(
+          `[MessageService] getConversationList took ${duration}ms for userId: ${userId}`
+        );
+
+        if (duration > 1000) {
+          console.warn(
+            `[MessageService] Performance warning: getConversationList took ${duration}ms (threshold: 1000ms)`
+          );
+        }
+      }
 
       // Map null values to undefined for DTO compatibility
       const mappedConversations = conversations.map((conv) => ({
@@ -200,6 +218,7 @@ export class MessageService {
         data: mappedConversations,
       };
     } catch (error) {
+      console.error("[MessageService] Error fetching conversations:", error);
       return {
         success: false,
         error: {

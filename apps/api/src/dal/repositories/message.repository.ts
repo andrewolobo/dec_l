@@ -149,8 +149,47 @@ export class MessageRepository extends BaseRepository<Message> {
   }
 
   /**
+   * Get unique conversation partner IDs for a user
+   * @private
+   */
+  private async getConversationPartnerIds(userId: number): Promise<number[]> {
+    // Get distinct sender IDs where user is recipient
+    const receivedFrom = await prisma.message.findMany({
+      where: {
+        recipientId: userId,
+        isDeleted: false,
+      },
+      distinct: ["senderId"],
+      select: {
+        senderId: true,
+      },
+    });
+
+    // Get distinct recipient IDs where user is sender
+    const sentTo = await prisma.message.findMany({
+      where: {
+        senderId: userId,
+        isDeleted: false,
+      },
+      distinct: ["recipientId"],
+      select: {
+        recipientId: true,
+      },
+    });
+
+    // Combine and deduplicate
+    const partnerIds = new Set<number>([
+      ...receivedFrom.map((m) => m.senderId),
+      ...sentTo.map((m) => m.recipientId),
+    ]);
+
+    return Array.from(partnerIds);
+  }
+
+  /**
    * Get conversation list for a user
    * Returns the last message with each unique user
+   * Refactored to use Prisma Query Builder instead of raw SQL for database compatibility
    */
   async getConversationList(
     userId: number,
@@ -161,80 +200,109 @@ export class MessageRepository extends BaseRepository<Message> {
   ) {
     const { limit = 20, offset = 0 } = options || {};
 
-    // Get all users who have conversations with the given user
-    const conversations = await prisma.$queryRaw<
-      Array<{
+    // Step 1: Fetch all messages involving the user (limited by a reasonable window)
+    // We need to fetch more than limit+offset to ensure we get enough unique conversations
+    const messages = await prisma.message.findMany({
+      where: {
+        OR: [{ senderId: userId }, { recipientId: userId }],
+        isDeleted: false,
+      },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            fullName: true,
+            profilePictureUrl: true,
+          },
+        },
+        recipient: {
+          select: {
+            id: true,
+            fullName: true,
+            profilePictureUrl: true,
+          },
+        },
+        post: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      // Fetch enough messages to ensure we get unique conversations
+      // This is a heuristic - adjust based on average messages per conversation
+      take: (limit + offset) * 20,
+    });
+
+    // Step 2: Group by conversation partner and get last message
+    const conversationMap = new Map<
+      number,
+      {
         userId: number;
         fullName: string;
         profilePictureUrl: string | null;
         lastMessage: string;
         lastMessageAt: Date;
         lastMessageSenderId: number;
-        unreadCount: bigint;
+        unreadCount: number;
         postId: number | null;
         postTitle: string | null;
-      }>
-    >`
-      WITH ConversationUsers AS (
-        SELECT DISTINCT
-          CASE
-            WHEN "SenderID" = ${userId} THEN "RecipientID"
-            ELSE "SenderID"
-          END AS "OtherUserId"
-        FROM "Messages"
-        WHERE ("SenderID" = ${userId} OR "RecipientID" = ${userId})
-          AND "IsDeleted" = false
-      ),
-      LastMessages AS (
-        SELECT
-          cu."OtherUserId",
-          m."MessageID",
-          m."MessageContent",
-          m."CreatedAt",
-          m."SenderID",
-          m."PostID",
-          ROW_NUMBER() OVER (PARTITION BY cu."OtherUserId" ORDER BY m."CreatedAt" DESC) as rn
-        FROM ConversationUsers cu
-        INNER JOIN "Messages" m ON (
-          (m."SenderID" = ${userId} AND m."RecipientID" = cu."OtherUserId")
-          OR (m."RecipientID" = ${userId} AND m."SenderID" = cu."OtherUserId")
-        )
-        WHERE m."IsDeleted" = false
-      ),
-      UnreadCounts AS (
-        SELECT
-          m."SenderID" AS "OtherUserId",
-          COUNT(*) as "UnreadCount"
-        FROM "Messages" m
-        WHERE m."RecipientID" = ${userId}
-          AND m."IsReadByRecipient" = false
-          AND m."IsDeleted" = false
-        GROUP BY m."SenderID"
-      )
-      SELECT
-        u."UserID" as "userId",
-        u."FullName" as "fullName",
-        u."ProfilePictureURL" as "profilePictureUrl",
-        lm."MessageContent" as "lastMessage",
-        lm."CreatedAt" as "lastMessageAt",
-        lm."SenderID" as "lastMessageSenderId",
-        COALESCE(uc."UnreadCount", 0) as "unreadCount",
-        lm."PostID" as "postId",
-        p."Title" as "postTitle"
-      FROM LastMessages lm
-      INNER JOIN "Users" u ON u."UserID" = lm."OtherUserId"
-      LEFT JOIN UnreadCounts uc ON uc."OtherUserId" = lm."OtherUserId"
-      LEFT JOIN "Posts" p ON p."PostID" = lm."PostID"
-      WHERE lm.rn = 1
-      ORDER BY lm."CreatedAt" DESC
-      OFFSET ${offset} LIMIT ${limit}
-    `;
+      }
+    >();
 
-    // Convert bigint to number for unreadCount
-    return conversations.map((conv) => ({
-      ...conv,
-      unreadCount: Number(conv.unreadCount),
-    }));
+    for (const message of messages) {
+      const partnerId =
+        message.senderId === userId ? message.recipientId : message.senderId;
+
+      // Only add if not already in map (messages are ordered by createdAt desc)
+      if (!conversationMap.has(partnerId)) {
+        const partner =
+          message.senderId === userId ? message.recipient : message.sender;
+
+        conversationMap.set(partnerId, {
+          userId: partnerId,
+          fullName: partner.fullName,
+          profilePictureUrl: partner.profilePictureUrl,
+          lastMessage: message.content,
+          lastMessageAt: message.createdAt,
+          lastMessageSenderId: message.senderId,
+          unreadCount: 0, // Will be calculated in next step
+          postId: message.postId,
+          postTitle: message.post?.title ?? null,
+        });
+      }
+    }
+
+    // Step 3: Calculate unread counts in parallel
+    const conversationArray = Array.from(conversationMap.values());
+    const conversationsWithUnread = await Promise.all(
+      conversationArray.map(async (conv) => {
+        const unreadCount = await prisma.message.count({
+          where: {
+            senderId: conv.userId,
+            recipientId: userId,
+            isReadByRecipient: false,
+            isDeleted: false,
+          },
+        });
+
+        return {
+          ...conv,
+          unreadCount,
+        };
+      })
+    );
+
+    // Step 4: Apply pagination
+    const paginatedConversations = conversationsWithUnread.slice(
+      offset,
+      offset + limit
+    );
+
+    return paginatedConversations;
   }
 
   /**
