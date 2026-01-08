@@ -444,8 +444,15 @@
 							<img
 								src={post.user.profilePictureUrl}
 								alt={post.user.fullName}
-								class="w-12 h-12 rounded-full object-cover"
+								class="w-12 h-12 rounded-full object-cover bg-slate-200 dark:bg-slate-700"
+								onerror={(e) => {
+									e.currentTarget.style.display = 'none';
+									e.currentTarget.nextElementSibling?.classList.remove('hidden');
+								}}
 							/>
+							<div class="hidden w-12 h-12 rounded-full bg-[#13ecec]/20 flex items-center justify-center">
+								<Icon name="person" size={24} />
+							</div>
 						{:else}
 							<div class="w-12 h-12 rounded-full bg-[#13ecec]/20 flex items-center justify-center">
 								<Icon name="person" size={24} />
