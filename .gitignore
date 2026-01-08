@@ -4,6 +4,7 @@ package-lock.json
 
 # Environment
 .env
+azure.env
 .env.local
 .env.*.local
 
