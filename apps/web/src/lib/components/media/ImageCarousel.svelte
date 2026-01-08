@@ -55,7 +55,7 @@
 
 	function handleDragMove(e: MouseEvent | TouchEvent) {
 		if (!isDragging || !carouselRef) return;
-		e.preventDefault();
+		// e.preventDefault();
 		const x = 'touches' in e ? e.touches[0].pageX : e.pageX;
 		const walk = (x - startX) * 2;
 		carouselRef.scrollLeft = scrollLeft - walk;
