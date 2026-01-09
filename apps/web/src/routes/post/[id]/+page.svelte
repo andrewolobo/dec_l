@@ -11,6 +11,7 @@
 	import type { PostResponseDTO } from '$lib/types/post.types';
 	import type { SellerScoreDTO } from '$lib/types/rating.types';
 	import { userStore } from '$lib/stores/user.store';
+	import { currentUser } from '$lib/stores';
 
 	let post = $state<PostResponseDTO | null>(null);
 	let sellerScore = $state<SellerScoreDTO | null>(null);
@@ -19,6 +20,9 @@
 	let currentImageIndex = $state(0);
 	let showContactInfo = $state(false);
 	let isLiking = $state(false);
+	
+	// Check if current user is the post owner
+	let isOwner = $derived(post && $currentUser && post.user.id === $currentUser.id);
 
 	// Get post ID from URL
 	$effect(() => {
@@ -178,6 +182,15 @@
 				</button>
 
 				<div class="flex items-center gap-2">
+					{#if isOwner}
+						<button
+							onclick={() => goto(`/post/edit/${post?.id}`)}
+							class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+							aria-label="Edit post"
+						>
+							<Icon name="edit" size={20} />
+						</button>
+					{/if}
 					<button
 						class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
 						aria-label="Share"

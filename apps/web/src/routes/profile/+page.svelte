@@ -122,10 +122,10 @@
 					<div class="w-12"></div>
 					<h1 class="text-lg font-bold text-slate-900 dark:text-white">Profile</h1>
 					<IconButton
-						icon="settings"
-						ariaLabel="Settings"
+						icon="edit"
+						ariaLabel="Edit Profile"
 						variant="default"
-						onclick={() => (window.location.href = '/settings')}
+						onclick={() => (window.location.href = '/profile/edit')}
 					/>
 				</div>
 			</header>

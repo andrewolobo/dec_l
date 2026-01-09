@@ -15,7 +15,7 @@
 		{
 			id: 'BASIC' as const,
 			name: 'Basic',
-			price: 1,
+			price: 5000,
 			duration: 3,
 			features: ['3 days visibility', 'Standard listing', 'Basic support', 'Email notifications'],
 			icon: 'star_outline',
@@ -26,14 +26,13 @@
 		{
 			id: 'STANDARD' as const,
 			name: 'Standard',
-			price: 2,
+			price: 7000,
 			duration: 7,
 			features: [
 				'7 days visibility',
-				'Featured listing badge',
+				'Featured badge',
 				'Priority support',
 				'Enhanced visibility',
-				'Email & SMS notifications'
 			],
 			icon: 'star_half',
 			color: 'text-blue-600 dark:text-blue-400',
@@ -44,16 +43,13 @@
 		{
 			id: 'PREMIUM' as const,
 			name: 'Premium',
-			price: 3,
+			price: 10000,
 			duration: 30,
 			features: [
 				'30 days visibility',
-				'Premium listing badge',
-				'Top placement in search',
+				'Premium badge',
+				'Top search',
 				'24/7 priority support',
-				'Maximum exposure',
-				'All notifications',
-				'Social media boost'
 			],
 			icon: 'star',
 			color: 'text-amber-600 dark:text-amber-400',
@@ -143,7 +139,7 @@
 					</h3>
 					<div class="flex items-baseline gap-1">
 						<span class="text-2xl font-bold text-slate-900 dark:text-slate-100">
-							{tier.price} USD
+							 Ush {tier.price} 
 						</span>
 						<span class="text-sm text-slate-500 dark:text-slate-400">
 							/ {tier.duration} days

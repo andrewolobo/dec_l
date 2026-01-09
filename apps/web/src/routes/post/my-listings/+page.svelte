@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
 	import MobileBottomNav from '$lib/components/layout/MobileBottomNav.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
@@ -153,7 +154,7 @@
 	function handleEdit(post: PostResponseDTO) {
 		console.log('Edit post:', post.id);
 		// Navigate to edit page
-		window.location.href = `/post/edit/${post.id}`;
+		goto(`/post/edit/${post.id}`);
 	}
 
 	function handleDelete(post: PostResponseDTO) {

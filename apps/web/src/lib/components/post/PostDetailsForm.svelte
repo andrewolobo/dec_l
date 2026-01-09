@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import LocationAutocomplete from '$lib/components/forms/LocationAutocomplete.svelte';
 	import { getCategories } from '$lib/services/category.service';
+	import { getCachedUser } from '$lib/services/user.service';
 	import type { CategoryResponseDTO } from '$lib/types/category.types';
 
 	interface FormData {
@@ -20,9 +22,10 @@
 	interface Props {
 		formData: FormData;
 		errors: Record<string, string>;
+		disableTitleEdit?: boolean;
 	}
 
-	let { formData = $bindable(), errors }: Props = $props();
+	let { formData = $bindable(), errors, disableTitleEdit = false }: Props = $props();
 
 	let categories = $state<CategoryResponseDTO[]>([]);
 	let isLoadingCategories = $state(true);
@@ -38,6 +41,17 @@
 	onMount(async () => {
 		try {
 			categories = await getCategories();
+			
+			// Auto-populate phone number and email from user profile if not already set
+			const user = getCachedUser();
+			if (user) {
+				if (!formData.contactNumber && user.phoneNumber) {
+					formData.contactNumber = user.phoneNumber;
+				}
+				if (!formData.emailAddress && user.emailAddress) {
+					formData.emailAddress = user.emailAddress;
+				}
+			}
 		} catch (error) {
 			console.error('Failed to load categories:', error);
 		} finally {
@@ -89,14 +103,21 @@
 			bind:value={formData.title}
 			placeholder="e.g., iPhone 13 Pro Max 256GB"
 			maxlength="100"
+			readonly={disableTitleEdit}
 			class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600
 				bg-white dark:bg-slate-800 text-slate-900 dark:text-white
 				placeholder:text-slate-400 dark:placeholder:text-slate-500
 				focus:outline-none focus:ring-2 focus:ring-[#13ecec] focus:border-transparent
-				{errors.title ? 'border-red-500 dark:border-red-500' : ''}"
+				{errors.title ? 'border-red-500 dark:border-red-500' : ''}
+				{disableTitleEdit ? 'cursor-not-allowed opacity-75 bg-slate-100 dark:bg-slate-900' : ''}"
 		/>
 		{#if errors.title}
 			<p class="mt-1 text-sm text-red-600 dark:text-red-400">{errors.title}</p>
+		{:else if disableTitleEdit}
+			<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+				<Icon name="lock" size={14} class="inline-block mr-1" />
+				Title cannot be changed after posting
+			</p>
 		{:else}
 			<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
 				{formData.title.length}/100 characters
@@ -203,28 +224,20 @@
 		{/if}
 	</div>
 
-	<!-- Location -->
-	<div>
-		<label for="location" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-			Location <span class="text-red-500">*</span>
-		</label>
-		<input
-			type="text"
-			id="location"
-			bind:value={formData.location}
-			placeholder="e.g., Kiwatule, Kampala"
-			class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600
-				bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100
-				placeholder:text-slate-400 dark:placeholder:text-slate-500
-				focus:outline-none focus:ring-2 focus:ring-[#13ecec] focus:border-transparent
-				{errors.location ? 'border-red-500 dark:border-red-500' : ''}"
-		/>
-		{#if errors.location}
-			<p class="mt-1 text-sm text-red-600 dark:text-red-400">{errors.location}</p>
-		{:else}
-			<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Where is the item located?</p>
-		{/if}
-	</div>
+	<!-- Location with Autocomplete -->
+	<LocationAutocomplete
+		bind:value={formData.location}
+		bind:coordinates={formData.gpsLocation}
+		error={errors.location}
+		label="Location"
+		placeholder="e.g., Kiwatule, Kampala"
+		required
+		showCoordinates={false}
+		onLocationSelect={(loc) => {
+			formData.location = loc.displayName;
+			formData.gpsLocation = `${loc.lat},${loc.lon}`;
+		}}
+	/>
 
 	<!-- Contact Number -->
 	<div>

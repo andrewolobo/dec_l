@@ -33,7 +33,8 @@
 		description: '',
 		price: '',
 		location: '',
-		contactNumber: ''
+		contactNumber: '',
+		gpsLocation: ''
 	});
 
 	// Validation state
