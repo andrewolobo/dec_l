@@ -3,7 +3,7 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import LocationAutocomplete from '$lib/components/forms/LocationAutocomplete.svelte';
 	import { getCategories } from '$lib/services/category.service';
-	import { getCachedUser } from '$lib/services/user.service';
+	import { getCachedUser, getProfile } from '$lib/services/user.service';
 	import type { CategoryResponseDTO } from '$lib/types/category.types';
 
 	interface FormData {
@@ -42,8 +42,18 @@
 		try {
 			categories = await getCategories();
 			
+			// Get user data - fetch from API if not in cache or incomplete
+			let user = getCachedUser();
+			
+			// If user doesn't have phone number, fetch fresh profile data
+			if (user && !user.phoneNumber) {
+				const profileResponse = await getProfile();
+				if (profileResponse.success && profileResponse.data) {
+					user = profileResponse.data;
+				}
+			}
+			
 			// Auto-populate phone number and email from user profile if not already set
-			const user = getCachedUser();
 			if (user) {
 				if (!formData.contactNumber && user.phoneNumber) {
 					formData.contactNumber = user.phoneNumber;
@@ -348,6 +358,7 @@
 			</div>
 
 			<!-- GPS Location -->
+			 
 			<div>
 				<label
 					for="gpsLocation"
@@ -360,12 +371,17 @@
 					id="gpsLocation"
 					bind:value={formData.gpsLocation}
 					placeholder="e.g., -6.7924, 39.2083"
+					readonly
 					class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600
-						bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100
+						bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100
 						placeholder:text-slate-400 dark:placeholder:text-slate-500
+						cursor-not-allowed opacity-75
 						focus:outline-none focus:ring-2 focus:ring-[#13ecec] focus:border-transparent"
 				/>
-				<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Latitude, Longitude format</p>
+				<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+					<Icon name="lock" size={14} class="inline-block mr-1" />
+					Automatically set from location selection
+				</p>
 			</div>
 		</div>
 	{/if}

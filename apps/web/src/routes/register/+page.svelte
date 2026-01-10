@@ -323,7 +323,7 @@
 					<div
 						class="bg-danger-500/10 border border-danger-500 text-danger-500 px-4 py-3 rounded-lg text-sm"
 					>
-						{error}
+						{error.message || error}
 					</div>
 				</div>
 			</div>
